@@ -22,7 +22,8 @@ LIBFLAGS = -L ./libft -lft -lpthread -L ./miniLibX -lmlx -framework OpenGL -fram
 all : $(NAME)
 
 $(NAME): $(OB)
-	make -C libft/
+	@make -C libft/
+	@make -C miniLibX/
 	$(COMP) -g -o $(NAME) $(OB) $(LIBFLAGS)
 	@printf "\033[00;32m"
 	@printf "BINARY CREATED\n"
@@ -32,15 +33,16 @@ $(NAME): $(OB)
 	$(COMP) -c -o $@ $< -I $(INC_DIR)
 
 clean:
-	make -C libft/ clean
-	rm -f $(OB)
+	@make -C libft/ clean
+	@make -C miniLibX clean
+	@rm -f $(OB)
 	@printf "\033[00;32m"
 	@printf "OBJECTS REMOVED\n"
 	@printf "\033[00;0m"
 
 fclean: clean
-	make -C libft/ fclean
-	rm -f $(NAME)
+	@make -C libft/ fclean
+	@rm -f $(NAME)
 	@printf "\033[00;32m"
 	@printf "BINARY REMOVED\n"
 	@printf "\033[00;0m"
