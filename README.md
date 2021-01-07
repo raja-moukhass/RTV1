@@ -13,3 +13,4 @@ sources
 - https://www.youtube.com/watch?v=Ahp6LDQnK4Y&feature=youtu.be&ab_channel=UCDavisAcademics (all about it)
 - http://viclw17.github.io/archives/ (raytracing c++)
 - http://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/basic_algo.pdf (pdf)
+-https://medium.com/swlh/ray-tracing-from-scratch-in-python-41670e6a96f9 (very goooooood)
