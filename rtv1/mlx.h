@@ -11,21 +11,21 @@
 # define FILE_HEADER_SIZE 14
 # define INFO_HEADER_SIZE 40
 
-typedef struct	s_point		//target
+typedef struct	s_vec		//target
 {
 	float	x;
 	float	y;
 	float	z;
-}				t_point;
+}				t_vec;
 typedef struct	s_sphere 
 {
 	float r;
-	t_point center;
+	t_vec c;
 }				t_sphere;
 typedef struct	s_ray
 {
-	t_point s; //source
-	t_point t; //target
+	t_vec o; //source or origine
+	t_vec d; //target or destination
 }				t_ray;
 
 typedef struct	s_data
@@ -35,8 +35,9 @@ typedef struct	s_data
 	void	*win;
 	void	*img;
 	t_ray	ray;
-	t_point	cam_s;	//cam source
-	t_point	cam_t;	//cam target
+	t_sphere	*sphere;
+	t_vec	cam_s;	//cam source
+	t_vec	cam_t;	//cam target
 
 }				t_data;
 #endif
