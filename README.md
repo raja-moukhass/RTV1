@@ -5,7 +5,8 @@ sources
 - https://www.purplealienplanet.com/node/20
 - https://www.scratchapixel.com/index.php?redirect
 - https://www.gabrielgambetta.com/computer-graphics-from-scratch/basic-ray-tracing.html
-- http://www.realtimerendering.com/raytracing/Ray%20Tracing%20in%20a%20Weekend.pdf 
+- http://www.realtimerendering.com/raytracing/Ray%20Tracing%20in%20a%20Weekend.pdf
+- http://www.hugi.scene.org/online/coding/hugi%2023%20-%20d9ray.htm (intersection)
 
 
 - https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces (vectors)
