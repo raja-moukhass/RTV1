@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 13:06:46 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/01/02 12:26:32 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/01/08 16:28:39 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_vector
 	float x;
 	float y;
 	float z;
+
 }t_vector;
 
 typedef struct s_sphere
@@ -49,16 +50,5 @@ typedef struct s_ray
 	t_vector dir;
 	
 }t_ray;
-
-
-// 	t_mlx f;
-  
-//   f.ptr = mlx_init();
-//   f.win = mlx_new_window(f.ptr, 500, 500, "Title");
-//   	hit = intersectRaySphere(&r, &s);
-
-//   f.pxl = mlx_pixel_put ( f.ptr,f.win, 40,40,255 );
-// // mlx_loop(f.ptr);
-
 
 # endif
