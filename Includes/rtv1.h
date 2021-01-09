@@ -20,35 +20,64 @@
 #include "../miniLibX/mlx.h"
 # define WIDTH 600
 # define HEIGHT 600
-
-typedef struct	s_mlx
+typedef struct	s_vec		//target
 {
-	void		*ptr;
-	void		*win;
-	void		*img;
-	void		*img_ptr;
-	int 		pxl;
-}	t_mlx;
-
-typedef struct s_vector
+	float	x;
+	float	y;
+	float	z;
+}				t_vec;
+typedef struct	s_sphere 
 {
-	float x;
-	float y;
-	float z;
-
-}t_vector;
-
-typedef struct s_sphere
+	float r;
+	t_vec c;
+}				t_sphere;
+typedef struct	s_ray
 {
-	t_vector pos;
-	float radius;
-}t_sphere;
+	t_vec o; //source or origine
+	t_vec d; //target or destination
+}				t_ray;
 
-typedef struct s_ray
+typedef struct	s_data
 {
-	t_vector start;
-	t_vector dir;
+	int		*d;
+	void	*ptr;
+	void	*win;
+	void	*img;
+	t_ray	ray;
+	t_sphere	*sphere;
+	t_vec	cam_s;	//cam source
+	t_vec	cam_t;	//cam target
+
+}				t_data;
+
+// typedef struct	s_mlx
+// {
+// 	void		*ptr;
+// 	void		*win;
+// 	void		*img;
+// 	void		*img_ptr;
+// 	int 		pxl;
+// }	t_mlx;
+
+// typedef struct s_vector
+// {
+// 	float x;
+// 	float y;
+// 	float z;
+
+// }t_vector;
+
+// typedef struct s_sphere
+// {
+// 	t_vector pos;
+// 	float radius;
+// }t_sphere;
+
+// typedef struct s_ray
+// {
+// 	t_vector start;
+// 	t_vector dir;
 	
-}t_ray;
+// }t_ray;
 
 # endif

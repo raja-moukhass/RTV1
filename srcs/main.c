@@ -15,68 +15,130 @@
 #include <stdbool.h>
 #include <math.h>
 
-int			ft_close(void)
+
+void	debugstr(char *str, int nl)
 {
-	exit(1);
-	return (0);
+	ft_putstr_fd("|",1);
+	ft_putstr_fd(str,1);
+	ft_putstr_fd("|",1);
+	if (nl)
+  ft_putendl_fd("",1);
+}
+void	debugnbr(int nbr, int nl,int fd)
+{
+	//ft_putstr_fd(tgetstr("cl", NULL),2);
+	ft_putstr_fd("|",fd);
+	ft_putnbr_fd(nbr,fd);
+	ft_putstr_fd("|",fd);
+	if (nl)
+		ft_putendl_fd("",fd);
 }
 
-int   keyhook(int key, void *p)
+float	mot2(float A, float B)
 {
-  (void)p;
-  if (key == 53)
-    ft_close();
-    return (0);
+	return ((A * A)- (2 + A * B) + (B * B));
+}
+
+float	dot_product(t_vec A, t_vec B)
+{	
+    float ret = (A.x * B.x) + (A.y * B.y) + (A.z * B.z);
+
+	return (ret);
+}
+float	dot_pro(double n, t_vec A)
+{	
+	return (A.x * n + A.y * n+ A.z * n);
+}
+
+t_vec  vec_sub(t_vec A, t_vec B)
+{
+    t_vec ret = {(A.x - B.x) , (A.y - B.y) , (A.z - B.z)};
+    return (ret);
+}
+
+void	normalize(t_vec *vec)
+{
+	t_vec tmp;
+
+	tmp.x = vec->x;
+	tmp.y = vec->y;
+	tmp.z = vec->z;
+	vec->x = tmp.x/sqrt(tmp.x * tmp.x + tmp.y * tmp.y + tmp.z * tmp.z);
+	vec->y = tmp.y/sqrt(tmp.x * tmp.x + tmp.y * tmp.y + tmp.z * tmp.z);
+	vec->z = tmp.z/sqrt(tmp.x * tmp.x + tmp.y * tmp.y + tmp.z * tmp.z);
+}
+
+int		 intersection_sphere(t_data *data)
+{
+    //         debugnbr(y,1,1);
+	float a = dot_product(data->ray.d,data->ray.d);
+    float b = 2 * dot_product(data->ray.d, vec_sub(data->ray.o, data->sphere->c));
+    float c = dot_product(vec_sub(data->ray.o, data->sphere->c) , vec_sub(data->ray.o, data->sphere->c)) - (data->sphere->r * data->sphere->r);
+    float L = b*b - (4*a*c);
+    // printf("\ngood = %lf| bad = %lf",aa,a);
+    if (L< 0)
+        return 0;
+    return 1;
 }
 
 
-float   vectorsub(t_vector *v1, t_vector *v2)
+void    circle_calc(t_data *data)
 {
-	float result = (v1->x - v2->x) + (v1->y - v2->y) + (v1->z - v2->z);
-	return(result);
-}
-float vectordot(t_vector *v1, t_vector *v2)
-{
-  double result = v1->x * v2->x + v1->y * v2->y + v1->z * v2->z;
-	return result;
+    //float   line;
+    int	y;
+	int x;
+    //int res;
+    double PI = 22 / 7;
+    double alpha = 60 * PI/180;
+	y = 0;
+	while (y < HEIGHT)
+	{
+		x = -1;
+		while (x++ < WIDTH)
+        {
+            data->ray.d.x = x-(HEIGHT/2);
+            data->ray.d.y = y-(HEIGHT/2);
+            data->ray.d.z = -WIDTH/(2*tan(alpha));
+            normalize(&data->ray.d);
+            if (intersection_sphere(data))
+               data->d[y * WIDTH + x] = 0xff21ff;
+        }
+		y++;
+	}
 }
 
-bool    intersect_ray(t_ray *r, t_sphere *s)
-{
-    float a;
-    a =  vectordot(&r->dir , &r->dir); // the vector dot product of the direction 
 
-  // vector representing the distence between the start and the position of the circle (p0 - c)
 
-  float dist;
-  dist = vectorsub(&r->start, &s->pos);
-  float b;
-  b = 2 * vectordot(&r->dir, &dist);
-  float c ;
-  c = vectordot(&dist, &dist) - (s->radius * s->radius);
-  // solving the discriminant 
-  float discr = b*b - 4 * a *c; // if the descr // 
-                                                    
-  if(discr < 0)
-  return false;
-  else 
-  return true;
-  
-}
+
 
 
 
 
 int main()
 {
-  t_mlx f;
-  void *data;
-  
-  f.ptr = mlx_init();
-  f.win = mlx_new_window(f.ptr, 500, 500, "Title");
-  mlx_hook(f.win,17,0,ft_close,&data);
-  mlx_hook(f.win, 2,0,keyhook,data);
-  mlx_loop(f.ptr);
-  
-  return (0);
+    t_data	*data;
+	int		bpp;
+    t_vec source = {0,0,0};
+      t_vec s = {50,50,-200};
+      //t_vec target = {80,50,0};
+      t_sphere *sphere;
+     sphere = (t_sphere *)malloc(sizeof(t_sphere));
+    sphere->c = s;
+    sphere->r = 30;
+      //debugnbr(sphere->c.x,1,1);
+    data = (t_data *)malloc(sizeof(t_data));
+    data->sphere = sphere;
+    //ebugstr("OFFFF",1);
+
+	data->ray.o = source;
+	//data->ray.d = target;
+
+    data->ptr = mlx_init();
+	data->win = mlx_new_window(data->ptr, WIDTH, HEIGHT, "ok");
+	data->img = mlx_new_image(data->ptr, WIDTH, HEIGHT);
+	data->d = (int *)mlx_get_data_addr(data->img, &bpp, &bpp, &bpp);
+    circle_calc(data);
+    //image_clear(data->d, 200,200,100);
+    mlx_put_image_to_window(data->ptr, data->win, data->img, 0, 0);
+    mlx_loop(data->ptr);
 }
