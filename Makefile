@@ -6,12 +6,12 @@
 #    By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/12 12:17:42 by ramoukha          #+#    #+#              #
-#    Updated: 2020/12/22 13:31:29 by ramoukha         ###   ########.fr        #
+#    Updated: 2021/01/10 17:00:27 by ramoukha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 COMP = gcc -Werror -Wextra -Wall
-SRC = srcs/main.c 
+SRC = srcs/main.c srcs/vec_calculation.c
 OB =  main.o 
 INC_DIR = ./includes/
 INC = ./includes/rtv1.h

@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 13:06:46 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/01/08 16:28:39 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/01/10 17:54:44 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,64 +20,45 @@
 #include "../miniLibX/mlx.h"
 # define WIDTH 600
 # define HEIGHT 600
-typedef struct	s_vec		//target
-{
-	float	x;
-	float	y;
-	float	z;
-}				t_vec;
-typedef struct	s_sphere 
-{
-	float r;
-	t_vec c;
-}				t_sphere;
-typedef struct	s_ray
-{
-	t_vec o; //source or origine
-	t_vec d; //target or destination
-}				t_ray;
 
-typedef struct	s_data
+typedef struct	s_mlx
 {
-	int		*d;
-	void	*ptr;
-	void	*win;
-	void	*img;
-	t_ray	ray;
+	void		*ptr;
+	void		*win;
+	void		*img;
+	void		*img_ptr;
+	int 		pxl;
+	t_ray 		ray;
 	t_sphere	*sphere;
-	t_vec	cam_s;	//cam source
-	t_vec	cam_t;	//cam target
 
-}				t_data;
+}	t_mlx;
 
-// typedef struct	s_mlx
-// {
-// 	void		*ptr;
-// 	void		*win;
-// 	void		*img;
-// 	void		*img_ptr;
-// 	int 		pxl;
-// }	t_mlx;
+typedef struct s_vector
+{
+	double x;
+	double y;
+	double z;
 
-// typedef struct s_vector
-// {
-// 	float x;
-// 	float y;
-// 	float z;
+}t_vector;
 
-// }t_vector;
-
-// typedef struct s_sphere
-// {
-// 	t_vector pos;
-// 	float radius;
-// }t_sphere;
-
-// typedef struct s_ray
-// {
-// 	t_vector start;
-// 	t_vector dir;
+typedef struct s_sphere
+{
+	t_vector pos;
+	double radius;
 	
-// }t_ray;
+}t_sphere;
+
+typedef struct s_ray
+{
+	t_vector start;
+	t_vector dir;
+	
+}t_ray;
+
+t_vector  vec_cross(t_vector v1, t_vector v2);
+t_vector  vec_add(t_vector v1, t_vector v2);
+
+t_vector  vec_sub(t_vector v1, t_vector v2);
+t_vector  vec_product(t_vector v, double i);
 
 # endif
