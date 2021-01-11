@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   mv1in.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rv1moukhv1 <rv1moukhv1@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rv1moukhv1 <rv1moukhv1@student.42.fr>          +#+  +:+       +#+    */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 12:54:06 by ramoukha          #+#    #+#             */
 /*   Updated: 2021/01/10 16:45:11 by ramoukha         ###   ########.fr       */
@@ -29,42 +29,32 @@ int   keyhook(int key, void *p)
     return (0);
 }
 
-// double    ft_slution(double a, double b, double c)
-// {
-//   double det;
-//   t_vector sol;
+double    ft_slution(double a, double b, double c)
+{
+  double det;
+  t_vector sol;
 
-//   det = b * b - 4 * a * c;
-//   if (det < 0.0001)
-//   return(-1);
-//   sol.x = (-b + sqrt(det) / (2 * a));
-//   sol.y = (-b - sqrt(det) / (2 * a));
-//   sol.z = ((sol.x < sol.y && sol.x > 0) ? sol.x : sol.y);
-// 	if (sol.z < 0)
-// 		sol.z = 0;
-// 	return (sol.z);
+  det = b * b - 4 * a * c;
+  if (det < 0.0001)
+  return(-1);
+  sol.x = (-b + sqrt(det) / (2 * a));
+  sol.y = (-b - sqrt(det) / (2 * a));
+  sol.z = ((sol.x < sol.y && sol.x > 0) ? sol.x : sol.y);
+	if (sol.z < 0)
+  sol.z = 0;
+	return (sol.z);
+}
 
-// }
-// int intersection_sphere(t_mlx *data)
-// {
-//     double a =  dot_product(data->ray.dir,data->ray.dir);
-//     double b = 2 * dot_product(data->ray.dir, vec_sub(data->ray.start, data->sphere->pos));
-//     double c = dot_product(vec_sub(data->ray.start, data->sphere->pos) , vec_sub(data->ray.start, data->sphere->pos)) - (data->sphere->radius * data->sphere->radius);
-//     double L = b*b - (4*a*c);
-//     // printf("\ngood = %lf| bad = %lf",aa,a);
-//     if (L< 0)
-//         return 0;
-//     return 1;
-// }
+
 int    intersection(t_ray *r,t_sphere *s)
 {
   double a = dot_product(r->dir, r->dir);
-  // printf("direction vect: (%lf, %lf, %lf)\n", r->dir.x, r->dir.y, r->dir.z);
-  // printf("product: %lf\n", a);
+
   t_vector dist = vec_sub(r->start,s->pos);
   //printf("(%lf, %lf, %lf)\n", dist.x, dist.y, dist.z);
   double b = 2 * dot_product(r->dir, dist);
   double c = dot_product(dist, dist) - (s->radius * s->radius);
+  //printf("\na = %lf b = %lf c = %lf", a,b,c);
   double discr = b * b - 4 * a * c;
   if(discr < 0)
   return 0;
@@ -78,10 +68,10 @@ void  sphere_calculation(t_mlx *data)
     int y;
     int hit;
     t_sphere s;
-    t_ray r;git 
-    s.pos.x = 50;
-    s.pos.y = 50;
-    s.pos.z = -50;
+    t_ray r;
+    s.pos.x = 0;
+    s.pos.y = 0;
+    s.pos.z = -40;
     r.start.x = 0;
     r.start.y = 0;
     r.start.z = 0;
@@ -96,21 +86,21 @@ void  sphere_calculation(t_mlx *data)
     y =0;
     while (y < HEIGHT)
     {
-      r.dir.y = y;
+      r.dir.y = y-(WIDTH/2);
       x = 0;
       
       while(x < WIDTH)
       {
-        r.dir.x = x;
+        r.dir.x = x-(WIDTH/2);
         r.dir.z =  -WIDTH/(2*tan(alpha));
         hit = intersection(&r,&s);
         // printf("%d",hit);
         if (hit)
 
         {
-
-              data->d[y*WIDTH + x] = 0xffffff;
-//ft_putstr("CHECK");
+            
+              // data->d[y*WIDTH + x] = 0xffffff;
+               data->d[y*WIDTH + x] = (int)(r.dir.y * 350) << 16;
 
         }
         x++;
@@ -118,25 +108,6 @@ void  sphere_calculation(t_mlx *data)
       y++;
     }
 }
-//   int y;
-//   int x;
-//   double  PI = 22 / 7;
-//   double alpha = 60 * PI/180;
-//   y = 0;
-//   while (y < HEIGHT)
-//   {
-//     x = -1;
-//     while(x++ <WIDTH)
-//     {
-//       data->ray.dir.x = x-(HEIGHT/2);
-//       data->ray.dir.y = y-(HEIGHT/2);
-//       data->ray.dir.z = -WIDTH/(2*tan(alpha));
-//       if(intersection_sphere(data))
-//       data->d[y*WIDTH + x] = 0xffffff;
-//     }
-//     y++;
-//   }
-//}
 
 
 int main()
