@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 13:06:46 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/01/10 17:54:44 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/01/11 11:28:00 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,7 @@
 # define WIDTH 600
 # define HEIGHT 600
 
-typedef struct	s_mlx
-{
-	void		*ptr;
-	void		*win;
-	void		*img;
-	void		*img_ptr;
-	int 		pxl;
-	t_ray 		ray;
-	t_sphere	*sphere;
 
-}	t_mlx;
 
 typedef struct s_vector
 {
@@ -55,10 +45,23 @@ typedef struct s_ray
 	
 }t_ray;
 
+typedef struct	s_mlx
+{
+	void		*ptr;
+	void		*win;
+	void		*img;
+	void		*img_ptr;
+	int 		pxl;
+	t_ray 		ray;
+	t_sphere	*sphere;
+	int			*d;
+
+}	t_mlx;
+
 t_vector  vec_cross(t_vector v1, t_vector v2);
 t_vector  vec_add(t_vector v1, t_vector v2);
 
 t_vector  vec_sub(t_vector v1, t_vector v2);
-t_vector  vec_product(t_vector v, double i);
+double	  dot_product(t_vector v1, t_vector v2);
 
 # endif
