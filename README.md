@@ -15,3 +15,4 @@ sources
 - http://viclw17.github.io/archives/ (raytracing c++)
 - http://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/basic_algo.pdf (pdf)
 -https://medium.com/swlh/ray-tracing-from-scratch-in-python-41670e6a96f9 (very goooooood)
+- http://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20raytracing%20shapes.htm (hugi)
