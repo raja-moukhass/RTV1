@@ -4,6 +4,23 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+
+double    ft_slution(double a, double b, double c)
+{
+  double det;
+  t_vector sol;
+
+  det = b * b - 4 * a * c;
+  if (det < 0.0001)
+  return(-1);
+  sol.x = (-b + sqrt(det) / (2 * a));
+  sol.y = (-b - sqrt(det) / (2 * a));
+  sol.z = ((sol.x < sol.y && sol.x > 0) ? sol.x : sol.y);
+	if (sol.z < 0)
+  sol.z = 0;
+	return (sol.z);
+}
+
 t_vector  vec_cross(t_vector v1, t_vector v2)
 {
   t_vector c;

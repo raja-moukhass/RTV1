@@ -29,21 +29,6 @@ int   keyhook(int key, void *p)
     return (0);
 }
 
-double    ft_slution(double a, double b, double c)
-{
-  double det;
-  t_vector sol;
-
-  det = b * b - 4 * a * c;
-  if (det < 0.0001)
-  return(-1);
-  sol.x = (-b + sqrt(det) / (2 * a));
-  sol.y = (-b - sqrt(det) / (2 * a));
-  sol.z = ((sol.x < sol.y && sol.x > 0) ? sol.x : sol.y);
-	if (sol.z < 0)
-  sol.z = 0;
-	return (sol.z);
-}
 
 
 int    intersection(t_ray *r,t_sphere *s)
@@ -76,8 +61,8 @@ void  sphere_calculation(t_mlx *data)
     r.start.y = 0;
     r.start.z = 0;
     s.radius = 30;
-  double  PI = 22 / 7;
-  double alpha = 60 * PI/180;
+    double  PI = 22 / 7;
+    double alpha = 60 * PI/180;
     r.dir.x = 0;
     r.dir.y = 0;
     r.dir.z = 1;
@@ -94,13 +79,11 @@ void  sphere_calculation(t_mlx *data)
         r.dir.x = x-(WIDTH/2);
         r.dir.z =  -WIDTH/(2*tan(alpha));
         hit = intersection(&r,&s);
-        // printf("%d",hit);
         if (hit)
 
         {
-            
-              // data->d[y*WIDTH + x] = 0xffffff;
-               data->d[y*WIDTH + x] = (int)(r.dir.y * 350) << 16;
+          data->d[y*WIDTH + x] = 0xffffff;
+          //data->d[y*WIDTH + x] = (int)(r.dir.y * 350) << 16;
 
         }
         x++;
