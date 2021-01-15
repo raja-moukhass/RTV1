@@ -34,6 +34,8 @@ int   keyhook(int key, void *p)
 int    intersection(t_ray *r,t_sphere *s)
 {
   double a = dot_product(r->dir, r->dir);
+  double t1;
+  double t2;
 
   t_vector dist = vec_sub(r->start,s->pos);
   //printf("(%lf, %lf, %lf)\n", dist.x, dist.y, dist.z);
@@ -42,9 +44,16 @@ int    intersection(t_ray *r,t_sphere *s)
   //printf("\na = %lf b = %lf c = %lf", a,b,c);
   double discr = b * b - 4 * a * c;
   if(discr < 0)
-  return 0;
-  else 
-  return 1;
+  return -1;
+  else {
+    t1 = (-b - sqrtf(discr)) / 2 * a;
+    t2 = (-b + sqrtf(discr)) / 2 * a;
+  }
+  if (t1 > 0 && t1 < t2)
+    return (t1);
+  else if (t2 > 0)
+      return (t2);
+  return -1;
 
 }
 void  sphere_calculation(t_mlx *data)
@@ -54,12 +63,31 @@ void  sphere_calculation(t_mlx *data)
     int hit;
     t_sphere s;
     t_ray r;
+
+    t_material materials;
+    materials.diffuse.red = 1;
+    materials.diffuse.green = 0;
+    materials.diffuse.blue = 0;
+    materials.reflection = 0.2;
+
+    t_light lights;
+    lights.pos.x = 0;
+    lights.pos.y = 0;
+    lights.pos.z = -100;
+
+    lights.intensity.red = 1;
+    lights.intensity.blue = 1;
+    lights.intensity.green =1;
+
+    //double t = 20000.0f;
     s.pos.x = 0;
     s.pos.y = 0;
     s.pos.z = -40;
+
     r.start.x = 0;
     r.start.y = 0;
     r.start.z = 0;
+
     s.radius = 30;
     double  PI = 22 / 7;
     double alpha = 60 * PI/180;
@@ -79,10 +107,30 @@ void  sphere_calculation(t_mlx *data)
         r.dir.x = x-(WIDTH/2);
         r.dir.z =  -WIDTH/(2*tan(alpha));
         hit = intersection(&r,&s);
-        if (hit)
-
+        if (hit >= 0)
         {
-          data->d[y*WIDTH + x] = 0xffffff;
+          t_vector hits;
+          hits = vec_add(r.start, vec_product(normalize(r.dir), hit));
+          printf("%lf\t", hits.x);
+          printf("%lf\t", hits.y);
+          printf("%lf\n", hits.z);
+          
+          t_vector nr = normal_sphere(hit, r, s);
+          t_vector ldir = vec_sub(lights.pos, hits);
+          t_vector refl = normalize(vec_add(ldir, r.dir));
+          double dot1 = dot_product(nr, normalize(ldir));
+          (void)dot1;
+          double dot = dot_product(nr, refl);
+          (void)dot;
+          if (dot1 >= 0)
+          {
+          int color = 0xff0000;
+            unsigned char *ptr = (unsigned char *)&color;
+            ptr[3] *= dot1;
+            ptr[2] *= dot1;
+            ptr[1] *= dot1;
+            data->d[y*WIDTH + x] = color * dot1;
+          }
           //data->d[y*WIDTH + x] = (int)(r.dir.y * 350) << 16;
 
         }
@@ -92,17 +140,35 @@ void  sphere_calculation(t_mlx *data)
     }
 }
 
+t_vector normal_sphere(double t, t_ray r, t_sphere s)
+{
+  t_vector hit;
+  t_vector n;
+
+  hit = vec_add(r.start, vec_product(normalize(r.dir), t));
+  n.x = -hit.x + s.pos.x;
+  n.y = -hit.y + s.pos.y;
+  n.z = -hit.z + s.pos.z;
+  return (normalize(n));
+}
+t_vector  normalize(t_vector vec)
+{
+  double mod;
+  
+  mod = sqrtf(powf(vec.x, 2) + powf(vec.y,2) + powf(vec.z, 2));
+  vec.x /= mod;
+  vec.y /= mod;
+  vec.z /= mod;
+  return (vec);
+}
 
 int main()
 {
   t_mlx *data;
   int bpp;
-  // t_vector origin = {0,0,0};
-  // t_vector s = {50,50,-200};
    t_sphere *sphere;
   sphere = (t_sphere *)malloc(sizeof(t_sphere));
-  // sphere->pos =s;
-  // sphere->radius = 10;
+
    data = (t_mlx *)malloc(sizeof(t_mlx));
    data->sphere = sphere;
   
@@ -111,14 +177,10 @@ int main()
   f.win = mlx_new_window(f.ptr, WIDTH, HEIGHT, "RTV1");
   mlx_hook(f.win,17,0,ft_close,&data);
   mlx_hook(f.win, 2,0,keyhook,data);
-  //printf("raja");
-
   f.img = mlx_new_image(f.ptr,WIDTH,HEIGHT);
   f.d   = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
-  //printf("raja");
   data->d = f.d; 
   sphere_calculation(data);
-
   mlx_put_image_to_window(f.ptr, f.win, f.img,0,0);
   mlx_loop(f.ptr);
 

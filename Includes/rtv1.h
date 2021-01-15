@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 13:06:46 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/01/11 11:28:00 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/01/15 17:13:08 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,33 @@ typedef struct	s_mlx
 
 }	t_mlx;
 
+typedef struct s_color
+{
+	double red; 
+	double green;
+	double blue;
+}t_color;
+
+typedef struct s_light
+{
+	t_vector pos;
+	t_color intensity;
+}t_light;
+
+typedef struct s_material
+{
+	t_color diffuse;
+	double 	reflection;
+}t_material;
+
+
 t_vector  vec_cross(t_vector v1, t_vector v2);
 t_vector  vec_add(t_vector v1, t_vector v2);
 
 t_vector  vec_sub(t_vector v1, t_vector v2);
 double	  dot_product(t_vector v1, t_vector v2);
-
+t_vector normal_sphere(double t, t_ray r, t_sphere s);
+t_vector  normalize(t_vector vec);
+t_vector  vec_product(t_vector v, double i);
 # endif
+
