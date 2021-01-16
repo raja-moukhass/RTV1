@@ -2,6 +2,7 @@
 #include "mlx.h"
 #include "libft/libft.h"
 
+
 void	debugstr(char *str, int nl)
 {
 	ft_putstr_fd("|",1);
@@ -49,35 +50,59 @@ void circleBres(int *dd,int xc, int yc, int r)
     } 
 }
 
-float	mot2(float A, float B)
+double	mot2(double A, double B)
 {
 	return ((A * A)- (2 + A * B) + (B * B));
 }
 // int		 intersection_sphere2(t_data *data,int x, int y)
 // {
 //     //         debugnbr(y,1,1);
-// 	float L = sqrt(mot2(data->sphere->c.x, data->ray.s.x) + mot2(data->sphere->center.y, data->ray.s.y) );
-// 	float tc = (L * data->ray.t.x)+ (L * data->ray.t.y)+(L * data->ray.t.z);
+// 	double L = sqrt(mot2(data->sphere->c.x, data->ray.s.x) + mot2(data->sphere->center.y, data->ray.s.y) );
+// 	double tc = (L * data->ray.t.x)+ (L * data->ray.t.y)+(L * data->ray.t.z);
 // 	if ( tc < 0.0 ) 
 // 		return 0;
-// 		float d = sqrt((tc*tc) - (L*L));
+// 		double d = sqrt((tc*tc) - (L*L));
 // 		if ( d > data->sphere->r) 
 // 		return 0;
-// 		float t1c = sqrt( (data->sphere->r * data->sphere->r) - (d*d) );
-// 		float t1 = tc - t1c;
-// 		float t2 = tc + t1c;
+// 		double t1c = sqrt( (data->sphere->r * data->sphere->r) - (d*d) );
+// 		double t1 = tc - t1c;
+// 		double t2 = tc + t1c;
 //         data->d[y * WIDTH + x] = 0xff21ff;
 //     return 1;
 // }
-float	dot_product(t_vec A, t_vec B)
+double	dot_product2(t_vec A, t_vec B)
 {	
-    float ret = (A.x * B.x) + (A.y * B.y) + (A.z * B.z);
+    printf("\nDEBUG: A.x = %f b.x= %f\n",A.x, B.x);
+    
+    double ret = (A.x * B.x) + (A.y * B.y) + (A.z * B.z);
+    printf("\nDEBUG: ret.x = %f ret.x = %f ret.x = %f ret = %f \n",(A.x * B.x), (A.y * B.y), (A.z * B.z), ret);
+exit(1);
+	return (ret);
+}
+double	dot_product(t_vec A, t_vec B)
+{	
+ 
+    double ret = (A.x * B.x) + (A.y * B.y) + (A.z * B.z);
+  
+	return (ret);
+}
+t_vec	dot_vec(t_vec A, t_vec B)
+{	
+    t_vec ret = {(A.x * B.x) + (A.y * B.y) + (A.z * B.z)};
 
 	return (ret);
 }
-float	dot_pro(double n, t_vec A)
+double	dot_pro_val(double n, t_vec A)
 {	
 	return (A.x * n + A.y * n+ A.z * n);
+}
+
+t_vec	dot_pro_vec(t_vec A, double n)
+{	
+    t_vec ret;
+    
+    ret = (t_vec){(A.x * n) , (A.y * n), (A.z * n)};
+	return (ret);
 }
 
 t_vec  vec_sub(t_vec A, t_vec B)
@@ -85,50 +110,91 @@ t_vec  vec_sub(t_vec A, t_vec B)
     t_vec ret = {(A.x - B.x) , (A.y - B.y) , (A.z - B.z)};
     return (ret);
 }
-
-void	normalize(t_vec *vec)
+t_vec  vec_add(t_vec A, t_vec B)
 {
-	t_vec tmp;
+    t_vec ret = {(A.x + B.x) , (A.y + B.y) , (A.z + B.z)};
+    return (ret);
+}
 
-	tmp.x = vec->x;
-	tmp.y = vec->y;
-	tmp.z = vec->z;
-	vec->x = tmp.x/sqrt(tmp.x * tmp.x + tmp.y * tmp.y + tmp.z * tmp.z);
-	vec->y = tmp.y/sqrt(tmp.x * tmp.x + tmp.y * tmp.y + tmp.z * tmp.z);
-	vec->z = tmp.z/sqrt(tmp.x * tmp.x + tmp.y * tmp.y + tmp.z * tmp.z);
+t_vec	normalize(t_vec vec)
+{
+	t_vec ret;
+
+	
+	ret.x = vec.x/sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+	ret.y = vec.y/sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+	ret.z = vec.z/sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+
+    return ret;
 }
 
 
 
-int		 intersection_sphere(t_data *data)
+int		 intersection_sphere(t_data *data, t_vec *p, t_vec *n)
 {
     //         debugnbr(y,1,1);
-	float a = dot_product(data->ray.d,data->ray.d);
-    float b = 2 * dot_product(data->ray.d, vec_sub(data->ray.o, data->sphere->c));
-    float c = dot_product(vec_sub(data->ray.o, data->sphere->c) , vec_sub(data->ray.o, data->sphere->c)) - (data->sphere->r * data->sphere->r);
-    float x = data->ray.d.x;
-    float y = data->ray.d.y;
-    float z = data->ray.d.z;
-    float aa = x*x + y*y + z*z;
-    float bb = (2*x*(-data->sphere->c.x)) + (2 * y * (-data->sphere->c.y)) + (2 * z * (-data->sphere->c.z));
-    float cc = ((data->sphere->c.x*data->sphere->c.x) + (data->sphere->c.y * data->sphere->c.y) + (data->sphere->c.z*data->sphere->c.z)) - (data->sphere->r * data->sphere->r);
-    float L = b*b - (4*a*c);
-    // printf("\ngood = %lf| bad = %lf",aa,a);
-    if (L< 0)
+	double a = dot_product(data->ray.d,data->ray.d);
+    double b = 2 * dot_product(data->ray.d, vec_sub(data->ray.o, data->sphere->c));
+    double c = dot_product(vec_sub(data->ray.o, data->sphere->c) , vec_sub(data->ray.o, data->sphere->c)) - (data->sphere->r * data->sphere->r);
+    t_vec light_o = {10,10,-10};
+   
+    double delta = b*b - (4*a*c);
+    double t1;
+    double t2;
+    if (delta< 0)
         return 0;
+    if (delta>0)
+     t1 = (-b - sqrt(delta))/(2*a);
+     t2 = (-b + sqrt(delta))/(2*a);
+     if (t2 < 0)
+     return 0;
+    double t;
+    if (t1 > 0)
+        t = t1;
+    else
+        t = t2;
+    
+    // if (delta == 0)
+    //  t1 = -b /2*a;
+
+    //printf("\ngood = %deltaf| bad = %deltaf",tonorm.x, n->x);
+    *p = vec_add(data->ray.o, dot_pro_vec(data->ray.d, t));
+    t_vec tonorm = vec_sub( *p, data->sphere->c);
+    *n = normalize(tonorm);
     return 1;
 }
-
-
+double		map(double value, double in_max, double in_min, double out_min, double out_max)
+{
+	return ((value - in_min) * (out_max - out_min)
+	/ (in_max - in_min) + out_min);
+}
+double  get_norm_2(t_vec v)
+{
+    double ret;
+    ret = (v.x * v.x) + (v.y * v.y) + (v.z * v.z);
+    return ret;
+}
 void    circle_calc(t_data *data)
 {
-    float   line;
+    double   line;
     int	y;
 	int x;
+    int a = -100;
+    int b = -100;
+    int c = -100;
     int res;
     double PI = 22 / 7;
     double alpha = 60 * PI/180;
 	y = 0;
+    t_vec n;
+    t_vec p;
+    t_vec   color = {1,1,1};
+    t_vec lum_pos = {-200,-200,0};
+    int intensite_lum = 20000;
+    data->sphere->color = color;
+    int i = 0;
+    double yes;
+    int check = 1;
 	while (y < HEIGHT)
 	{
 		x = -1;
@@ -137,11 +203,35 @@ void    circle_calc(t_data *data)
             data->ray.d.x = x-(HEIGHT/2);
             data->ray.d.y = y-(HEIGHT/2);
             data->ray.d.z = -WIDTH/(2*tan(alpha));
-            normalize(&data->ray.d);
-            if (intersection_sphere(data))
-               data->d[y * WIDTH + x] = 0xff21ff;
+          //  debugstr("hello",1);
+            // normalize(&data->ray.d);
+            double intensite_pixel;
+            if (intersection_sphere(data, &p, &n)){
+
+    //printf("\nDEBUG1: norm.x = %f n.x= %f\n",normalize(vec_sub(lum_pos, p)).x, n.x);
+                 intensite_pixel = 2000000 * fmax(0,dot_product(normalize(vec_sub(lum_pos,p)), n)) / dot_product(vec_sub(lum_pos,p),vec_sub(lum_pos,p));
+                 //intensite_pixel =  map(intensite_pixel,1,-1,60,255);
+              color.x = fmin(255.,fmax(0,intensite_pixel));
+color.y = fmin(255.,fmax(0,intensite_pixel));
+color.z = fmin(255.,fmax(0,intensite_pixel));
+               data->d[y * WIDTH + x] =  0xFFFFFF * intensite_pixel ;
+            //   data->ray.d.x = map(data->ray.d.x, HEIGHT,-HEIGHT/2,0,255);
+            // data->ray.d.y = map(data->ray.d.y, HEIGHT,-HEIGHT/2,0,255);
+            // data->ray.d.z = map(data->ray.d.z, HEIGHT,-HEIGHT/2,0,255);
+            //    double t = get_norm_2(vec_sub(lum_pos, p));
+               printf("\nbefore %lf|%lf|%lf",color.x, n.y, n.z);
+             
+
+
+               // ((int)data->ray.d.x *(1/2)+1) >> 16 | (int)data->ray.d.y >> 8 | (int)data->ray.d.z ;
+               // debugnbr((int)data->ray.d.y,1,1);
+            }
+            if (b < 200)
+                b++;
         }
 		y++;
+        if (a < 200)
+         a++;
 	}
 }
 
@@ -149,17 +239,17 @@ int main()
 {
     t_data	*data;
 	int		bpp;
-   t_vec source = {0,0,0};
-      t_vec s = {0,50,-200};
+   t_vec source = {0,0,-1};
+      t_vec s = {0,0,-50};
  t_vec target = {80,50,0};
     t_sphere *sphere;
      sphere = (t_sphere *)malloc(sizeof(t_sphere));
     sphere->c = s;
     sphere->r = 30;
-      debugnbr(sphere->c.x,1,1);
-    data = (t_data *)malloc(sizeof(t_data));
-    data->sphere = sphere;
-    debugstr("OFFFF",1);
+	debugnbr(sphere->c.x,1,1);
+	data = (t_data *)malloc(sizeof(t_data));
+	data->sphere = sphere;
+	debugstr("OFFFF",1);
 
 	data->ray.o = source;
 	//data->ray.d = target;

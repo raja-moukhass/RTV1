@@ -19,6 +19,7 @@ typedef struct	s_vec		//target
 }				t_vec;
 typedef struct	s_sphere 
 {
+	t_vec color;
 	float r;
 	t_vec c;
 }				t_sphere;
