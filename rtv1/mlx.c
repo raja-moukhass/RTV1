@@ -136,7 +136,7 @@ int		 intersection_sphere(t_data *data, t_vec *p, t_vec *n)
 	double a = dot_product(data->ray.d,data->ray.d);
     double b = 2 * dot_product(data->ray.d, vec_sub(data->ray.o, data->sphere->c));
     double c = dot_product(vec_sub(data->ray.o, data->sphere->c) , vec_sub(data->ray.o, data->sphere->c)) - (data->sphere->r * data->sphere->r);
-    t_vec light_o = {10,10,-10};
+   
    
     double delta = b*b - (4*a*c);
     double t1;
@@ -174,6 +174,7 @@ double  get_norm_2(t_vec v)
     ret = (v.x * v.x) + (v.y * v.y) + (v.z * v.z);
     return ret;
 }
+
 void    circle_calc(t_data *data)
 {
     double   line;
@@ -189,7 +190,7 @@ void    circle_calc(t_data *data)
     t_vec n;
     t_vec p;
     t_vec   color = {1,1,1};
-    t_vec lum_pos = {-200,-200,0};
+    
     int intensite_lum = 20000;
     data->sphere->color = color;
     int i = 0;
@@ -203,23 +204,30 @@ void    circle_calc(t_data *data)
             data->ray.d.x = x-(HEIGHT/2);
             data->ray.d.y = y-(HEIGHT/2);
             data->ray.d.z = -WIDTH/(2*tan(alpha));
+            // ft_putnbr();
+            // exit(1);
           //  debugstr("hello",1);
-            // normalize(&data->ray.d);
+            data->ray.d = normalize(data->ray.d);
             double intensite_pixel;
             if (intersection_sphere(data, &p, &n)){
-
+//   intensite_pixel =  fmax(0,dot_product(normalize(vec_sub(lum_pos,p)), n)) / dot_product(vec_sub(lum_pos,p),vec_sub(lum_pos,p));
+             //  intensite_pixel =  map(intensite_pixel,70,0,0,255);
+//               color.x = fmin(fmax(0,intensite_pixel*2000),255);
     //printf("\nDEBUG1: norm.x = %f n.x= %f\n",normalize(vec_sub(lum_pos, p)).x, n.x);
-                 intensite_pixel = 2000000 * fmax(0,dot_product(normalize(vec_sub(lum_pos,p)), n)) / dot_product(vec_sub(lum_pos,p),vec_sub(lum_pos,p));
-                 //intensite_pixel =  map(intensite_pixel,1,-1,60,255);
-              color.x = fmin(255.,fmax(0,intensite_pixel));
-color.y = fmin(255.,fmax(0,intensite_pixel));
-color.z = fmin(255.,fmax(0,intensite_pixel));
-               data->d[y * WIDTH + x] =  0xFFFFFF * intensite_pixel ;
+                intensite_pixel =  1000000 * fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), n)) / dot_product(vec_sub(data->lum_pos,p),vec_sub(data->lum_pos,p));
+            //  intensite_pixel =  map(intensite_pixel,60,0,0,255);
+              color.x = intensite_pixel;
+color.y = fmin(255.,fmax(0.,intensite_pixel));
+color.z = fmin(255.,fmax(0.,intensite_pixel));
+               data->d[(y * WIDTH + x) + 0] =    color.y  ;
+              // data->d[(y * WIDTH + x)] =    color.y ;
+            //    data->d[(y * WIDTH + x) + 1] =   (int)(intensite_pixel) ;
+            //    data->d[(y * WIDTH + x) + 2] =   (int)(intensite_pixel) ;
             //   data->ray.d.x = map(data->ray.d.x, HEIGHT,-HEIGHT/2,0,255);
             // data->ray.d.y = map(data->ray.d.y, HEIGHT,-HEIGHT/2,0,255);
             // data->ray.d.z = map(data->ray.d.z, HEIGHT,-HEIGHT/2,0,255);
             //    double t = get_norm_2(vec_sub(lum_pos, p));
-               printf("\nbefore %lf|%lf|%lf",color.x, n.y, n.z);
+
              
 
 
@@ -233,8 +241,36 @@ color.z = fmin(255.,fmax(0,intensite_pixel));
         if (a < 200)
          a++;
 	}
+                printf("\nbefore %lf|%lf|%lf",data->lum_pos.x,color.y,n.x);
 }
 
+void		image_clear(int *d)
+{
+	int	y;
+	int x;
+
+	y = 0;
+	while (y < HEIGHT)
+	{
+		x = -1;
+		while (x++ < WIDTH)
+			d[y * WIDTH + x] = 0x000000;
+		y++;
+	}
+}
+int    mouse_move(int x, int y,t_data *data)
+{
+     double PI = 22 / 7;
+    double alpha = 60 * PI/180;
+data->lum_pos.x = x-(HEIGHT/2);
+data->lum_pos.y = y-(HEIGHT/2);
+data->lum_pos.z = 40 ;
+// data->sphere->c.z -= 10;
+image_clear(data->d);
+circle_calc(data);
+mlx_put_image_to_window(data->ptr, data->win, data->img, 0, 0);
+return 1;
+}
 int main()
 {
     t_data	*data;
@@ -242,6 +278,7 @@ int main()
    t_vec source = {0,0,-1};
       t_vec s = {0,0,-50};
  t_vec target = {80,50,0};
+ t_vec lum_pos = {10,10,-1};
     t_sphere *sphere;
      sphere = (t_sphere *)malloc(sizeof(t_sphere));
     sphere->c = s;
@@ -250,7 +287,7 @@ int main()
 	data = (t_data *)malloc(sizeof(t_data));
 	data->sphere = sphere;
 	debugstr("OFFFF",1);
-
+    data->lum_pos = lum_pos;
 	data->ray.o = source;
 	//data->ray.d = target;
 
@@ -258,9 +295,11 @@ int main()
 	data->win = mlx_new_window(data->ptr, WIDTH, HEIGHT, "ok");
 	data->img = mlx_new_image(data->ptr, WIDTH, HEIGHT);
 	data->d = (int *)mlx_get_data_addr(data->img, &bpp, &bpp, &bpp);
+
     circle_calc(data);
     //image_clear(data->d, 200,200,100);
     mlx_put_image_to_window(data->ptr, data->win, data->img, 0, 0);
+    mlx_hook(data->win, 6, 0, mouse_move, data);
     mlx_loop(data->ptr);
 
 }

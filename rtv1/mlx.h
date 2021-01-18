@@ -35,6 +35,7 @@ typedef struct	s_data
 	void	*ptr;
 	void	*win;
 	void	*img;
+	t_vec	lum_pos;
 	t_ray	ray;
 	t_sphere	*sphere;
 	t_vec	cam_s;	//cam source
