@@ -111,27 +111,30 @@ void  sphere_calculation(t_mlx *data)
         {
           t_vector hits;
           hits = vec_add(r.start, vec_product(normalize(r.dir), hit));
-          printf("%lf\t", hits.x);
-          printf("%lf\t", hits.y);
-          printf("%lf\n", hits.z);
+        
           
-          t_vector nr = normal_sphere(hit, r, s);
-          t_vector ldir = vec_sub(lights.pos, hits);
-          t_vector refl = normalize(vec_add(ldir, r.dir));
-          double dot1 = dot_product(nr, normalize(ldir));
-          (void)dot1;
-          double dot = dot_product(nr, refl);
-          (void)dot;
-          if (dot1 >= 0)
+          t_vector nr = normalize(vec_sub(hits, s.pos));
+          t_vector ldir = normalize(vec_sub((t_vector){0,0,-100},(t_vector){0,0,-40}));
+          // t_vector refl = normalize(vec_add(ldir, r.dir));
+          double dot = dot_product(nr, ldir);
+          t_color rgb;
+         // printf("%lf", dot);
+          rgb = (t_color){1,1,1};
+          rgb.red = ((rgb.red) * dot);
+          rgb.green = ((rgb.green) * dot);
+          rgb.blue = ((rgb.blue) * dot);
+          if (rgb.red > 1.0)
+            rgb.red = 1.0;
+          if (rgb.green > 1.0)
+            rgb.green = 1.0;
+          if (rgb.blue > 1.0)
+            rgb.blue = 1.0;
+          int color = (((int)(rgb.red*255) << 16) | ((int)(rgb.green*255) << 8) | (int)((rgb.blue*255)));
+          if (dot >= 0)
           {
-          int color = 0xff0000;
-            unsigned char *ptr = (unsigned char *)&color;
-            ptr[3] *= dot1;
-            ptr[2] *= dot1;
-            ptr[1] *= dot1;
-            data->d[y*WIDTH + x] = color * dot1;
+            data->d[y*WIDTH + x] = color;
           }
-          //data->d[y*WIDTH + x] = (int)(r.dir.y * 350) << 16;
+          //data->d[y*WIDTH + x] = 0xff;
 
         }
         x++;
@@ -146,9 +149,9 @@ t_vector normal_sphere(double t, t_ray r, t_sphere s)
   t_vector n;
 
   hit = vec_add(r.start, vec_product(normalize(r.dir), t));
-  n.x = -hit.x + s.pos.x;
-  n.y = -hit.y + s.pos.y;
-  n.z = -hit.z + s.pos.z;
+  n.x = hit.x - s.pos.x;
+  n.y = hit.y - s.pos.y;
+  n.z = hit.z - s.pos.z;
   return (normalize(n));
 }
 t_vector  normalize(t_vector vec)
