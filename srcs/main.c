@@ -130,6 +130,7 @@ void  sphere_calculation(t_mlx *data)
           if (rgb.blue > 1.0)
             rgb.blue = 1.0;
           int color = (((int)(rgb.red*255) << 16) | ((int)(rgb.green*255) << 8) | (int)((rgb.blue*255)));
+          //int color = 0xff;
           if (dot >= 0)
           {
             data->d[y*WIDTH + x] = color;
