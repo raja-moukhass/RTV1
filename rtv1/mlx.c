@@ -290,34 +290,34 @@ void    circle_calc(t_data *data)
           //  debugstr("hello",1);
             data->ray.d = normalize(data->ray.d);
        
-            if (intersection_cylinder(data, &p, &(data->n))){
- double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), data->n));
- data->d[(y * WIDTH + x) + 0] = (int)(255 * ang_norm_light) << 16 | (int)(255 * ang_norm_light) << 8 | (int)(255 * ang_norm_light);
+            if (intersection_sphere(data, &p, &(data->n))){
+//  double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), data->n));
+// //  data->d[(y * WIDTH + x) + 0] = (int)(255 * ang_norm_light) << 16 | (int)(255 * ang_norm_light) << 8 | (int)(255 * ang_norm_light);
 
 
 
 
-//    double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), data->n));
-//                 L = normalize(vec_sub(data->lum_pos, p));
-//                 V = normalize(vec_sub(data->ray.o, p));
-//                 t_vec dd = dot_pro_vec(data->n,dot_product(L,data->n));
-//                 t_vec Rm = vec_sub(dot_pro_vec(dd, 2),L);
-//                 double ka = 0, kd = 0, ks = 1;
-// double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0,dot_product(Rm,V)),40));
-//             int colorr = (int)(255 * ang_norm_light + 70);
-//             if(colorr > 255)
-//                 colorr = 255;
-//             data->d[(y * WIDTH + x) + 0] = colorr ;
-//             color.x = (int)(((data->d[(y * WIDTH + x) + 0]>> 16)&255) + 255* intensite_pixel);
-//             color.y = (int)(((data->d[(y * WIDTH + x) + 0]>> 8)&255)+255 * intensite_pixel);
-//             color.z = (int)((data->d[(y * WIDTH + x) + 0] &255) + 255 * intensite_pixel);
-//             if (color.x > 255)
-//                 color.x = 255;
-//                  if (color.y > 255)
-//                 color.y = 255;
-//                  if (color.z > 255)
-//                 color.z = 255;
-//                                   data->d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+   double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), data->n));
+                L = normalize(vec_sub(data->lum_pos, p));
+                V = normalize(vec_sub(data->ray.o, p));
+                t_vec dd = dot_pro_vec(data->n,dot_product(L,data->n));
+                t_vec Rm = vec_sub(dot_pro_vec(dd, 2),L);
+                double ka = 0, kd = 0, ks = 1;
+double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0,dot_product(Rm,V)),40));
+            int colorr = (int)(255 * ang_norm_light + 70);
+            if(colorr > 255)
+                colorr = 255;
+            data->d[(y * WIDTH + x) + 0] = colorr ;
+            color.x = (int)(((data->d[(y * WIDTH + x) + 0]>> 16)&255) + 255* intensite_pixel);
+            color.y = (int)(((data->d[(y * WIDTH + x) + 0]>> 8)&255)+255 * intensite_pixel);
+            color.z = (int)((data->d[(y * WIDTH + x) + 0] &255) + 255 * intensite_pixel);
+            if (color.x > 255)
+                color.x = 255;
+                 if (color.y > 255)
+                color.y = 255;
+                 if (color.z > 255)
+                color.z = 255;
+                                  data->d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
              //  intensite_pixel =  map(intensite_pixel,70,0,0,255);
 //               color.x = fmin(fmax(0,intensite_pixel*2000),255);
     //printf("\nDEBUG1: norm.x = %f n.x= %f\n",normalize(vec_sub(lum_pos, p)).x, n.x);
