@@ -197,14 +197,13 @@ int		 intersection_cylinder(t_data *data, t_vec *p, t_vec *n)
     //printf("\ngood = %deltaf| bad = %deltaf",tonorm.x, n->x);
 
     *p = vec_add(data->ray.o, dot_pro_vec(data->ray.d, t));
-    t_vec tonorm = vec_sub( *p, data->cyl->ax);
-    if (data->cyl_center_calc)
-    {
+    t_vec tonorm = vec_sub(vec_sub( data->cyl->o, *p), dot_vec(dot_vec(data->cyl->ax, vec_sub(data->cyl->o, *p)), data->cyl->ax));
+    // t_vec tonorm = sub3(dot_product(dot_vec(data->cyl->ax, vec_sub(data->cyl->o, *p)), data->cyl->ax), vec_sub( data->cyl->o, *p));
+
+  
 
     *n = normalize(tonorm);
-debugstr("center in",1);
-    }
-    data->cyl_center_calc = 0;
+
     return 1;
 }
 
@@ -290,9 +289,9 @@ void    circle_calc(t_data *data)
           //  debugstr("hello",1);
             data->ray.d = normalize(data->ray.d);
        
-            if (intersection_sphere(data, &p, &(data->n))){
-//  double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), data->n));
-// //  data->d[(y * WIDTH + x) + 0] = (int)(255 * ang_norm_light) << 16 | (int)(255 * ang_norm_light) << 8 | (int)(255 * ang_norm_light);
+            if (intersection_cylinder(data, &p, &(data->n))){
+//  double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), data->n)/2);
+//  data->d[(y * WIDTH + x) + 0] = (int)(255 * ang_norm_light) << 16 | (int)(255 * ang_norm_light) << 8 | (int)(255 * ang_norm_light);
 
 
 
@@ -373,7 +372,7 @@ int    mouse_move(int x, int y,t_data *data)
     double alpha = 60 * PI/180;
 data->lum_pos.x =  x-(HEIGHT/2);
 data->lum_pos.y =  y-(HEIGHT/2);
-data->lum_pos.z = -20;
+data->lum_pos.z = -WIDTH/(2*tan(alpha));
 
 // data->sphere->c.z -= 10;
 image_clear(data->d);
@@ -388,7 +387,7 @@ int main()
    t_vec source = {0,0,0};
       t_vec s = {0,0,-60};
  t_vec target = {80,50,0};
- t_vec lum_pos = {0,0,200};
+ t_vec lum_pos = {0,0,0};
     t_sphere *sphere;
      sphere = (t_sphere *)malloc(sizeof(t_sphere));
     t_cylinder *cyl;
