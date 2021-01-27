@@ -23,6 +23,13 @@ typedef struct	s_sphere
 	float r;
 	t_vec c;
 }				t_sphere;
+typedef struct	s_cylinder 
+{
+	t_vec color;
+	float r;
+	t_vec ax;
+	t_vec	o;
+}				t_cylinder;
 typedef struct	s_ray
 {
 	t_vec o; //source or origine
@@ -35,7 +42,11 @@ typedef struct	s_data
 	void	*ptr;
 	void	*win;
 	void	*img;
+	int		cyl_center_calc;
+
+	t_vec n;
 	t_vec	lum_pos;
+	t_cylinder *cyl;
 	t_ray	ray;
 	t_sphere	*sphere;
 	t_vec	cam_s;	//cam source
