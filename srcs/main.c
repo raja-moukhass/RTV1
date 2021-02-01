@@ -29,7 +29,20 @@ int   keyhook(int key, void *p)
     return (0);
 }
 
+int rgb_to_int(t_color rgb){
+  return (((int)(rgb.red*255) << 16) | ((int)(rgb.green*255) << 8) | (int)((rgb.blue*255)));
+}
 
+t_color clamp_color(t_color rgb){
+          if (rgb.red > 1.0)
+            rgb.red = 1.0;
+          if (rgb.green > 1.0)
+            rgb.green = 1.0;
+          if (rgb.blue > 1.0)
+            rgb.blue = 1.0;
+
+            return  rgb;
+}
 
 int    intersection(t_ray *r,t_sphere *s)
 {
@@ -82,7 +95,7 @@ void  sphere_calculation(t_mlx *data)
     //double t = 20000.0f;
     s.pos.x = 0;
     s.pos.y = 0;
-    s.pos.z = -40;
+    s.pos.z = -60;
 
     r.start.x = 0;
     r.start.y = 0;
@@ -114,28 +127,16 @@ void  sphere_calculation(t_mlx *data)
         
           
           t_vector nr = normalize(vec_sub(hits, s.pos));
-          t_vector ldir = normalize(vec_sub((t_vector){0,0,-100},(t_vector){0,0,-40}));
+          t_vector ldir = normalize(vec_sub((t_vector){100,0,-100},s.pos));
           // t_vector refl = normalize(vec_add(ldir, r.dir));
           double dot = dot_product(nr, ldir);
           t_color rgb;
          // printf("%lf", dot);
-          rgb = (t_color){1,1,1};
+          rgb = (t_color){1,0,0};
           rgb.red = ((rgb.red) * dot);
           rgb.green = ((rgb.green) * dot);
           rgb.blue = ((rgb.blue) * dot);
-          if (rgb.red > 1.0)
-            rgb.red = 1.0;
-          if (rgb.green > 1.0)
-            rgb.green = 1.0;
-          if (rgb.blue > 1.0)
-            rgb.blue = 1.0;
-          int color = (((int)(rgb.red*255) << 16) | ((int)(rgb.green*255) << 8) | (int)((rgb.blue*255)));
-          //int color = 0xff;
-          if (dot >= 0)
-          {
-            data->d[y*WIDTH + x] = color;
-          }
-          //data->d[y*WIDTH + x] = 0xff;
+           data->d[y*WIDTH + x] =  rgb_to_int(clamp_color(rgb)) ;
 
         }
         x++;
