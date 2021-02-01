@@ -155,6 +155,60 @@ t_vec	normalize(t_vec vec)
 	// var.z = vector_dot(l, l) - pow(tmp[1], 2) -
 	// 		pow(cylinder->shape.radius, 2);
 	
+	
+// int		 intersection_cone(t_data *data, t_vec *p, t_vec *n)
+// {
+//     //         debugnbr(y,1,1);
+//     // n = 0;
+// 	// l = vector_sub(ray->origin, cylinder->transform.position);
+// 	// tmp[0] = vector_dot(ray->direction, cylinder->transform.rotation);
+// 	// tmp[1] = vector_dot(l, cylinder->transform.rotation);
+// 	// var.x = vector_dot(ray->direction, ray->direction) - pow(tmp[0], 2);
+// 	// var.y = 2 * (vector_dot(ray->direction, l) - (tmp[0] * tmp[1]));
+// 	// var.z = vector_dot(l, l) - pow(tmp[1], 2) -
+// 	// 		pow(cylinder->shape.radius, 2);
+// 	double alpha = 2;
+//     t_vec vec = vec_sub(data->ray.o,data->cyl->o);
+// 	double tmp = dot_pro_val(alpha,)
+// 	double a = dot_product(data->ray.d, data->ray.d) - pow(tmp, 2);
+    
+//     double tmp1 = dot_product(delta_p, data->cyl->ax);
+//     double b = 2 * (dot_product(data->ray.d, delta_p) - (tmp * tmp1));
+//     double c = dot_product(delta_p, delta_p) - pow(tmp1,2) - (data->cyl->r*data->cyl->r);
+   
+   
+//     double delta = b*b - (4*a*c);
+//     double t1;
+//     double t2;
+//     if (delta< 0)
+//         return 0;
+//     if (delta>0)
+//      t1 = (-b - sqrt(delta))/(2*a);
+//      t2 = (-b + sqrt(delta))/(2*a);
+//      if (t2 < 0)
+//      return 0;
+//     double t;
+//     if (t1 > 0)
+//         t = t1;
+//     else
+//         t = t2;
+    
+//     // if (delta == 0)
+//     //  t1 = -b /2*a;
+
+//     //printf("\ngood = %deltaf| bad = %deltaf",tonorm.x, n->x);
+
+//     *p = vec_add(data->ray.o, dot_pro_vec(data->ray.d, t));
+//     t_vec tonorm = vec_sub(vec_sub( data->cyl->o, *p), dot_vec(dot_vec(data->cyl->ax, vec_sub(data->cyl->o, *p)), data->cyl->ax));
+//     // t_vec tonorm = sub3(dot_product(dot_vec(data->cyl->ax, vec_sub(data->cyl->o, *p)), data->cyl->ax), vec_sub( data->cyl->o, *p));
+
+  
+
+//     *n = normalize(tonorm);
+
+//     return 1;
+// }
+
 int		 intersection_cylinder(t_data *data, t_vec *p, t_vec *n)
 {
     //         debugnbr(y,1,1);
@@ -167,6 +221,7 @@ int		 intersection_cylinder(t_data *data, t_vec *p, t_vec *n)
 	// var.z = vector_dot(l, l) - pow(tmp[1], 2) -
 	// 		pow(cylinder->shape.radius, 2);
     t_vec delta_p = vec_sub(data->ray.o,data->cyl->o);
+    // delta_p = normalize(delta_p);
 	double tmp = dot_product(data->ray.d,data->cyl->ax);
 	double a = dot_product(data->ray.d, data->ray.d) - pow(tmp, 2);
     
@@ -180,16 +235,31 @@ int		 intersection_cylinder(t_data *data, t_vec *p, t_vec *n)
     double t2;
     if (delta< 0)
         return 0;
-    if (delta>0)
      t1 = (-b - sqrt(delta))/(2*a);
      t2 = (-b + sqrt(delta))/(2*a);
-     if (t2 < 0)
-     return 0;
     double t;
-    if (t1 > 0)
-        t = t1;
-    else
-        t = t2;
+   if (t1 < 0 && t2 < 0)
+	return 0;
+   if (t1 > 0 && t2 > 0)
+   {
+	   if (t1 > t2 )
+		t = t2;
+		else
+		t = t1;
+		}
+		else if ( (t1 > 0 && t2 < 0) ||( t2 < 0 && t2 >0))
+		{
+			if (t1 > t2)
+				t = t1;
+			else
+				t = t2;
+		}
+
+		
+	printf("%f \n",t);	
+
+	
+
     
     // if (delta == 0)
     //  t1 = -b /2*a;
@@ -197,7 +267,7 @@ int		 intersection_cylinder(t_data *data, t_vec *p, t_vec *n)
     //printf("\ngood = %deltaf| bad = %deltaf",tonorm.x, n->x);
 
     *p = vec_add(data->ray.o, dot_pro_vec(data->ray.d, t));
-    t_vec tonorm = vec_sub(vec_sub( data->cyl->o, *p), dot_vec(dot_vec(data->cyl->ax, vec_sub(data->cyl->o, *p)), data->cyl->ax));
+    t_vec tonorm = vec_sub(vec_sub(data->cyl->o,*p), dot_pro_vec(data->cyl->ax, dot_product(data->cyl->ax, vec_sub(data->cyl->o, *p))));
     // t_vec tonorm = sub3(dot_product(dot_vec(data->cyl->ax, vec_sub(data->cyl->o, *p)), data->cyl->ax), vec_sub( data->cyl->o, *p));
 
   
@@ -251,7 +321,36 @@ double  get_norm_2(t_vec v)
     ret = (v.x * v.x) + (v.y * v.y) + (v.z * v.z);
     return ret;
 }
+int intersect_plane(t_data *data, double *t) 
+{ 
+    // assuming vectors are all normalized
+    float denom = dot_product(data->plane->n, data->ray.d); 
+    if (denom > 0.0000001) { 
 
+        t_vec p0l0 = vec_sub(data->plane->o , data->ray.o); 
+        *t = dot_product(p0l0, data->plane->n) / denom; 
+        if (*t > 0.0)
+    printf("%f\n",*t);
+        return (1); 
+    } 
+ 
+    return 0; 
+}
+void    draw_plane(double p1, double p2,int x, int y, t_data *data)
+{
+     if (p1 > 0.0 && p2 > 0.0 && p1 < p2)
+      data->d[(y * WIDTH + x) + 0] = 255 << 8;
+      else if   (p1 > 0.0 && p2 > 0.0 && p1 > p2)
+      data->d[(y * WIDTH + x) + 0] = 255 ;
+    else if ((p1 < 0.0 || p2 < 0.0) && p1 < p2)
+            data->d[(y * WIDTH + x) + 0] = 255 << 8;
+            
+    else if ((p1 < 0.0 || p2 < 0.0) && p1 > p2)
+    {             data->d[(y * WIDTH + x) + 0] = 255 ;
+            }
+    // printf("p1 = %lf  p2 = %lf\n",p1,p2);
+    
+}
 void    circle_calc(t_data *data)
 {
     double   line;
@@ -270,7 +369,7 @@ void    circle_calc(t_data *data)
     t_vec n;
     t_vec p;
     t_vec   color = {255,0,0};
-    
+    double t;
     // int intensite_lum =  ;
     data->sphere->color = color;
     int i = 0;
@@ -288,21 +387,48 @@ void    circle_calc(t_data *data)
             // exit(1);
           //  debugstr("hello",1);
             data->ray.d = normalize(data->ray.d);
-       
+
+            // if (intersection_cone(data, &p, &(data->n))){
+
+
+			// }
+            double p1 = 0;
+            double p2 = 0;
+                 data->plane->n = (t_vec){0,1,0};
+            data->plane->o = (t_vec){0,-1,-30};
+//             t = 0;
+//            if ( intersect_plane(data, &t) )
+//            { 
+//                p1 = t;
+//             //    if (t > 0.0)
+//             //    printf("p1 = %lf  p2 = %lf\n",p1,p2);
+//    { 
+//                sleep(5);}
+//                }
+//             else 
+//             p1 = -10000;
+//             data->plane->n = (t_vec){1,0,0};
+//             data->plane->o = (t_vec){200,-2,-30};
+//             if (intersect_plane(data, &t))
+//             p2 = t;
+//             else 
+//             p2 = -10000;
+//             draw_plane(p1,p2,x,y,data);
+             if (intersect_plane(data, &t))
+            {
+                 data->d[(y * WIDTH + x) + 0] = 255;
+            }
             if (intersection_cylinder(data, &p, &(data->n))){
-//  double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), data->n)/2);
-//  data->d[(y * WIDTH + x) + 0] = (int)(255 * ang_norm_light) << 16 | (int)(255 * ang_norm_light) << 8 | (int)(255 * ang_norm_light);
 
 
 
-
-   double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos,p)), data->n));
+   double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(p,data->lum_pos)), data->n));
                 L = normalize(vec_sub(data->lum_pos, p));
                 V = normalize(vec_sub(data->ray.o, p));
                 t_vec dd = dot_pro_vec(data->n,dot_product(L,data->n));
                 t_vec Rm = vec_sub(dot_pro_vec(dd, 2),L);
-                double ka = 0, kd = 0, ks = 1;
-double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0,dot_product(Rm,V)),40));
+                double ka = 0, kd = 0.8, ks = 1;
+double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
             int colorr = (int)(255 * ang_norm_light + 70);
             if(colorr > 255)
                 colorr = 255;
@@ -317,33 +443,8 @@ double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0,dot_produ
                  if (color.z > 255)
                 color.z = 255;
                                   data->d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
-             //  intensite_pixel =  map(intensite_pixel,70,0,0,255);
-//               color.x = fmin(fmax(0,intensite_pixel*2000),255);
-    //printf("\nDEBUG1: norm.x = %f n.x= %f\n",normalize(vec_sub(lum_pos, p)).x, n.x);
-            //   color.x = intensite_pixel;
-// color.y = fmin(255.,fmax(0.,intensite_pixel));
-// color.z = fmin(255.,fmax(0.,intensite_pixel));
-// data->d[(y * WIDTH + x) + 0] = (int)(255 * intensite_pixel) << 16 | (int)(255 * intensite_pixel) << 8 | (int)(255 * intensite_pixel);
-            //    data->d[(y * WIDTH + x) + 0] = (int)(255 * intensite_pixel) << 16 | (int)(255 * intensite_pixel) << 8 | (int)(255 * intensite_pixel);
-
-            //   if (ang_norm_light> 0.97)
-            //     {
-            //     intensite_pixel = ang_norm_light *   fmax(0,dot_product(Rm,V)) ;
-
-            //    }
-              // data->d[(y * WIDTH + x)] =    color.y ;
-            //    data->d[(y * WIDTH + x) + 1] =   (int)(intensite_pixel) ;
-            //    data->d[(y * WIDTH + x) + 2] =   (int)(intensite_pixel) ;
-            //   data->ray.d.x = map(data->ray.d.x, HEIGHT,-HEIGHT/2,0,255);
-            // data->ray.d.y = map(data->ray.d.y, HEIGHT,-HEIGHT/2,0,255);
-            // data->ray.d.z = map(data->ray.d.z, HEIGHT,-HEIGHT/2,0,255);
-            //    double t = get_norm_2(vec_sub(lum_pos, p));
-
-             
-
-
-               // ((int)data->ray.d.x *(1/2)+1) >> 16 | (int)data->ray.d.y >> 8 | (int)data->ray.d.z ;
-               // debugnbr((int)data->ray.d.y,1,1);
+								  
+   
             }
             
         }
@@ -371,8 +472,9 @@ int    mouse_move(int x, int y,t_data *data)
      double PI = 22 / 7;
     double alpha = 60 * PI/180;
 data->lum_pos.x =  x-(HEIGHT/2);
-data->lum_pos.y =  y-(HEIGHT/2);
-data->lum_pos.z = -WIDTH/(2*tan(alpha));
+// data->lum_pos.y =  y-(HEIGHT/2);
+
+// data->lum_pos.z = ;
 
 // data->sphere->c.z -= 10;
 image_clear(data->d);
@@ -385,22 +487,30 @@ int main()
     t_data	*data;
 	int		bpp;
    t_vec source = {0,0,0};
-      t_vec s = {0,0,-60};
+      t_vec s = {0,30,-60};
+       t_vec spher = {0,0,-50};
  t_vec target = {80,50,0};
- t_vec lum_pos = {0,0,0};
+ t_vec lum_pos = {0,0,100};
+ t_vec n = {0,1,0};
+ t_vec plane_o = {0,0,-30};
     t_sphere *sphere;
      sphere = (t_sphere *)malloc(sizeof(t_sphere));
     t_cylinder *cyl;
     cyl = (t_cylinder *)malloc(sizeof(t_cylinder));
-    t_vec cyl_ax = {1,0,0};
+    t_vec cyl_ax = {0,1,0};
 	t_vec cyl_o = s;
     cyl->ax = cyl_ax;
 	cyl->o = s;
 	cyl->r = 30;
-	sphere->c = s;
+	sphere->c = spher;
     sphere->r = 30;
 	debugnbr(sphere->c.x,1,1);
 	data = (t_data *)malloc(sizeof(t_data));
+    t_plane *plane;
+    plane = (t_plane *)malloc(sizeof(t_plane));
+    plane->o = plane_o;
+    plane->n = n;
+    data->plane = plane;
     data->cyl = cyl;
  data->cyl_center_calc = 1;
 	data->sphere = sphere;

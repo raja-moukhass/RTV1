@@ -30,6 +30,11 @@ typedef struct	s_cylinder
 	t_vec ax;
 	t_vec	o;
 }				t_cylinder;
+typedef struct	s_plane 
+{
+	t_vec	n;
+	t_vec	o;
+}				t_plane;
 typedef struct	s_ray
 {
 	t_vec o; //source or origine
@@ -51,6 +56,7 @@ typedef struct	s_data
 	t_sphere	*sphere;
 	t_vec	cam_s;	//cam source
 	t_vec	cam_t;	//cam target
+	t_plane	*plane;
 
 }				t_data;
 #endif
