@@ -132,7 +132,7 @@ t_ray   get_ray(double u, double v, t_camera *camera)
 void  sphere_calculation(t_mlx *data)
 {
     int x;
-    int y;
+    int y = 0;
     int hit;
     t_sphere s;
     t_ray r;
@@ -152,6 +152,7 @@ void  sphere_calculation(t_mlx *data)
     lights.intensity.blue = 1;
     lights.intensity.green =1;
 
+    //double t = 20000.0f;
     s.pos.x = 0;
     s.pos.y = 0;
     s.pos.z = 0;
@@ -160,6 +161,7 @@ void  sphere_calculation(t_mlx *data)
 
 
     t_camera cam;
+    //init camera
     cam.look_from = (t_vector){0, 0, -80};
     cam.cam_dir = (t_vector){0, 0, 1};
     cam.up = (t_vector){0, 1, 0};
@@ -171,6 +173,9 @@ void  sphere_calculation(t_mlx *data)
       
       while(x < WIDTH)
       {
+        //r.dir.x = x-(WIDTH/2);
+        //r.dir.z =  -WIDTH/(2*tan(alpha));
+        //map x and y between -1 < < 1;
         r = get_ray(x, y, &cam);
         hit = intersection(&r,&s);
         if (hit >= 0)
