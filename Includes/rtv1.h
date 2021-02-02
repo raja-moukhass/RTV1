@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 13:06:46 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/01/15 17:13:08 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/02 16:07:40 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,29 @@ typedef struct	s_mlx
 
 }	t_mlx;
 
+typedef struct s_camera
+{
+	double low;
+	t_vector cam_dir;
+	double fov;
+	//double aspect_ratio;
+	t_vector hotizontal;
+	t_vector up;
+	t_vector vertical;
+	t_vector low_left_corner;
+	t_vector look_from;
+}t_camera;
+
+// typedef struct	s_camera
+// {
+	
+// 	t_vector	lookfrom;
+// 	t_vector	cam_d;
+// 	double		fov;
+// 	t_vector	horizontal;
+// 	t_vector	low_left_c;
+// 	t_vector	vertical;
+// }
 typedef struct s_color
 {
 	double red; 
@@ -80,6 +103,10 @@ typedef struct s_material
 
 t_vector  vec_cross(t_vector v1, t_vector v2);
 t_vector  vec_add(t_vector v1, t_vector v2);
+t_ray   get_ray(double u, double v, t_camera *camera);
+void    ft_camera(t_camera *cam, t_vector vup , double aspect);
+t_vector get_camera_direction(t_camera cam, t_vector get_ray);
+
 
 t_vector  vec_sub(t_vector v1, t_vector v2);
 double	  dot_product(t_vector v1, t_vector v2);
