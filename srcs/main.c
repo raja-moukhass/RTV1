@@ -102,15 +102,20 @@ t_ray   get_ray(double u, double v, t_camera *camera)
   
   //t_vector ray;
   //camera = NULL;
-  u = 2 * (u + 0.5) / ( 600 -1) - 1;
-  v = 1 - 2 * (v + 0.5) / ( 600 -1);
+
+
+
+  u = 2 * (u + 0.5) / ( WIDTH -1) - 1;
+  v = 1 - 2 * (v + 0.5) / ( HEIGHT -1);
   double  half_h;
   double  half_w;
-  new.start = camera->look_from;
-  half_h = tan((camera->fov * M_PI /180) / 2);
+  t_vector cam_pos = camera->look_from;
+  cam_pos.z += 0.1;
+  new.start = cam_pos;
+  half_h =  2.0 * tan((camera->fov * M_PI /180) / 2);
   half_w = half_h;
-  cam_w = normalize(vec_sub(camera->look_from, camera->cam_dir));
-  cam_u = vec_cross(camera->up, cam_w);
+  cam_w = normalize(vec_sub(cam_pos, camera->cam_dir));
+  cam_u = normalize(vec_cross(camera->up, cam_w));
   cam_v = vec_cross(cam_w, cam_u); 
   horizontal = vec_product(cam_u, half_w);
   vertical = vec_product(cam_v, half_h);
@@ -127,13 +132,12 @@ t_ray   get_ray(double u, double v, t_camera *camera)
 //   new.start = camera->look_from;
 //   return (new);
 
-
 }
 void  sphere_calculation(t_mlx *data)
 {
     int x;
     int y = 0;
-    int hit;
+    double hit;
     t_sphere s;
     t_ray r;
 
@@ -157,13 +161,13 @@ void  sphere_calculation(t_mlx *data)
     s.pos.y = 0;
     s.pos.z = 0;
 
-    s.radius = 10;
+    s.radius = 1;
 
 
     t_camera cam;
     //init camera
-    cam.look_from = (t_vector){0, 0, -80};
-    cam.cam_dir = (t_vector){0, 0, 1};
+    cam.look_from = (t_vector){0, 5, 0};
+    cam.cam_dir = (t_vector){0, 0, 0};
     cam.up = (t_vector){0, 1, 0};
     cam.fov = 60;
     while (y < HEIGHT)
@@ -181,11 +185,11 @@ void  sphere_calculation(t_mlx *data)
         if (hit >= 0)
         {
           t_vector hits;
-          hits = vec_add(r.start, vec_product(normalize(r.dir), hit));
+          hits = vec_add(r.start, vec_product((r.dir), hit));
         
           
           t_vector nr = normalize(vec_sub(hits, s.pos));
-          t_vector ldir = normalize(vec_sub((t_vector){0,0,-100},(t_vector){0,0,-40}));
+          t_vector ldir = normalize(vec_sub((t_vector){10,10,0}, hits));
           //t_vector refl = normalize(vec_add(ldir, r.dir));
           double dot = dot_product(nr, ldir);
           t_color rgb;
