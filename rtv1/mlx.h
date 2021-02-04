@@ -41,6 +41,20 @@ typedef struct	s_ray
 	t_vec d; //target or destination
 }				t_ray;
 
+typedef struct s_camera
+{
+	double low;
+	t_vec cam_dir;
+	double fov;
+	//double aspect_ratio;
+	t_vec hotizontal;
+	t_vec up;
+	t_vec vertical;
+	t_vec low_left_corner;
+	t_vec look_from;
+}t_camera;
+
+
 typedef struct	s_data
 {
 	int		*d;
@@ -48,14 +62,12 @@ typedef struct	s_data
 	void	*win;
 	void	*img;
 	int		cyl_center_calc;
-
+t_camera	*camera;
 	t_vec n;
 	t_vec	lum_pos;
 	t_cylinder *cyl;
 	t_ray	ray;
 	t_sphere	*sphere;
-	t_vec	cam_s;	//cam source
-	t_vec	cam_t;	//cam target
 	t_plane	*plane;
 
 }				t_data;

@@ -86,6 +86,14 @@ double	dot_product(t_vec A, t_vec B)
   
 	return (ret);
 }
+t_vec  vec_cross(t_vec v1, t_vec v2)
+{
+  t_vec c;
+  c.x = v1.y * v2.z - v2.y * v1.z;
+  c.y = v1.z * v2.x - v2.z * v1.x;
+  c.z = v1.x * v2.y - v2.x * v1.y;
+  return (c);
+}
 t_vec	dot_vec(t_vec A, t_vec B)
 {	
     t_vec ret = {(A.x * B.x) + (A.y * B.y) + (A.z * B.z)};
@@ -256,7 +264,7 @@ int		 intersection_cylinder(t_data *data, t_vec *p, t_vec *n)
 		}
 
 		
-	printf("%f \n",t);	
+	// printf("%f \n",t);	
 
 	
 
@@ -267,7 +275,7 @@ int		 intersection_cylinder(t_data *data, t_vec *p, t_vec *n)
     //printf("\ngood = %deltaf| bad = %deltaf",tonorm.x, n->x);
 
     *p = vec_add(data->ray.o, dot_pro_vec(data->ray.d, t));
-    t_vec tonorm = vec_sub(vec_sub(data->cyl->o,*p), dot_pro_vec(data->cyl->ax, dot_product(data->cyl->ax, vec_sub(data->cyl->o, *p))));
+    t_vec tonorm = vec_sub(vec_sub(*p,data->cyl->o), dot_pro_vec(data->cyl->ax, dot_product(data->cyl->ax, vec_sub(*p, data->cyl->o))));
     // t_vec tonorm = sub3(dot_product(dot_vec(data->cyl->ax, vec_sub(data->cyl->o, *p)), data->cyl->ax), vec_sub( data->cyl->o, *p));
 
   
@@ -329,8 +337,8 @@ int intersect_plane(t_data *data, double *t)
 
         t_vec p0l0 = vec_sub(data->plane->o , data->ray.o); 
         *t = dot_product(p0l0, data->plane->n) / denom; 
-        if (*t > 0.0)
-    printf("%f\n",*t);
+        // if (*t > 0.0)
+    // printf("%f\n",*t);
         return (1); 
     } 
  
@@ -350,6 +358,47 @@ void    draw_plane(double p1, double p2,int x, int y, t_data *data)
             }
     // printf("p1 = %lf  p2 = %lf\n",p1,p2);
     
+}
+
+t_ray   get_ray(double u, double v, t_camera *camera)
+{
+  // /t_vector   dir;
+  t_vec   horizontal;
+  t_vec   vertical;
+  t_vec   cam_u;
+  t_vec   cam_v;
+  t_vec   cam_w;
+  t_ray      new;   
+  
+  //t_vector ray;
+  //camera = NULL;
+  u = 2 * (u + 0.5) / ( 600 -1) - 1;
+  v = 1 - 2 * (v + 0.5) / ( 600 -1);
+  double  half_h;
+  double  half_w;
+  new.o = camera->look_from;
+  half_h = tan((camera->fov * M_PI /180) / 2);
+  half_w = half_h;
+  cam_w = normalize(vec_sub(camera->look_from, camera->cam_dir));
+  cam_u = vec_cross(camera->up, cam_w);
+  cam_v = vec_cross(cam_w, cam_u); 
+  horizontal = dot_pro_vec(cam_u, half_w);
+  vertical = dot_pro_vec(cam_v, half_h);
+  camera->low_left_corner = vec_sub(camera->look_from, cam_w);
+  camera->low_left_corner = vec_sub(camera->low_left_corner,dot_pro_vec(horizontal, 1/2));
+  camera->low_left_corner = vec_sub(camera->low_left_corner,dot_pro_vec(vertical, 1/2));
+  new.d = vec_sub(camera->low_left_corner, new.o);
+  new.d = vec_add(new.d, dot_pro_vec(horizontal, u));
+  new.d = vec_add(new.d, dot_pro_vec(vertical, v));
+  new.d = normalize(new.d);
+
+  return new;
+
+//   new.dir = vec_add(dir, camera->cam_dir);
+//   new.start = camera->look_from;
+//   return (new);
+
+
 }
 void    circle_calc(t_data *data)
 {
@@ -380,12 +429,12 @@ void    circle_calc(t_data *data)
 		x = -1;
 		while (x++ < WIDTH)
         {
+            // data->ray = get_ray(x, y, data->camera);
             data->ray.d.x = x-(HEIGHT/2);
             data->ray.d.y = y-(HEIGHT/2);
             data->ray.d.z = -WIDTH/(2*tan(alpha));
-            // ft_putnbr();
-            // exit(1);
-          //  debugstr("hello",1);
+          
+            // printf("\n%f",data->ray.d.z);
             data->ray.d = normalize(data->ray.d);
 
             // if (intersection_cone(data, &p, &(data->n))){
@@ -401,7 +450,8 @@ void    circle_calc(t_data *data)
 //            { 
 //                p1 = t;
 //             //    if (t > 0.0)
-//             //    printf("p1 = %lf  p2 = %lf\n",p1,p2);
+            //  printf("%f",data->ray.d.z);
+            //  exit(1);
 //    { 
 //                sleep(5);}
 //                }
@@ -414,22 +464,22 @@ void    circle_calc(t_data *data)
 //             else 
 //             p2 = -10000;
 //             draw_plane(p1,p2,x,y,data);
-             if (intersect_plane(data, &t))
-            {
-                 data->d[(y * WIDTH + x) + 0] = 255;
-            }
-            if (intersection_cylinder(data, &p, &(data->n))){
+            //  if (intersect_plane(data, &t))
+            // {
+            //      data->d[(y * WIDTH + x) + 0] = 255;
+            // }
+            if (intersection_sphere(data, &p, &(data->n))){
 
 
 
-   double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(p,data->lum_pos)), data->n));
-                L = normalize(vec_sub(data->lum_pos, p));
+   double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos, p)), data->n));
+                L = normalize(vec_sub( data->lum_pos,p));
                 V = normalize(vec_sub(data->ray.o, p));
                 t_vec dd = dot_pro_vec(data->n,dot_product(L,data->n));
                 t_vec Rm = vec_sub(dot_pro_vec(dd, 2),L);
-                double ka = 0, kd = 0.8, ks = 1;
+                double ka = 0, kd = 0, ks = 1;
 double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
-            int colorr = (int)(255 * ang_norm_light + 70);
+            int colorr = (int)(255);
             if(colorr > 255)
                 colorr = 255;
             data->d[(y * WIDTH + x) + 0] = colorr ;
@@ -482,15 +532,15 @@ circle_calc(data);
 mlx_put_image_to_window(data->ptr, data->win, data->img, 0, 0);
 return 1;
 }
+
 int main()
 {
     t_data	*data;
 	int		bpp;
    t_vec source = {0,0,0};
-      t_vec s = {0,30,-60};
-       t_vec spher = {0,0,-50};
- t_vec target = {80,50,0};
- t_vec lum_pos = {0,0,100};
+      t_vec s = {0,30,-200};
+       t_vec spher = {0,0,-100};
+ t_vec lum_pos = {0,0,0};
  t_vec n = {0,1,0};
  t_vec plane_o = {0,0,-30};
     t_sphere *sphere;
@@ -506,6 +556,13 @@ int main()
     sphere->r = 30;
 	debugnbr(sphere->c.x,1,1);
 	data = (t_data *)malloc(sizeof(t_data));
+    t_camera *cam;
+    cam = (t_camera *)malloc(sizeof(t_camera));
+    cam->look_from = (t_vec){0, 0, -80};
+    cam->cam_dir = (t_vec){0, 0, -1};
+    cam->up = (t_vec){0, 1, 0};
+    cam->fov = 60;
+    data->camera = cam;
     t_plane *plane;
     plane = (t_plane *)malloc(sizeof(t_plane));
     plane->o = plane_o;
