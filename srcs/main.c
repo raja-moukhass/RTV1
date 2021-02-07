@@ -29,7 +29,47 @@ int   keyhook(int key, void *p)
     ft_close();
     return (0);
 }
+t_color clamp_color(t_color rgb){
+          if (rgb.red > 1.0)
+            rgb.red = 1.0;
+          if (rgb.green > 1.0)
+            rgb.green = 1.0;
+          if (rgb.blue > 1.0)
+            rgb.blue = 1.0;
 
+            return  rgb;
+}
+int rgb_to_int(t_color rgb){
+  return (((int)(rgb.red*255) << 16) | ((int)(rgb.green*255) << 8) | (int)((rgb.blue*255)));
+}
+int   cone_intersection(t_ray *ray, t_cone *cone)
+{
+  double k;
+  double a; 
+  double b;
+  double c;
+  double t1;
+  double t2;
+  k = tan((cone->angle * M_PI / 180.0) / 2);
+  t_vector obj_center;
+  obj_center = vec_sub(ray->start, cone->position);
+  a = dot_product(ray->dir, ray->dir) -(1 + pow(k,2)) *(dot_product(ray->dir, cone->axis) * dot_product(ray->dir, cone->axis));
+  b = 2 * (dot_product(ray->dir,obj_center) - (1 + pow(k,2)) * (dot_product(ray->dir, cone->axis) * dot_product(obj_center, cone->axis)));
+  c = (dot_product(obj_center,obj_center) - (1 + pow(k,2)) * (dot_product(obj_center, cone->axis) * dot_product(obj_center, cone->axis)));
+  double discr = b * b - 4 * a * c;
+  if(discr < 0)
+  return -1;
+  else {
+    t1 = (-b - sqrtf(discr)) / 2 * a;
+    t2 = (-b + sqrtf(discr)) / 2 * a;
+
+  }
+  if (t1 > 0 && t1 < t2)
+    return (t1);
+  else if (t2 > 0)
+      return (t2);
+  return -1;
+}
 int    intersection(t_ray *r,t_sphere *s)
 {
   double a = dot_product(r->dir, r->dir);
@@ -53,46 +93,11 @@ int    intersection(t_ray *r,t_sphere *s)
   else if (t2 > 0)
       return (t2);
   return -1;
-
-}
-t_vector get_camera_direction(t_camera cam, t_vector get_ray)
-{
-  t_vector ray; 
-  cam.low_left_corner = vec_add (cam.look_from , get_ray);
-  ray = vec_sub(cam.low_left_corner, cam.look_from);
-  return ray;
 }
 
-// void    ft_camera(t_camera *cam, t_vector vup , double aspect)
-// {
-//   t_vector i;
-//   t_vector j;
-//   t_vector k;
-
-
-// //   new.dir = vec_add(dir, camera->cam_dir);
-// //   new.start = camera->look_from;
-// //    return (new);
-
-//   double  half_h;
-//   double  half_w;
-
-//   half_h = tan((cam->fov * M_PI /180) / 2);
-//   half_w = aspect * half_h;
-//   i = normalize(vec_product(cam->cam_dir,-1));
-//   j = normalize(vec_cross(vup,i));
-//   k = vec_cross(i,j);
-//   cam->low_left_corner.x = cam->look_from.x - half_w * j.x - half_h * k.x - i.x;
-//   cam->low_left_corner.y = cam->look_from.y - half_w * j.y - half_h * k.y - i.y;
-//   cam->low_left_corner.z = cam->look_from.z - half_w * j.z - half_h * k.z - i.z;
-//   cam->hotizontal = vec_product(j, 2 *half_w);
-//   cam->vertical = vec_product(k, 2 * half_h);
-  
-// }
 
 t_ray   get_ray(double u, double v, t_camera *camera)
 {
-  // /t_vector   dir;
   t_vector   horizontal;
   t_vector   vertical;
   t_vector   cam_u;
@@ -100,11 +105,6 @@ t_ray   get_ray(double u, double v, t_camera *camera)
   t_vector   cam_w;
   t_ray      new;   
   
-  //t_vector ray;
-  //camera = NULL;
-
-
-
   u = 2 * (u + 0.5) / ( WIDTH -1) - 1;
   v = 1 - 2 * (v + 0.5) / ( HEIGHT -1);
   double  half_h;
@@ -127,17 +127,12 @@ t_ray   get_ray(double u, double v, t_camera *camera)
   new.dir = vec_add(new.dir, vec_product(vertical, v));
   new.dir = normalize(new.dir);
   return new;
-
-//   new.dir = vec_add(dir, camera->cam_dir);
-//   new.start = camera->look_from;
-//   return (new);
-
 }
 void  sphere_calculation(t_mlx *data)
 {
     int x;
-    int y = 0;
-    double hit;
+    int y;
+    int hit;
     t_sphere s;
     t_ray r;
 
@@ -159,17 +154,21 @@ void  sphere_calculation(t_mlx *data)
     //double t = 20000.0f;
     s.pos.x = 0;
     s.pos.y = 0;
-    s.pos.z = 0;
+    s.pos.z = -60;
 
-    s.radius = 1;
+    r.start.x = 0;
+    r.start.y = 0;
+    r.start.z = 0;
 
+    s.radius = 30;
+    double  PI = 22 / 7;
+    double alpha = 60 * PI/180;
+    r.dir.x = 0;
+    r.dir.y = 0;
+    r.dir.z = 1;
 
-    t_camera cam;
-    //init camera
-    cam.look_from = (t_vector){0, 5, 0};
-    cam.cam_dir = (t_vector){0, 0, 0};
-    cam.up = (t_vector){0, 1, 0};
-    cam.fov = 60;
+    r.start.z = 0;
+    y =0;
     while (y < HEIGHT)
     {
       r.dir.y = y-(WIDTH/2);
@@ -177,47 +176,26 @@ void  sphere_calculation(t_mlx *data)
       
       while(x < WIDTH)
       {
-        //r.dir.x = x-(WIDTH/2);
-        //r.dir.z =  -WIDTH/(2*tan(alpha));
-        //map x and y between -1 < < 1;
-        r = get_ray(x, y, &cam);
+        r.dir.x = x-(WIDTH/2);
+        r.dir.z =  -WIDTH/(2*tan(alpha));
         hit = intersection(&r,&s);
         if (hit >= 0)
         {
           t_vector hits;
-          hits = vec_add(r.start, vec_product((r.dir), hit));
+          hits = vec_add(r.start, vec_product(normalize(r.dir), hit));
         
           
           t_vector nr = normalize(vec_sub(hits, s.pos));
-          t_vector ldir = normalize(vec_sub((t_vector){10,10,0}, hits));
-          //t_vector refl = normalize(vec_add(ldir, r.dir));
+          t_vector ldir = normalize(vec_sub((t_vector){100,0,-100},s.pos));
+          // t_vector refl = normalize(vec_add(ldir, r.dir));
           double dot = dot_product(nr, ldir);
           t_color rgb;
          // printf("%lf", dot);
-          rgb = (t_color){1,1,1};
+          rgb = (t_color){1,0,0};
           rgb.red = ((rgb.red) * dot);
           rgb.green = ((rgb.green) * dot);
           rgb.blue = ((rgb.blue) * dot);
-          if (rgb.red > 1.0)
-            rgb.red = 1.0;
-          if (rgb.green > 1.0)
-            rgb.green = 1.0;
-          if (rgb.blue > 1.0)
-            rgb.blue = 1.0;
-          int color = (((int)(rgb.red*255) << 16) | ((int)(rgb.green*255) << 8) | (int)((rgb.blue*255)));
-          //int color = 0xff;
-          if (dot >= 0)
-          {
-            data->d[y*WIDTH + x] = color;
-
-          }
-          else
-          
-          {
-            data->d[y*WIDTH + x] = 0;
-
-          }
-          //data->d[y*WIDTH + x] = 0xff;
+           data->d[y*WIDTH + x] =  rgb_to_int(clamp_color(rgb)) ;
 
         }
         x++;
@@ -227,37 +205,82 @@ void  sphere_calculation(t_mlx *data)
 }
 
 
-t_vector    normal_sphere(double t, t_ray r, t_sphere s)
+void  cone_calculation(t_mlx *data)
 {
-  t_vector  hit;
-  t_vector  n;
+    int x;
+    int y = 0;
+    double hit;
+    t_sphere s;
+    t_cone c;
+    //t_cone s;
+    t_ray r;
 
-  hit = vec_add(r.start, vec_product(normalize(r.dir), t));
-  n.x = hit.x - s.pos.x;
-  n.y = hit.y - s.pos.y;
-  n.z = hit.z - s.pos.z;
-  return (normalize(n));
-}
-t_vector  normalize(t_vector vec)
-{
-  double mod;
-  
-  mod = sqrtf(powf(vec.x, 2) + powf(vec.y,2) + powf(vec.z, 2));
-  vec.x /= mod;
-  vec.y /= mod;
-  vec.z /= mod;
-  return (vec);
+    t_material materials;
+    materials.diffuse.red = 1;
+    materials.diffuse.green = 0;
+    materials.diffuse.blue = 0;
+    materials.reflection = 0.2;
+
+    t_light lights;
+    lights.pos = (t_vector){20,0,0};
+
+    lights.intensity.red = 1;
+    lights.intensity.blue = 1;
+    lights.intensity.green =1;
+
+    //double t = 20000.0f;
+    c.position.x = 0;
+    c.position.y = 0;
+    c.position.z = -60;
+    c.axis.x = 0;
+    c.axis.y = 1;
+    c.axis.z = 0;
+    c.angle = 60;
+
+
+    t_camera cam;
+    //init camera
+    cam.look_from = (t_vector){0, 0, 0};
+    cam.cam_dir = (t_vector){0, 0, -1};
+    cam.up = (t_vector){0, 1, 0};
+    cam.fov = 60;
+    while (y < HEIGHT)
+    {
+      x = 0;
+      
+      while(x < WIDTH)
+      {
+        r = get_ray(x, y, &cam);
+        hit = cone_intersection(&r,&c);
+        if (hit >= 0)
+        {
+          t_vector hits;
+          hits = vec_add(r.start, vec_product((r.dir), hit));
+        
+          
+          t_vector nr = normalize(vec_sub(hits, s.pos));
+
+          if (dot_product(nr, r.dir) > 0)
+            nr = vec_product(nr, -1);
+          t_vector ldir = normalize(vec_sub((t_vector){10,10,0}, hits));
+          //t_vector refl = normalize(vec_add(ldir, r.dir));
+          double dot = dot_product(nr, ldir);
+          
+          t_color rgb;
+         // printf("%lf", dot);
+          rgb = (t_color){1,1,1};
+          rgb.red = ((rgb.red) * dot);
+          rgb.green = ((rgb.green) * dot);
+          rgb.blue = ((rgb.blue) * dot);
+          data->d[y*WIDTH + x] =  rgb_to_int(clamp_color(rgb));
+
+        }
+        x++;
+      }
+      y++;
+    }
 }
 
-// t_vector get_ray(double u, double v)
-// {
-//   t_camera cam;
-//   t_vector hori;
-//   t_vector verti;
-//   hori = vec_product(cam.hotizontal, u);
-//   verti = vec_product(cam.vertical, v);
-//   return hori;
-// }
 int main()
 {
   t_mlx *data;
@@ -274,6 +297,7 @@ int main()
   f.img = mlx_new_image(f.ptr,WIDTH,HEIGHT);
   f.d   = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
   data->d = f.d; 
+  //cone_calculation(data);
   sphere_calculation(data);
   mlx_put_image_to_window(f.ptr, f.win, f.img,0 ,0);
   mlx_loop(f.ptr);
