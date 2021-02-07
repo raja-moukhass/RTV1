@@ -212,7 +212,6 @@ void  cone_calculation(t_mlx *data)
     double hit;
     t_sphere s;
     t_cone c;
-    //t_cone s;
     t_ray r;
 
     t_material materials;
