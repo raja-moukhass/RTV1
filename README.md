@@ -16,3 +16,4 @@ sources
 - http://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/basic_algo.pdf (pdf)
 -https://medium.com/swlh/ray-tracing-from-scratch-in-python-41670e6a96f9 (very goooooood)
 - http://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20raytracing%20shapes.htm (hugi)
+- https://lousodrome.net/blog/light/2017/01/03/intersection-of-a-ray-and-a-cone/#:~:text=We%20define%20a%20ray%20with,O%20%E2%86%92%20%2B%20t%20D%20%E2%86%92%20.(cone intersection)
