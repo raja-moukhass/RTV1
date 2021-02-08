@@ -298,16 +298,25 @@ int		 intersection_sphere(t_data *data, t_vec *p, t_vec *n)
     double t2;
     if (delta< 0)
         return 0;
-    if (delta>0)
      t1 = (-b - sqrt(delta))/(2*a);
      t2 = (-b + sqrt(delta))/(2*a);
-     if (t2 < 0)
-     return 0;
     double t;
-    if (t1 > 0)
-        t = t1;
-    else
-        t = t2;
+   if (t1 < 0 && t2 < 0)
+	return 0;
+   if (t1 > 0 && t2 > 0)
+   {
+	   if (t1 > t2 )
+		t = t2;
+		else
+		t = t1;
+		}
+		else if ( (t1 > 0 && t2 < 0) ||( t2 < 0 && t2 >0))
+		{
+			if (t1 > t2)
+				t = t1;
+			else
+				t = t2;
+		}
     
     // if (delta == 0)
     //  t1 = -b /2*a;
@@ -344,18 +353,46 @@ int intersect_plane(t_data *data, double *t)
  
     return 0; 
 }
-void    draw_plane(double p1, double p2,int x, int y, t_data *data)
+void    draw_plane(int x, int y, t_data *data)
 {
-     if (p1 > 0.0 && p2 > 0.0 && p1 < p2)
-      data->d[(y * WIDTH + x) + 0] = 255 << 8;
-      else if   (p1 > 0.0 && p2 > 0.0 && p1 > p2)
-      data->d[(y * WIDTH + x) + 0] = 255 ;
-    else if ((p1 < 0.0 || p2 < 0.0) && p1 < p2)
-            data->d[(y * WIDTH + x) + 0] = 255 << 8;
+    double t;
+   t_vec col;
+       double p = 0;
+                 data->plane->n = (t_vec){1,0,0};
+            data->plane->o = (t_vec){200,200,20};
+           if (intersect_plane(data, &t))
+                {
+                    if (p>= 0 && t>0 && p > t)
+                    {
+                    p = t;
+                    col = (t_vec){255,0,0};
+                    }
+                    else if (p <= 0  && t>0 )
+                    {
+                    p = t;
+                    col = (t_vec){255,0,0};
+                    }
+                }
+                data->plane->n = (t_vec){0,1,0};
+            data->plane->o = (t_vec){200,200,24};
+           if (intersect_plane(data, &t))
+                {
+                    if (p>= 0 && t>0 && p > t)
+                    {
+                                            col = (t_vec){0,255,0};
+
+                        p = t;
+                    }
+                    else if (p <= 0  && t>0 )
+                    {
+                    p = t;
+                    col = (t_vec){0,255,0};
+                    }
+                }
+    // col = (t_vec){0,255,0};
+     
+     data->d[(y * WIDTH + x) + 0] = (int)col.x << 16 | (int)col.y  << 8 | (int)col.z ;
             
-    else if ((p1 < 0.0 || p2 < 0.0) && p1 > p2)
-    {             data->d[(y * WIDTH + x) + 0] = 255 ;
-            }
     // printf("p1 = %lf  p2 = %lf\n",p1,p2);
     
 }
@@ -377,18 +414,18 @@ t_ray   get_ray(double u, double v, t_camera *camera)
   double  half_h;
   double  half_w;
   new.o = camera->look_from;
-  half_h = tan((camera->fov * M_PI /180) / 2);
+  half_h = 2.0 * tan((camera->fov * M_PI /180) / 2);
   half_w = half_h;
   cam_w = normalize(vec_sub(camera->look_from, camera->cam_dir));
-  cam_u = vec_cross(camera->up, cam_w);
+  cam_u = normalize(vec_cross(camera->up, cam_w));
   cam_v = vec_cross(cam_w, cam_u); 
   horizontal = dot_pro_vec(cam_u, half_w);
   vertical = dot_pro_vec(cam_v, half_h);
-  camera->low_left_corner = vec_sub(camera->look_from, cam_w);
+  camera->low_left_corner = vec_sub( camera->look_from,cam_w);
   camera->low_left_corner = vec_sub(camera->low_left_corner,dot_pro_vec(horizontal, 1/2));
   camera->low_left_corner = vec_sub(camera->low_left_corner,dot_pro_vec(vertical, 1/2));
   new.d = vec_sub(camera->low_left_corner, new.o);
-  new.d = vec_add(new.d, dot_pro_vec(horizontal, u));
+  new.d = vec_sub(new.d, dot_pro_vec(horizontal, u));
   new.d = vec_add(new.d, dot_pro_vec(vertical, v));
   new.d = normalize(new.d);
 
@@ -429,73 +466,63 @@ void    circle_calc(t_data *data)
 		x = -1;
 		while (x++ < WIDTH)
         {
-            // data->ray = get_ray(x, y, data->camera);
+            data->ray = get_ray(x, y, data->camera);
             data->ray.d.x = x-(HEIGHT/2);
             data->ray.d.y = y-(HEIGHT/2);
             data->ray.d.z = -WIDTH/(2*tan(alpha));
           
             // printf("\n%f",data->ray.d.z);
-            data->ray.d = normalize(data->ray.d);
+            // data->ray.d = normalize(data->ray.d);
 
             // if (intersection_cone(data, &p, &(data->n))){
 
 
 			// }
-            double p1 = 0;
-            double p2 = 0;
-                 data->plane->n = (t_vec){0,1,0};
-            data->plane->o = (t_vec){0,-1,-30};
+         
 //             t = 0;
-//            if ( intersect_plane(data, &t) )
-//            { 
-//                p1 = t;
-//             //    if (t > 0.0)
-            //  printf("%f",data->ray.d.z);
-            //  exit(1);
-//    { 
-//                sleep(5);}
-//                }
-//             else 
-//             p1 = -10000;
-//             data->plane->n = (t_vec){1,0,0};
-//             data->plane->o = (t_vec){200,-2,-30};
-//             if (intersect_plane(data, &t))
-//             p2 = t;
-//             else 
-//             p2 = -10000;
-//             draw_plane(p1,p2,x,y,data);
-            //  if (intersect_plane(data, &t))
-            // {
-            //      data->d[(y * WIDTH + x) + 0] = 255;
-            // }
-            if (intersection_sphere(data, &p, &(data->n))){
+        //    if ( intersect_plane(data, &t) )
+        //    { 
+        //        p1 = t;
+        
+        //        }
+        //     else 
+        //     p1 = 0;
+        //     data->plane->n = (t_vec){1,0,0};
+        //     data->plane->o = (t_vec){200,200,40};
+        //     if (intersect_plane(data, &t))
+        //     p2 = t;
+        //     else 
+        //     p2 = 0;
+            draw_plane(x,y,data);
+           
+//             if (intersection_sphere(data, &p, &(data->n))){
 
 
 
-   double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos, p)), data->n));
-                L = normalize(vec_sub( data->lum_pos,p));
-                V = normalize(vec_sub(data->ray.o, p));
-                t_vec dd = dot_pro_vec(data->n,dot_product(L,data->n));
-                t_vec Rm = vec_sub(dot_pro_vec(dd, 2),L);
-                double ka = 0, kd = 0, ks = 1;
-double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
-            int colorr = (int)(255);
-            if(colorr > 255)
-                colorr = 255;
-            data->d[(y * WIDTH + x) + 0] = colorr ;
-            color.x = (int)(((data->d[(y * WIDTH + x) + 0]>> 16)&255) + 255* intensite_pixel);
-            color.y = (int)(((data->d[(y * WIDTH + x) + 0]>> 8)&255)+255 * intensite_pixel);
-            color.z = (int)((data->d[(y * WIDTH + x) + 0] &255) + 255 * intensite_pixel);
-            if (color.x > 255)
-                color.x = 255;
-                 if (color.y > 255)
-                color.y = 255;
-                 if (color.z > 255)
-                color.z = 255;
-                                  data->d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+//    double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->lum_pos, p)), data->n));
+//                 L = normalize(vec_sub(data->lum_pos, p));
+//                 V = normalize(vec_sub(data->ray.o, p));
+//                 t_vec dd = dot_pro_vec(data->n,dot_product(L,data->n));
+//                 t_vec Rm = vec_sub(dot_pro_vec(dd, 2),L);
+//                 double ka = 0, kd = 1, ks = 1;
+// double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
+//             int colorr = (int)(255);
+//             if(colorr > 255)
+//                 colorr = 255;
+//             data->d[(y * WIDTH + x) + 0] = colorr ;
+//             color.x = (int)(((data->d[(y * WIDTH + x) + 0]>> 16)&255) + 255* intensite_pixel);
+//             color.y = (int)(((data->d[(y * WIDTH + x) + 0]>> 8)&255)+255 * intensite_pixel);
+//             color.z = (int)((data->d[(y * WIDTH + x) + 0] &255) + 255 * intensite_pixel);
+//             if (color.x > 255)
+//                 color.x = 255;
+//                  if (color.y > 255)
+//                 color.y = 255;
+//                  if (color.z > 255)
+//                 color.z = 255;
+//                                   data->d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
 								  
    
-            }
+//             }
             
         }
 		y++;
@@ -521,7 +548,7 @@ int    mouse_move(int x, int y,t_data *data)
 {
      double PI = 22 / 7;
     double alpha = 60 * PI/180;
-data->lum_pos.x =  x-(HEIGHT/2);
+// data->lum_pos.x =  x;
 // data->lum_pos.y =  y-(HEIGHT/2);
 
 // data->lum_pos.z = ;
@@ -538,11 +565,11 @@ int main()
     t_data	*data;
 	int		bpp;
    t_vec source = {0,0,0};
-      t_vec s = {0,30,-200};
-       t_vec spher = {0,0,-100};
+      t_vec s = {0,30,200};
+       t_vec spher = {0,0,-80};
  t_vec lum_pos = {0,0,0};
- t_vec n = {0,1,0};
- t_vec plane_o = {0,0,-30};
+ t_vec n = {0,-1,0};
+ t_vec plane_o = {0,200,-30};
     t_sphere *sphere;
      sphere = (t_sphere *)malloc(sizeof(t_sphere));
     t_cylinder *cyl;
@@ -553,15 +580,15 @@ int main()
 	cyl->o = s;
 	cyl->r = 30;
 	sphere->c = spher;
-    sphere->r = 30;
+    sphere->r = 60;
 	debugnbr(sphere->c.x,1,1);
 	data = (t_data *)malloc(sizeof(t_data));
     t_camera *cam;
     cam = (t_camera *)malloc(sizeof(t_camera));
-    cam->look_from = (t_vec){0, 0, -80};
-    cam->cam_dir = (t_vec){0, 0, -1};
+    cam->look_from = (t_vec){0, 0, 20};
+    cam->cam_dir = (t_vec){0, 0, 21};
     cam->up = (t_vec){0, 1, 0};
-    cam->fov = 60;
+    cam->fov = 30;
     data->camera = cam;
     t_plane *plane;
     plane = (t_plane *)malloc(sizeof(t_plane));

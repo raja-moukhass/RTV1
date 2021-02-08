@@ -1,69 +1,111 @@
- #include <fcntl.h>
-#include <stdlib.h>
-#include "libft/libft.h"
-#include "libft/get_next_line.h"
-#include <stdio.h>
-typedef struct s_camera
+#include "rtv1.h"
+
+double   ft_atof(char *str)
 {
-    char    **source; // looking from
- 
-    char    **target; // looking at
- 
-
-    //struct s_data next;
-}              t_camera;
-typedef struct s_sphere
-{
-    char	**pos;
-	char	**trans;
-	char	**rot;
-	char	**color;
-	char	*radius;
-	struct s_sphere  *next;
-}			t_sphere;
-
-typedef struct s_cone
-{
-    char	**pos;
-	char	**trans;
-	char	**axis;
-	char	**rot;
-	char	**color;
-	char	*angle;
-	struct s_cone  *next;
-}			t_cone;
-
-typedef struct s_data
-{
-    char **tab;
-
-    t_camera	*camera;
-	t_sphere	*sphere;
-	t_cone		*cone;
-}              t_data;
-
-
+    int     i;
+    int     j;
+    int     signe;
+    double  res;
+    i = 0;
+    res = 0;
+    signe = 1;
+    while (str[i] == ' ' || str[i] == '\f' || str[i] == '\t'
+            || str[i] == '\v' || str[i] == '\r' || str[i] == '\n')
+        i++;
+    if (str[i] == '+' || str[i] == '-')
+    {
+        signe = str[i] == '-' ? -1 : 1;
+        i++;
+    }
+    while (str[i] <= '9' && str[i] >= '0')
+    {
+        res = (res * 10) + str[i] - '0';
+        i++;
+    }
+    j = 0;
+    if (str[i] == '.')
+    {
+        i++;
+        while (str[i] <= '9' && str[i] >= '0' && j <= 3)
+        {
+            res = res + (double)((str[i] - '0') / pow(10.0, (double)++j));
+            i++;
+        }
+    }
+    return (res * signe);
+}
 void	add_node(t_data **dat, int type)
 {
-	t_sphere *temp;
-	t_sphere *p;
-	t_data *data;
+	
+	t_data *data = *dat;
 
-	data = *dat;
 
 	if (type == 1)
-		temp = ft_memalloc(sizeof(t_sphere));
-	if (type == 2)
-		temp = ft_memalloc(sizeof(t_cone));
-	if (data->sphere == NULL)
-		data->sphere = temp;
-	else
 	{
-		p = data->sphere;
-		while (p->next != NULL)
-			p = p->next;
-		p->next = temp;
+		t_sphere *temp;
+		t_sphere *p;
+		temp = ft_memalloc(sizeof(t_sphere));
+		if (data->sphere == NULL)
+			data->sphere = temp;
+		else
+		{
+			p = data->sphere;
+			while (p != NULL)
+				p = p->next;
+			p = temp;
+			p->next = NULL;
 		}
+	}
+	if (type == 2)
+	{
+		t_cone *temp;
+		t_cone *p;
+		temp = ft_memalloc(sizeof(t_cone));
+		if (data->cone == NULL)
+			data->cone = temp;
+		else
+		{
+			p = data->cone;
+			while (p != NULL)
+				p = p->next;
+			p = temp;
+			p->next = NULL;
+		}
+	}
+	if (type == 3)
+	{
+
+		t_cylinder *temp;
+		t_cylinder *p;
+		temp = ft_memalloc(sizeof(t_cylinder));
+		if (data->cylinder == NULL)
+			data->cylinder = temp;
+		else
+		{
+			p = data->cylinder;
+			while (p != NULL)
+				p = p->next;
+			p = temp;
+			p->next = NULL;
+		}
+	}
+	if (type == 4)
+	{
+
+		t_plane *temp;
+		t_plane *p;
+		temp = ft_memalloc(sizeof(t_plane));
+		if (data->plane == NULL)
+			data->plane = temp;
+		else
+		{
+			p = data->plane;
+			while (p != NULL)
+				p = p->next;
+			p = temp;
+			p->next = NULL;
+		}
+	}
 }
 void	debugstr(char *str, int nl)
 {
@@ -103,22 +145,18 @@ int ft_lines(int fd)
     close(fd);
     return (count);
 }
-// int		init_data(t_data *data)
-// {
-// 	data = (t_data *)malloc(sizeof(t_data));
-// 	data->camera = (t_camera *)malloc(sizeof(t_camera));
-// }
-char	**split_data(t_data *data, char *str)
+
+t_vec		split_data(t_data *data, char *str)
 {
     int		i;
     char	**ar;
     int		j;
     int		dot;
+	t_vec	ret;
 
 	
     i = 0;
     ar = ft_strsplit(str, ' ');
-	ft_putendl(str);
     while (ar[i])
     {
         dot = 1;
@@ -140,7 +178,11 @@ char	**split_data(t_data *data, char *str)
     }
     if (i != 3)
         call_error(data);
-    return (ar);
+	ret.x = ft_atof(ar[0]);
+	ret.y = ft_atof(ar[1]);
+	ret.z = ft_atof(ar[2]);
+
+    return (ret);
 }
 void		camera_check(t_data **dat, int i)
 {
@@ -157,6 +199,24 @@ void		camera_check(t_data **dat, int i)
 	data->camera->source = split_data(data,data->tab[i + 1]);
 
 	data->camera->target = split_data(data,data->tab[i + 2]);
+	
+}
+void		camera_check(t_data **dat, int i)
+{
+	int		check;
+	t_data *data;
+
+	data = *dat;
+	check = 1;
+	while(data->tab[i + check] && check < 3)
+		check++;
+	if (check != 3)
+		call_error(data);
+
+	data->light->pos = split_data(data,data->tab[i + 1]);
+
+	data->light->color = split_data(data,data->tab[i + 2]);
+	data->light->intens = ft_atof(ft_strdup(data->tab[i + 3]));
 	
 }
 void		sphere_check(t_data **dat, int i)
@@ -181,7 +241,7 @@ void		sphere_check(t_data **dat, int i)
 	temp->trans = split_data(data,data->tab[i + 2]);
 	temp->rot = split_data(data,data->tab[i + 3]);
 	temp->color = split_data(data,data->tab[i + 4]);
-	temp->radius = ft_strdup(data->tab[i + 5]);
+	temp->radius = ft_atof(ft_strdup(data->tab[i + 5]));
 	
 }
 void		cone_check(t_data **dat, int i)
@@ -201,7 +261,7 @@ void		cone_check(t_data **dat, int i)
 	add_node(dat,2);
 	temp = data->cone;
 	while(temp->next)
-	temp = temp->next;
+		temp = temp->next;
 	temp->pos = split_data(data,data->tab[i + 1]);
 	temp->trans = split_data(data,data->tab[i + 2]);
 	temp->rot = split_data(data,data->tab[i + 3]);
@@ -209,19 +269,75 @@ void		cone_check(t_data **dat, int i)
 	temp->angle = ft_strdup(data->tab[i + 5]);
 	
 }
+void		cylinder_check(t_data **dat, int i)
+{
+	int			check;
+	t_cylinder		*temp;
+	t_data		*data;
+	
+	data = *dat;
+	check = 1;
+	while(data->tab[i + check] && check < 5)
+		check++;
+	if (check != 5)
+	{
+		call_error(data);
+	}
+	add_node(dat,3);
+
+	temp = data->cylinder;
+	while(temp->next)
+		temp = temp->next;
+	temp->pos = split_data(data,data->tab[i + 1]);
+	temp->trans = split_data(data,data->tab[i + 2]);
+	temp->rot = split_data(data,data->tab[i + 3]);
+	temp->rot = split_data(data,data->tab[i + 4]);
+	temp->color = split_data(data,data->tab[i + 5]);
+	temp->angle = ft_atof(ft_strdup(data->tab[i + 6]));
+	
+}
+void		plane_check(t_data **dat, int i)
+{
+	int			check;
+	t_plane		*temp;
+	t_data		*data;
+	ft_putstr("here");
+	data = *dat;
+	check = 1;
+	while(data->tab[i + check] && check < 4)
+		check++;
+	if (check != 4)
+	{
+		call_error(data);
+	}
+	add_node(dat,4);
+
+	temp = data->plane;
+	while(temp->next)
+		temp = temp->next;
+	temp->pos = split_data(data,data->tab[i + 1]);
+	temp->trans = split_data(data,data->tab[i + 2]);
+	temp->rot = split_data(data,data->tab[i + 3]);
+	temp->rot = split_data(data,data->tab[i + 4]);
+	temp->color = split_data(data,data->tab[i + 5]);
+	
+}
 int		ft_checker(t_data **data)
 {
     int i = 0;
     while ((*data)->tab[i])
     {
-		ft_putnbrnl(i);
         if(ft_strcmp((*data)->tab[i],"camera") == 0)
 				camera_check(data, i);
-		ft_putstr("ew");
          if(ft_strcmp((*data)->tab[i],"sphere") == 0)
               sphere_check(data, i);
-		
+		   if(ft_strcmp((*data)->tab[i],"cylinder") == 0)
+             cylinder_check(data, i);
+	if(ft_strcmp((*data)->tab[i],"light") == 0)
+             light_check(data, i);
 
+ if(ft_strcmp((*data)->tab[i],"plane") == 0)
+             plane_check(data, i);
         if(ft_strcmp((*data)->tab[i],"cone") == 0)
              cone_check(data, i);
         i++;
@@ -229,42 +345,50 @@ int		ft_checker(t_data **data)
     return(0);
 }
 
-void	init_data(t_data **data)
+void	init_data(t_data **data, char *av)
 {
+	int		i;
+	char	**tab;
+    int		count;
+	int fd;
+	i = 0;
+	fd = open(av, O_RDONLY);
+	count = ft_lines(fd);
+	fd = open(av, O_RDONLY);
+    tab = (char **)malloc(sizeof(char*) * (count + 1));
+    while(get_next_line(fd,&tab[i]))
+		i++;
+    close(fd);
+	
+    tab[i] = NULL;
+	ft_putstr("here");
     (*data) = (t_data *)malloc(sizeof(t_data));
+    (*data)->tab = tab;
 	(*data)->camera = (t_camera *)malloc(sizeof(t_camera));
-	(*data)->camera->source = ft_memalloc(sizeof(char *));
 	(*data)->sphere = malloc(sizeof(t_sphere));
 	(*data)->sphere = NULL;
 	(*data)->cone = malloc(sizeof(t_cone));
 	(*data)->cone = NULL;
+	(*data)->cylinder = malloc(sizeof(t_cylinder));
+	(*data)->cylinder = NULL;
 }
 
 int main(int ac, char **av)
 {
     t_data  *data;
-	init_data(&data);
+	init_data(&data, av[1]);
     ac = 0;
-    int fd = open(av[1], O_RDONLY);
-    char **tab;
-    char *line;
-    int i = 0;
-    int count = ft_lines(fd);
     
-    int fd1 = open(av[1], O_RDONLY);
-    tab = (char **)malloc(sizeof(char*) * (count + 1));
-	//ft_putnbrnl(count);
-    while(get_next_line(fd1,&tab[i]))
-	i++;
-	
-    tab[i] = NULL;
-    data->tab = tab;
+    char **tab;
+    int i = 0;
+    
+   
 	
     if (ft_checker(&data) < 0)
         {
             ft_putendl("error");
         }
-		printf("\ncamera:\n\tsource|%s|%s|%s|\n\ttarget|%s|%s|%s|\nsphere:\n\tposition|%s|%s|%s|\n\ttranslation",data->camera->source[0],data->camera->source[1],data->camera->source[2],data->camera->target[0],data->camera->target[1],data->camera->target[2],data->sphere->next->pos[0],data->sphere->pos[1],data->cone->angle);
-    close(fd1);
+		printf("%f", data->plane->pos.x);
+		// printf("\ncamera:\n\tsource|%s|%s|%s|\n\ttarget|%s|%s|%s|\nsphere:\n\tposition|%s|%s|%s|\n\ttranslation",data->cylinder->pos,data->camera->source[1],data->camera->source[2],data->camera->target[0],data->camera->target[1],data->camera->target[2],data->sphere->next->pos[0],data->sphere->pos[1],data->cone->angle);
     return (0);
 }

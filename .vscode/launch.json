@@ -5,16 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "hello",
+            "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/Users/amya/Desktop/rtv1/a.out",
-            "args": ["files/0_0_sphere"],
+            "program": "/Users/amya/Desktop/git_RTV1/rtv1/a.out",
+            "args": ["files/0_2_cylinder"],
             "stopAtEntry": false,
-            "cwd": "/Users/amya/Desktop/rtv1",
+            "cwd": "/Users/amya/Desktop/git_RTV1/rtv1",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "lldb",
+            "MIMode": "lldb"
         }
     ]
 }

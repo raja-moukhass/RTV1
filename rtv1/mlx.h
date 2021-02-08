@@ -4,8 +4,8 @@
 # include <math.h>
 # include <mlx.h>
 #include <stdlib.h>
-# define WIDTH  600
-# define HEIGHT 600
+# define WIDTH  500
+# define HEIGHT 500
 # define BPP 3
 # define PSIZE (4 - (600 * 3) % 4) % 4
 # define FILE_HEADER_SIZE 14
