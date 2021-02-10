@@ -15,6 +15,11 @@
 #include "libft/libft.h"
 #include "libft/get_next_line.h"
 #include <stdio.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 typedef struct	s_vec	
 {
 	float	x;
@@ -23,8 +28,15 @@ typedef struct	s_vec
 }				t_vec;
 typedef struct s_camera
 {
-    t_vec		source; 
-    t_vec		target; 
+   double low;
+	t_vec cam_dir;
+	double fov;
+	//double aspect_ratio;
+	t_vec hotizontal;
+	t_vec up;
+	t_vec vertical;
+	t_vec low_left_corner;
+	t_vec look_from;
 }              t_camera;
 typedef struct s_light
 {
@@ -73,16 +85,54 @@ typedef struct s_plane
 	char	*angle;
 	struct s_plane  *next;
 }			t_plane;
+typedef struct	s_mlx
+{
+	void		*ptr;
+	void		*win;
+	void		*img;
+	void		*img_ptr;
+	int 		pxl;
+	int			*d;
+
+}	t_mlx;
+typedef struct	s_vars	
+{
+	t_vec	n;
+	float	t;
+
+}				t_vars;
+typedef struct s_ray
+{
+	t_vec o;
+	t_vec dir;
+	
+}t_ray;
 typedef struct s_data
 {
     char **tab;
-	int		fd;
+	t_vars			var;
+	int			fd;
+	t_mlx		mlx;
     t_camera	*camera;
 	t_sphere	*sphere;
 	t_cone		*cone;
-	t_cylinder		*cylinder;
+	t_cylinder	*cylinder;
 	t_plane		*plane;
 	t_light		*light;
+	t_ray		ray;
 }              t_data;
 
+
+t_vec  vec_cross(t_vec v1, t_vec v2);
+t_vec  vec_add(t_vec v1, t_vec v2);
+t_ray   get_ray(double u, double v, t_camera *camera);
+void    ft_camera(t_camera *cam, t_vec vup , double aspect);
+t_vec get_camera_direction(t_camera cam, t_vec get_ray);
+
+
+t_vec  vec_sub(t_vec v1, t_vec v2);
+double	  dot_product(t_vec v1, t_vec v2);
+t_vec normal_sphere(double t, t_ray r, t_sphere s);
+t_vec  normalize(t_vec vec);
+t_vec  vec_product(t_vec v, double i);
 #endif

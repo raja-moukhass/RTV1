@@ -10,7 +10,7 @@ OBJ= main.o\
 all: $(NAME)
 
 $(NAME):
-	gcc -g -lmlx -framework OpenGL -framework AppKit mlx.c  libft/libft.a 
+	gcc -g -lmlx -framework OpenGL -framework AppKit main.c vec_calc.c libft/libft.a 
 
 clean:
 	rm -f $(OBJ)
