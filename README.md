@@ -20,3 +20,4 @@ sources
 - https://lousodrome.net/blog/light/2017/01/03/intersection-of-a-ray-and-a-cone/#:~:text=We%20define%20a%20ray%20with,O%20%E2%86%92%20%2B%20t%20D%20%E2%86%92%20.
 (cone intersection)
 - https://github.com/raja-moukhass/RTV1.git (good resources)
+- https://github.com/VBrazhnik/FdF/wiki/How-to-rotate-figure-in-3D%3F (rotation)
