@@ -4,10 +4,10 @@
 # include <math.h>
 # include <mlx.h>
 #include <stdlib.h>
-# define WIDTH  600
-# define HEIGHT 600
+# define WIDTH  1000
+# define HEIGHT 1000
 # define BPP 3
-# define PSIZE (4 - (600 * 3) % 4) % 4
+// # define PSIZE (4 - (600 * 3) % 4) % 4
 # define FILE_HEADER_SIZE 14
 # define INFO_HEADER_SIZE 40
  #include <fcntl.h>
@@ -75,16 +75,26 @@ typedef struct s_cylinder
 	double			angle;
 	struct s_cylinder  *next;
 }			t_cylinder;
-typedef struct s_plane
+typedef struct s_ray
 {
+	t_vec o;
+	t_vec dir;
+	
+}t_ray;
+
+typedef struct s_obj
+{
+	int 			id;
+	double			t;
     t_vec			pos;
 	t_vec			trans;
 	t_vec			axis;
 	t_vec			rot;
 	t_vec			color;
-	char	*angle;
-	struct s_plane  *next;
-}			t_plane;
+	double			an_ra;
+	double			(*inter)(t_ray *ray,struct s_obj *);
+	struct s_obj  *next;
+}			t_obj;
 typedef struct	s_mlx
 {
 	void		*ptr;
@@ -101,28 +111,19 @@ typedef struct	s_vars
 	float	t;
 
 }				t_vars;
-typedef struct s_ray
-{
-	t_vec o;
-	t_vec dir;
-	
-}t_ray;
 typedef struct s_data
 {
     char **tab;
 	t_vars			var;
 	int			fd;
 	t_mlx		mlx;
-    t_camera	*camera;
-	t_sphere	*sphere;
-	t_cone		*cone;
-	t_cylinder	*cylinder;
-	t_plane		*plane;
+    t_obj		*obj;
+	t_camera	*camera;
 	t_light		*light;
 	t_ray		ray;
 }              t_data;
-
-
+double    intersection_spher(t_ray *r,t_obj *s);
+double		 intersection_cylinder(t_ray *ray, t_obj *cylinder);
 t_vec  vec_cross(t_vec v1, t_vec v2);
 t_vec  vec_add(t_vec v1, t_vec v2);
 t_ray   get_ray(double u, double v, t_camera *camera);
