@@ -33,6 +33,14 @@ double ft_atof(char *str)
     }
     return (res * signe);
 }
+
+double      get_norm(t_vec v)
+{
+    double ret;
+    ret = (v.x * v.x) + (v.y * v.y) + (v.z * v.z);
+    return (ret);
+}
+
 t_obj *add_node(t_data **dat)
 {
     int i = 1;
@@ -422,28 +430,45 @@ int keyhook(int key, void *p)
 
 double intersection_spher(t_ray *r, t_obj *s)
 {
-    double a = dot_product(r->dir, r->dir);
+    
     double t1;
     double t2;
+    double t;
 
     t_vec dist = vec_sub(r->o, s->pos);
     //printf("(%lf, %lf, %lf)\n", dist.x, dist.y, dist.z);
+    double a =  get_norm(r->dir);
     double b = 2 * dot_product(r->dir, dist);
-    double c = dot_product(dist, dist) - (s->an_ra * s->an_ra);
+    double c = get_norm(dist) - (s->an_ra * s->an_ra);
     //printf("\na = %lf b = %lf c = %lf", a,b,c);
-    double discr = b * b - 4 * a * c;
-    if (discr < 0)
-        return -1;
+    double delta = b * b - 4 * a * c;
+    // if (discr < 0)
+    //     return -1;
+    // else
+    // {
+    //     t1 = (-b - sqrt(discr)) / 2 * a;
+    //     t2 = (-b + sqrt(discr)) / 2 * a;
+    // }
+    // if (t1 > 0 && t1 < t2)
+    //     return (t1);
+    // else if (t2 > 0)
+    //     return (t2);
+
+    if (delta < 0)
+        return (-1);
+
+    t1 = (-1 * b - sqrt(delta)) / (2 * a);
+    t2 = (-1 * b + sqrt(delta)) / (2 * a);
+
+    if (t2 < 0 && t1 < 0)
+        return (-1);
+    else if (t1 > 0 && t2 < 0)
+        t = t1;
+    else if (t2 > 0 && t1 < 0)
+        t = t2;
     else
-    {
-        t1 = (-b - sqrtf(discr)) / 2 * a;
-        t2 = (-b + sqrtf(discr)) / 2 * a;
-    }
-    if (t1 > 0 && t1 < t2)
-        return (t1);
-    else if (t2 > 0)
-        return (t2);
-    return -1;
+        t = fmin(t1, t2);
+    return (t);
 }
 t_vec get_camera_direction(t_camera cam, t_vec get_ray)
 {
@@ -491,8 +516,8 @@ t_ray get_ray(double u, double v, t_camera *camera)
 
     //t_vector ray;
     //camera = NULL;
-    u = 2 * (u + 0.5) / (HEIGHT - 1) - 1;
-    v = 1 - 2 * (v + 0.5) / (HEIGHT - 1);
+    u = 2 * (u + 0.5) / (HEIGHT) - 1;
+    v = 1 - 2 * (v + 0.5) / (HEIGHT);
     double half_h;
     double half_w;
     new.o = camera->look_from;
@@ -671,7 +696,25 @@ t_vec normalize(t_vec vec)
 //     *n = normalize(tonorm);
 //     return 1;
 // }
+t_ray       init_rayy(int i, int j, t_camera *cam)
+{
+    t_vec  s;
+    t_ray   r;
+      t_vec cam_u;
+    t_vec cam_v;
+    t_vec cam_w;
 
+     cam_w = normalize(vec_sub(cam->look_from, cam->cam_dir));
+    cam_u = normalize(vec_cross(cam->up, cam_w));
+    cam_v = vec_cross(cam_w, cam_u);
+    s = vec_sub(cam->look_from, vec_product(cam->cam_dir, 100));
+    s = vec_sub(s, vec_product (cam_u, (i - (HEIGHT / 2))));
+    s = vec_add(s, vec_product(cam_v, ((HEIGHT / 2) - j)));
+    r.dir = vec_sub(s, cam->look_from);
+    r.o = cam->look_from;
+   r.dir =  normalize((r.dir));
+    return (r);
+}
 double intersection_cylinder(t_ray *ray, t_obj *cylinder)
 {
     //         debugnbr(y,1,1);
@@ -738,11 +781,11 @@ t_vec   light_it_up(t_data *data, int x, int y,t_obj *obj, double t)
     t_vec hit;
     t_vec   n;
     t_vec color;
+        hit = vec_add(data->ray.o, vec_product(data->ray.dir, t));
     if (obj->id == 2)
     {
-        hit = vec_add(data->ray.o, vec_product(data->ray.dir, t));
-        t_vec tonorm = vec_sub(vec_sub(hit ,obj->pos), vec_product(obj->axis, dot_product(obj->axis, vec_sub(hit, obj->pos))));
-        n = normalize(tonorm);
+        n = vec_sub(vec_sub(hit ,obj->pos), vec_product(obj->axis, dot_product(obj->axis, vec_sub(hit, obj->pos))));
+        n = normalize(n);
            double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->light->pos, hit)), n));
                             t_vec L = normalize(vec_sub(data->light->pos, hit));
                             t_vec V = normalize(vec_sub(data->ray.o, hit));
@@ -767,6 +810,34 @@ t_vec   light_it_up(t_data *data, int x, int y,t_obj *obj, double t)
                              if (color.z > 255)
                             color.z = 255;
     }
+    else if (obj->id == 1)
+    {
+        n = normalize(vec_sub( hit, obj->pos));
+          double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->light->pos, hit)), n));
+                            t_vec L = normalize(vec_sub(data->light->pos, hit));
+                            t_vec V = normalize(vec_sub(data->ray.o, hit));
+                            t_vec dd = vec_product(n,dot_product(L,n));
+                            t_vec Rm = vec_sub(vec_product(dd, 2),L);
+                            double ka = 0, kd = 0.6, ks = 1;
+            double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
+            color.x = obj->color.x * 0.3;
+            color.y = obj->color.y * 0.3;
+            color.z = obj->color.x * 0.3;
+                       color.x =  fmin(255, obj->color.x*ang_norm_light + color.x);
+            		    color.y =  fmin(255, obj->color.y*ang_norm_light + color.y);
+            			 color.z =  fmin(255, obj->color.z*ang_norm_light + color.z);
+                        data->mlx.d[(y * WIDTH + x) + 0] =  (int)color.x << 16 | (int)color.y<< 8 | (int)color.z;
+                        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 16)&255) + data->light->color.x * intensite_pixel);
+                        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 8)&255)+data->light->color.y * intensite_pixel);
+                        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] &255) + data->light->color.z * intensite_pixel);
+                        if (color.x > 255)
+                            color.x = 255;
+                             if (color.y > 255)
+                            color.y = 255;
+                             if (color.z > 255)
+                            color.z = 255;
+    }
+
     return color;
 
 }
@@ -799,6 +870,8 @@ void ray_tracer(t_data *data)
         while (x++ < WIDTH)
         {
             data->ray = get_ray(x, y, data->camera);
+                        // data->ray = init_rayy(y, x, data->camera);
+
             // data->ray.dir.x = x-(HEIGHT/2);
             // data->ray.dir.y = y-(HEIGHT/2);
             // data->ray.dir.z = -WIDTH/(2*tan(alpha));
@@ -843,7 +916,7 @@ void ray_tracer(t_data *data)
             // save = head;
             // save->t = t1;
             // t1 = data->obj->inter(&(data->ray), head);
-            if (t1 > 0 && save->id == 2)
+             if (t1 > 0 && (save->id == 2 || save->id == 1))
             {
                 color = light_it_up(data, x, y, save, t1);
                 data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
@@ -898,8 +971,8 @@ int mouse_move(int x, int y, t_data *data)
 {
     double PI = 22 / 7;
     double alpha = 60 * PI / 180;
-    data->light->pos.x = x - (HEIGHT / 2);
-    data->light->pos.y = y - (HEIGHT / 2);
+    data->obj->pos.x = x - (HEIGHT / 2);
+    // data->light->pos.y = y - (HEIGHT / 2);
 
     // data->lum_pos.z = ;
     // data->sphere->c.z -= 10;
@@ -939,7 +1012,7 @@ int main(int ac, char **av)
     debugstr("CHECK",1);
        ray_tracer(data);
       mlx_put_image_to_window(f.ptr, f.win, f.img,0 ,0);
-        //   mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
+          mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
       mlx_loop(f.ptr);
     // printf("\ncamera:\n\tsource|%s|%s|%s|\n\ttarget|%s|%s|%s|\nsphere:\n\tposition|%s|%s|%s|\n\ttranslation",data->cylinder->pos,data->camera->source[1],data->camera->source[2],data->camera->target[0],data->camera->target[1],data->camera->target[2],data->sphere->next->pos[0],data->sphere->pos[1],data->cone->angle);
     return (0);
