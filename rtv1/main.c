@@ -1,5 +1,50 @@
 #include "rtv1.h"
 
+
+
+
+double		ft_min_ray(float t1, float t2, double *t)
+{
+	if (((t1 < t2 || t2 < 0.001) && t1 > 0.1) && (t1 < *t))
+	{
+		*t = t1;
+		return (1);
+	}
+	else if (((t2 < t1 || t1 < 0.001) && t2 > 0.1) && (t2 < *t))
+	{
+		*t = t2;
+		return (1);
+	}
+	else
+		return (0);
+}
+
+double				intersect_cone( t_ray *r, t_obj *c)
+{
+    double      t;
+	t_delta		d;
+	t_vec	dist;
+	float		anglesin;
+	float		anglecos;
+
+	anglecos = pow(cos(c->an_ra), 2.0);
+	anglesin = pow(sin(c->an_ra), 2.0);
+	dist = vec_sub(r->o, c->axis);
+	d.a = anglecos * (r->dir.z * r->dir.z + r->dir.x * r->dir.x)
+		- anglesin * (r->dir.y * r->dir.y);
+	d.b = 2.0 * (anglecos * (dist.z * r->dir.z + dist.x * r->dir.x)
+			- anglesin * (dist.y * r->dir.y));
+	d.c = anglecos * (dist.z * dist.z + dist.x * dist.x)
+		- anglesin * (dist.y * dist.y);
+	d.delta = d.b * d.b - 4.0 * d.a * d.c;
+	if (d.delta < 0.00000001)
+		return (0);
+	d.delta = sqrt(d.delta);
+	return (ft_min_ray((-d.b + d.delta) / (2.0 * d.a),
+				(-d.b - d.delta) / (2.0 * d.a), &t));
+}
+
+
 double ft_atof(char *str)
 {
     int i;
@@ -219,7 +264,7 @@ void obj_check(t_data **dat, int i, int id)
     else if (id == 4)
         temp->inter = &intersect_plane;
     else if (id == 5)
-        temp->inter = &intersect_plane;
+        temp->inter = &intersect_cone;
 
 }
 
@@ -379,7 +424,7 @@ t_ray get_ray(double u, double v, t_camera *camera)
     new.dir = vec_sub(new.dir, vec_product(horizontal, u));
     new.dir = vec_add(new.dir, vec_product(vertical, v));
     new.dir = normalize(new.dir);
-
+                                                                                                                                                                                                                                                                                                                                                                                                     
     return new;
 
     //   new.dir = vec_add(dir, camera->cam_dir);
@@ -432,6 +477,7 @@ t_ray       init_rayy(int i, int j, t_camera *cam)
 
 double intersection_cylinder(t_ray *ray, t_obj *cylinder)
 {
+	ray = ft_transform_ray(ray, cylinder);
     t_vec delta_p = vec_sub(ray->o, cylinder->pos);
     double tmp = dot_product(ray->dir, cylinder->axis);
     double a = dot_product(ray->dir, ray->dir) - pow(tmp, 2);
@@ -439,7 +485,6 @@ double intersection_cylinder(t_ray *ray, t_obj *cylinder)
     double tmp1 = dot_product(delta_p, cylinder->axis);
     double b = 2 * (dot_product(ray->dir, delta_p) - (tmp * tmp1));
     double c = dot_product(delta_p, delta_p) - pow(tmp1, 2) - (cylinder->an_ra * cylinder->an_ra);
-
     double delta = b * b - (4 * a * c);
     double t1;
     double t2;
@@ -586,8 +631,12 @@ void ray_tracer(t_data *data)
                 color = light_it_up(data, x, y, save, t1);
                 data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
             }
+          
+
             else if (t1 > 0)
-                data->mlx.d[(y * WIDTH + x) + 0] = (int)save->color.x << 16 | (int)save->color.y << 8 | (int)save->color.z;
+            {
+                     data->mlx.d[(y * WIDTH + x) + 0] = (int)save->color.x << 16 | (int)save->color.y << 8 | (int)save->color.z;
+            }
 
         }
         y++;
@@ -641,6 +690,6 @@ int main(int ac, char **av)
       mlx_put_image_to_window(f.ptr, f.win, f.img,0 ,0);
         //   mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
       mlx_loop(f.ptr);
-    // printf("\ncamera:\n\tsource|%s|%s|%s|\n\ttarget|%s|%s|%s|\nsphere:\n\tposition|%s|%s|%s|\n\ttranslation",data->cylinder->pos,data->camera->source[1],data->camera->source[2],data->camera->target[0],data->camera->target[1],data->camera->target[2],data->sphere->next->pos[0],data->sphere->pos[1],data->cone->angle);
+    // printf("pos %f col %f ax %f",data->obj->pos.z, data->obj->color.x, data->obj->axis.y);
     return (0);
 }

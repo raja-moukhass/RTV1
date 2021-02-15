@@ -75,6 +75,14 @@ typedef struct s_cylinder
 	double			angle;
 	struct s_cylinder  *next;
 }			t_cylinder;
+
+typedef struct s_delta{
+  float a;
+  float b;
+  float c;
+  float delta;
+} t_delta;
+
 typedef struct s_ray
 {
 	t_vec o;
@@ -129,6 +137,12 @@ t_vec  vec_add(t_vec v1, t_vec v2);
 t_ray   get_ray(double u, double v, t_camera *camera);
 void    ft_camera(t_camera *cam, t_vec vup , double aspect);
 t_vec get_camera_direction(t_camera cam, t_vec get_ray);
+t_vec ft_rotate_x(t_vec v, float angle);
+t_vec ft_rotate_y(t_vec v, float angle);
+t_vec ft_rotate_z(t_vec v, float angle);
+t_vec ft_rotate(t_vec v, t_vec rot);
+t_vec ft_translate(t_vec v, t_vec trans);
+t_ray   *ft_transform_ray(t_ray *ray, t_obj *o);
 
 
 t_vec  vec_sub(t_vec v1, t_vec v2);
