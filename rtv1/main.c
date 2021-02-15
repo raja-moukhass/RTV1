@@ -410,7 +410,7 @@ void init_data(t_data **data, char *av)
     (*data)->camera->look_from = (t_vec){0, 5, 0};
     (*data)->camera->cam_dir = (t_vec){0, 0, 0};
     (*data)->camera->up = (t_vec){0, 1, 0};
-    (*data)->camera->fov = 60;
+    (*data)->camera->fov = 10;
 }
 /////--------**********************************************************************
 
@@ -704,10 +704,10 @@ t_ray       init_rayy(int i, int j, t_camera *cam)
     t_vec cam_v;
     t_vec cam_w;
 
-     cam_w = normalize(vec_sub(cam->look_from, cam->cam_dir));
+    cam_w = normalize(vec_sub(cam->look_from, cam->cam_dir));
     cam_u = normalize(vec_cross(cam->up, cam_w));
     cam_v = vec_cross(cam_w, cam_u);
-    s = vec_sub(cam->look_from, vec_product(cam->cam_dir, 100));
+    s = vec_sub(cam->look_from, vec_product(cam->cam_dir, 2000));
     s = vec_sub(s, vec_product (cam_u, (i - (HEIGHT / 2))));
     s = vec_add(s, vec_product(cam_v, ((HEIGHT / 2) - j)));
     r.dir = vec_sub(s, cam->look_from);
@@ -870,7 +870,7 @@ void ray_tracer(t_data *data)
         while (x++ < WIDTH)
         {
             data->ray = get_ray(x, y, data->camera);
-                        // data->ray = init_rayy(y, x, data->camera);
+                        // data->ray = init_rayy(x, y, data->camera);
 
             // data->ray.dir.x = x-(HEIGHT/2);
             // data->ray.dir.y = y-(HEIGHT/2);
@@ -1012,7 +1012,7 @@ int main(int ac, char **av)
     debugstr("CHECK",1);
        ray_tracer(data);
       mlx_put_image_to_window(f.ptr, f.win, f.img,0 ,0);
-          mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
+        //   mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
       mlx_loop(f.ptr);
     // printf("\ncamera:\n\tsource|%s|%s|%s|\n\ttarget|%s|%s|%s|\nsphere:\n\tposition|%s|%s|%s|\n\ttranslation",data->cylinder->pos,data->camera->source[1],data->camera->source[2],data->camera->target[0],data->camera->target[1],data->camera->target[2],data->sphere->next->pos[0],data->sphere->pos[1],data->cone->angle);
     return (0);
