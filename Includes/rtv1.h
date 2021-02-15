@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 13:06:46 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/07 10:35:08 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/13 16:51:24 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,14 @@ typedef struct s_vector
 	double z;
 }t_vector;
 
+typedef struct s_color
+{
+	double red; 
+	double green;
+	double blue;
+}t_color;
+
+
 typedef struct s_cone 
 {
 	t_vector position;
@@ -38,9 +46,28 @@ typedef struct s_cone
 typedef struct s_sphere
 {
 	t_vector pos;
+	t_vector trans;
+	t_vector rot;
 	double radius;
 	
 }t_sphere;
+
+typedef enum s_type{
+  SPHERE = 0, CONE = 1, PLANE = 2
+}   t_type;
+
+typedef struct s_object {
+  t_vector pos;
+  t_vector rot;
+  t_vector trans;
+  t_color color;
+  t_vector axis;
+  float angle;
+  float radius;
+  t_type  type;
+   struct s_object *next;
+} t_object ;
+
 
 typedef struct s_ray
 {
@@ -49,17 +76,6 @@ typedef struct s_ray
 	
 }t_ray;
 
-typedef struct	s_mlx
-{
-	void		*ptr;
-	void		*win;
-	void		*img;
-	void		*img_ptr;
-	int 		pxl;
-	t_ray 		ray;
-	t_sphere	*sphere;
-	int			*d;
-}	t_mlx;
 
 typedef struct s_camera
 {
@@ -73,12 +89,29 @@ typedef struct s_camera
 	t_vector look_from;
 }t_camera;
 
-typedef struct s_color
+typedef struct s_hit
 {
-	double red; 
-	double green;
-	double blue;
-}t_color;
+	float t;
+	t_object *o;
+	t_vector n;
+	t_vector p;
+}t_hit;
+
+
+
+typedef struct	s_mlx
+{
+	void		*ptr;
+	void		*win;
+	void		*img;
+	void		*img_ptr;
+	int 		pxl;
+	t_ray 		ray;
+	t_camera  cam;
+	t_object	*objects;
+	int			*d;
+}	t_mlx;
+
 
 typedef struct s_light
 {
@@ -92,6 +125,16 @@ typedef struct s_material
 	double 	reflection;
 }t_material;
 
+t_object ft_create_sphere(t_vector pos, t_vector trans, t_vector rot, float radius, t_color color);
+t_object ft_create_cone(t_vector pos, t_vector trans, t_vector rot, t_vector axis, float angle, t_color color);
+t_object *ft_create_object( t_object object);
+void ft_add_object(t_object **lst, t_object *nw);
+
+t_vector ft_rotate_x(t_vector v, float angle);
+t_vector ft_rotate_y(t_vector v, float angle);
+t_vector ft_rotate_z(t_vector v, float angle);
+t_vector ft_rotate(t_vector v, t_vector rot);
+t_vector ft_translate(t_vector v, t_vector trans);
 
 t_vector  vec_cross(t_vector v1, t_vector v2);
 t_vector  vec_add(t_vector v1, t_vector v2);
