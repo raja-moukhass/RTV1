@@ -26,7 +26,6 @@
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 typedef struct	s_vec	
 {
 	float	x;
@@ -38,7 +37,6 @@ typedef struct s_camera
    double low;
 	t_vec cam_dir;
 	double fov;
-	//double aspect_ratio;
 	t_vec hotizontal;
 	t_vec up;
 	t_vec vertical;
@@ -138,6 +136,12 @@ typedef struct s_data
 	t_ray		ray;
 }              t_data;
 double    intersection_spher(t_ray *r,t_obj *s);
+double	intersect_cone( t_ray *r, t_obj *c);
+double  intersect_plane(t_ray *r, t_obj *plane);
+double		ft_min_ray(float t1, float t2, double *t);
+double intersection_spher(t_ray *r, t_obj *s);
+double      get_norm(t_vec v);
+
 double		 intersection_cylinder(t_ray *ray, t_obj *cylinder);
 t_vec  vec_cross(t_vec v1, t_vec v2);
 t_vec  vec_add(t_vec v1, t_vec v2);

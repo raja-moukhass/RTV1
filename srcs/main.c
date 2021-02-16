@@ -19,30 +19,7 @@ double		ft_min_ray(float t1, float t2, double *t)
 		return (0);
 }
 
-double				intersect_cone( t_ray *r, t_obj *c)
-{
-    double      t;
-	t_delta		d;
-	t_vec	dist;
-	float		anglesin;
-	float		anglecos;
 
-	anglecos = pow(cos(c->an_ra), 2.0);
-	anglesin = pow(sin(c->an_ra), 2.0);
-	dist = vec_sub(r->o, c->axis);
-	d.a = anglecos * (r->dir.z * r->dir.z + r->dir.x * r->dir.x)
-		- anglesin * (r->dir.y * r->dir.y);
-	d.b = 2.0 * (anglecos * (dist.z * r->dir.z + dist.x * r->dir.x)
-			- anglesin * (dist.y * r->dir.y));
-	d.c = anglecos * (dist.z * dist.z + dist.x * dist.x)
-		- anglesin * (dist.y * dist.y);
-	d.delta = d.b * d.b - 4.0 * d.a * d.c;
-	if (d.delta < 0.00000001)
-		return (0);
-	d.delta = sqrt(d.delta);
-	return (ft_min_ray((-d.b + d.delta) / (2.0 * d.a),
-				(-d.b - d.delta) / (2.0 * d.a), &t));
-}
 
 
 double ft_atof(char *str)
@@ -185,21 +162,7 @@ t_vec split_data(t_data *data, char *str)
     return (ret);
 }
 
-double  intersect_plane(t_ray *r, t_obj *plane) 
-{ 
-    double  t;
 
-    t_vec p0l0 = vec_sub(r->dir, plane->pos ); 
-    double nomin = dot_product(p0l0, plane->axis);
-    float denom = dot_product(plane->axis, r->dir); 
-    if (denom == 0 || (denom > 0 &&  nomin > 0) ||  (denom < 0 &&  nomin < 0) ) 
-        return 0;
-
-    t = -nomin / denom; 
-  
-        return (t); 
-  
-}
 
 void camera_check(t_data **dat, int i)
 {
@@ -337,7 +300,6 @@ void init_data(t_data **data, char *av)
     (*data)->camera->up = (t_vec){0, 1, 0};
     (*data)->camera->fov = 10;
 }
-/////--------**********************************************************************
 
 int ft_close(void)
 {
@@ -353,36 +315,6 @@ int keyhook(int key, void *p)
     return (0);
 }
 
-double intersection_spher(t_ray *r, t_obj *s)
-{
-    
-    double t1;
-    double t2;
-    double t;
-
-    t_vec dist = vec_sub(r->o, s->pos);
-    double a =  get_norm(r->dir);
-    double b = 2 * dot_product(r->dir, dist);
-    double c = get_norm(dist) - (s->an_ra * s->an_ra);
-    double delta = b * b - 4 * a * c;
- 
-
-    if (delta < 0)
-        return (-1);
-
-    t1 = (-1 * b - sqrt(delta)) / (2 * a);
-    t2 = (-1 * b + sqrt(delta)) / (2 * a);
-
-    if (t2 < 0 && t1 < 0)
-        return (-1);
-    else if (t1 > 0 && t2 < 0)
-        t = t1;
-    else if (t2 > 0 && t1 < 0)
-        t = t2;
-    else
-        t = fmin(t1, t2);
-    return (t);
-}
 t_vec get_camera_direction(t_camera cam, t_vec get_ray)
 {
     t_vec ray;
@@ -395,16 +327,13 @@ t_vec get_camera_direction(t_camera cam, t_vec get_ray)
 
 t_ray get_ray(double u, double v, t_camera *camera)
 {
-    // /t_vec   dir;
     t_vec horizontal;
     t_vec vertical;
     t_vec cam_u;
     t_vec cam_v;
     t_vec cam_w;
     t_ray new;
-
-    //t_vector ray;
-    //camera = NULL;
+    
     u = 2 * (u + 0.5) / (HEIGHT) - 1;
     v = 1 - 2 * (v + 0.5) / (HEIGHT);
     double half_h;
@@ -426,10 +355,6 @@ t_ray get_ray(double u, double v, t_camera *camera)
     new.dir = normalize(new.dir);
 
     return new;
-
-    //   new.dir = vec_add(dir, camera->cam_dir);
-    //   new.start = camera->look_from;
-    //   return (new);
 }
 
 
@@ -477,42 +402,7 @@ t_ray       init_rayy(int i, int j, t_camera *cam)
     return (r);
 }
 
-double intersection_cylinder(t_ray *ray, t_obj *cylinder)
-{
-	ray = ft_transform_ray(ray, cylinder);
-    t_vec delta_p = vec_sub(ray->o, cylinder->pos);
-    double tmp = dot_product(ray->dir, cylinder->axis);
-    double a = dot_product(ray->dir, ray->dir) - pow(tmp, 2);
 
-    double tmp1 = dot_product(delta_p, cylinder->axis);
-    double b = 2 * (dot_product(ray->dir, delta_p) - (tmp * tmp1));
-    double c = dot_product(delta_p, delta_p) - pow(tmp1, 2) - (cylinder->an_ra * cylinder->an_ra);
-    double delta = b * b - (4 * a * c);
-    double t1;
-    double t2;
-    if (delta < 0)
-        return 0;
-    t1 = (-b - sqrt(delta)) / (2 * a);
-    t2 = (-b + sqrt(delta)) / (2 * a);
-    double t;
-    if (t1 < 0 && t2 < 0)
-        return 0;
-    if (t1 > 0 && t2 > 0)
-    {
-        if (t1 > t2)
-            t = t2;
-        else
-            t = t1;
-    }
-    else if ((t1 > 0 && t2 < 0) || (t2 < 0 && t2 > 0))
-    {
-        if (t1 > t2)
-            t = t1;
-        else
-            t = t2;
-    }
-    return t;
-}
 
 t_vec   light_it_up(t_data *data, int x, int y,t_obj *obj, double t)
 {
@@ -607,11 +497,6 @@ void ray_tracer(t_data *data)
         while (x++ < WIDTH)
         {
             data->ray = get_ray(x, y, data->camera);
-                        // data->ray = init_rayy(x, y, data->camera);
-
-            // data->ray.dir.x = x-(HEIGHT/2);
-            // data->ray.dir.y = y-(HEIGHT/2);
-            // data->ray.dir.z = -WIDTH/(2*tan(alpha));
 
             t1 = -1;
             head = data->obj;
@@ -650,10 +535,6 @@ int mouse_move(int x, int y, t_data *data)
     double PI = 22 / 7;
     double alpha = 60 * PI / 180;
     data->obj->pos.x = x - (HEIGHT / 2);
-    // data->light->pos.y = y - (HEIGHT / 2);
-
-    // data->lum_pos.z = ;
-    // data->sphere->c.z -= 10;
     image_clear(data->mlx.d);
     ray_tracer(data);
     mlx_put_image_to_window(data->mlx.ptr, data->mlx.win, data->mlx.img, 0, 0);
@@ -676,7 +557,6 @@ int main(int ac, char **av)
         ft_putendl("error");
         exit(0);
     }
-    // printf("here %d", data->obj->next->next->id);
     int bpp;
     t_mlx f;
 
