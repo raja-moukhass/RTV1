@@ -6,11 +6,11 @@
 #    By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/12 12:17:42 by ramoukha          #+#    #+#              #
-#    Updated: 2021/02/16 15:06:05 by ramoukha         ###   ########.fr        #
+#    Updated: 2021/02/16 15:31:07 by ramoukha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-COMP = gcc 
+COMP = gcc -g
 SRC = srcs/main.c srcs/vec_calc.c  srcs/transforms.c srcs/ft_intersection.c
 OB =  srcs/main.o srcs/vec_calc.o srcs/transforms.o  srcs/ft_intersection.o
 INC_DIR = ./includes/

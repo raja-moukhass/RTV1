@@ -108,6 +108,14 @@ typedef struct s_obj
 	double			(*inter)(t_ray *ray,struct s_obj *);
 	struct s_obj  *next;
 }			t_obj;
+typedef struct s_hit
+{
+	float t;
+	t_obj *o;
+	t_vec n;
+	t_vec p;
+}t_hit;
+
 typedef struct	s_mlx
 {
 	void		*ptr;
@@ -136,6 +144,9 @@ typedef struct s_data
 	t_ray		ray;
 }              t_data;
 double    intersection_spher(t_ray *r,t_obj *s);
+double   cone_intersection(t_ray *ray, t_obj *cone);
+t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o);
+ 	
 double	intersect_cone( t_ray *r, t_obj *c);
 double  intersect_plane(t_ray *r, t_obj *plane);
 double		ft_min_ray(float t1, float t2, double *t);
