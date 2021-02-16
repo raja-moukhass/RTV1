@@ -8,10 +8,10 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/Users/amya/Desktop/git_RTV1/rtv1/a.out",
+            "program": "/Users/amya/Desktop/rtvagain/rtv1/a.out",
             "args": ["files/0_0_sphere"],
             "stopAtEntry": false,
-            "cwd": "/Users/amya/Desktop/git_RTV1/rtv1",
+            "cwd": "/Users/amya/Desktop/rtvagain/rtv1",
             "environment": [],
             "externalConsole": false,
             "MIMode": "lldb"

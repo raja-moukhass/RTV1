@@ -616,7 +616,8 @@ void ray_tracer(t_data *data)
             while(head)
             {
                 t = head->inter(&(data->ray), head);
-            	
+            	if (head->id == 5 && t > 0)
+                ft_putstr("\nYES)");
             	    if ((t < t1 && t1 > 0 && t > 0) || (t > t1 && t1 < 0 && t > 0))
             		{
             			t1 = t;
