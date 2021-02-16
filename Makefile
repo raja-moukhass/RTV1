@@ -6,13 +6,13 @@
 #    By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/12 12:17:42 by ramoukha          #+#    #+#              #
-#    Updated: 2021/02/15 09:28:12 by ramoukha         ###   ########.fr        #
+#    Updated: 2021/02/16 09:49:15 by ramoukha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 COMP = gcc 
-SRC = srcs/main.c srcs/vec_calculation.c srcs/object.c srcs/transfoms.c 
-OB =  srcs/main.o srcs/vec_calculation.o srcs/transfoms.o srcs/object.o 
+SRC = srcs/main.c srcs/vec_calc.c  srcs/transforms.c 
+OB =  srcs/main.o srcs/vec_calc.o srcs/transforms.o  
 INC_DIR = ./includes/
 INC = ./includes/rtv1.h
 OB = $(SRC:.c=.o)

@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 #include "rtv1.h"
 
-t_vector ft_rotate_x(t_vector v, float angle){
-  t_vector res;
+t_vec ft_rotate_x(t_vec v, float angle){
+  t_vec res;
 
   res.x = v.x;
   res.y = v.y * cos(angle) + v.z * sin(angle);
@@ -20,8 +20,8 @@ t_vector ft_rotate_x(t_vector v, float angle){
       return res;
 }
 
-t_vector ft_rotate_y(t_vector v, float angle){
-  t_vector res;
+t_vec ft_rotate_y(t_vec v, float angle){
+  t_vec res;
   res.y = v.y;
   res.x = v.x * cos(angle) + v.z * sin(angle);
   res.z = - v.x * sin(angle) + v.z * cos(angle);
@@ -29,9 +29,21 @@ t_vector ft_rotate_y(t_vector v, float angle){
 
 }
 
+t_ray   *ft_transform_ray(t_ray *ray, t_obj *o){
+  t_vec rot;
+  t_vec trans;
 
-t_vector ft_rotate_z(t_vector v, float angle){
-  t_vector res;
+  rot = (t_vec){-o->rot.x, -o->rot.y, -o->rot.z};
+  trans = (t_vec){-o->trans.x, -o->trans.y, -o->trans.z};
+
+  ray->o = ft_rotate(ray->o, rot);
+  ray->o = ft_translate(ray->o, trans);
+  ray->dir = ft_rotate(ray->dir, rot);
+  return ray;
+}
+
+t_vec ft_rotate_z(t_vec v, float angle){
+  t_vec res;
 
 
   res.z = v.z;
@@ -40,8 +52,8 @@ t_vector ft_rotate_z(t_vector v, float angle){
     return res;
 }
 
-t_vector ft_rotate(t_vector v, t_vector rot){
-  t_vector res;
+t_vec ft_rotate(t_vec v, t_vec rot){
+  t_vec res;
 
   res = ft_rotate_x(v, rot.x);
   res = ft_rotate_y(res, rot.y);
@@ -49,8 +61,8 @@ t_vector ft_rotate(t_vector v, t_vector rot){
   return res;
 }
 
-t_vector ft_translate(t_vector v, t_vector trans){
-  t_vector res;
+t_vec ft_translate(t_vec v, t_vec trans){
+  t_vec res;
 
   res.x = v.x + trans.x;
   res.y = v.y + trans.y;
