@@ -16,7 +16,7 @@ OB =  srcs/main.o srcs/vec_calc.o srcs/transforms.o  srcs/ft_intersection.o
 INC_DIR = ./includes/
 INC = ./includes/rtv1.h
 OB = $(SRC:.c=.o)
-NAME =  RTV1
+NAME =  a.out
 LIBFLAGS = -L ./libft -lft -lpthread -L ./miniLibX -lmlx -framework OpenGL -framework AppKit
 
 all : $(NAME)
