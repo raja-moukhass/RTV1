@@ -474,12 +474,12 @@ t_vec   light_it_up(t_data *data, int x, int y,t_obj *obj, double t)
                             t_vec Rm = vec_sub(vec_product(dd, 2),L);
                             double ka = 0, kd = 0, ks = 1;
             double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
-            color.x = obj->color.x * 0;
-            color.y = obj->color.y * 0;
-            color.z = obj->color.z * 0;
-                       color.x =  fmin(255, obj->color.x*ang_norm_light + color.x);
-            		    color.y =  fmin(255, obj->color.y*ang_norm_light + color.y);
-            			 color.z =  fmin(255, obj->color.z*ang_norm_light + color.z);
+            color.x = obj->color.x * 0.3;
+            color.y = obj->color.y * 0.3;
+            color.z = obj->color.z * 0.3;
+                    //    color.x =  fmin(255, obj->color.x*ang_norm_light + color.x);
+            		//     color.y =  fmin(255, obj->color.y*ang_norm_light + color.y);
+            		// 	 color.z =  fmin(255, obj->color.z*ang_norm_light + color.z);
                         data->mlx.d[(y * WIDTH + x) + 0] =  (int)color.x << 16 | (int)color.y<< 8 | (int)color.z;
                         color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 16)&255) + data->light->color.x * intensite_pixel);
                         color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 8)&255)+data->light->color.y * intensite_pixel);
@@ -600,6 +600,25 @@ void ray_tracer(t_data *data)
     double yes;
     int check = 1;
     double t1 = -1;
+	// t_camera shadow;
+	t_ray shadow;
+	t_vec hit;
+
+	/*
+	while (y < HEIGHT)
+    {
+        x = -1;
+        while (x++ < WIDTH)
+        {
+			save = get_col(data, ray);
+			save(color ,hit, t);
+			if(save.t != -1)
+			{
+
+			}
+		}
+	}
+	*/
     while (y < HEIGHT)
     {
         x = -1;
@@ -612,28 +631,59 @@ void ray_tracer(t_data *data)
             while(head)
             {
                 t = head->inter(&(data->ray), head);
-              
             	    if ((t < t1 && t1 > 0 && t > 0) || (t > t1 && t1 < 0 && t > 0))
             		{
             			t1 = t;
             			save=head;
             		}
             	head = head->next;
-            }
-
-           
-             if (t1 > 0 && (save->id == 2 || save->id == 1 || save->id == 5 ||  save->id == 4))
+             }
+             if (t1 != -1)
             {
+			// shadow.o = 	vec_add(data->ray.o, vec_product(data->ray.dir, t1));
+			// shadow.dir = vec_sub(data->light->pos, shadow.o );
+			// 	 t1 = -1;
+            // head = data->obj;
+            // while(head)
+            // {
+            //     t = head->inter(&(shadow), head);
+            // 	    if (t != -1 && save->id != head->id)
+            // 		{
+            // 			t1 = t;
+			// 			break;
+            // 		}
+            // 	head = head->next;
+            // }
+			// if (t1 != -1)
+			// color = (t_vec){0,0,0};
+			// else
                 color = light_it_up(data, x, y, save, t1);
-                data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
-            }
-          
+                
 
-            else if (t1 > 0)
+
+			shadow.o = 	vec_add(data->ray.o, vec_product(data->ray.dir, t1));
+			shadow.dir = vec_sub(data->light->pos, shadow.o );
+			t1 = -1;
+            head = data->obj;
+            while(head)
             {
-                     data->mlx.d[(y * WIDTH + x) + 0] = (int)save->color.x << 16 | (int)save->color.y << 8 | (int)save->color.z;
+                t = head->inter(&(shadow), head);
+            	    if (t != 0 && save->id != head->id)
+            		{
+            			t1 = t;
+						break;
+            		}
+					
+            	head = head->next;
             }
-
+			if (t1 != -1)
+			{
+				color.x = color.x * 0.6;
+				color.y = color.y * 0.6;
+				color.z = color.z * 0.6;
+			}
+			data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+            }
         }
         y++;
     }
