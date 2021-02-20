@@ -26,11 +26,11 @@
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
-typedef struct	s_vec	
+typedef struct	s_vec
 {
-	float	x;
-	float	y;
-	float	z;
+	double	x;
+	double	y;
+	double	z;
 }				t_vec;
 typedef struct s_camera
 {
@@ -45,8 +45,8 @@ typedef struct s_camera
 }              t_camera;
 typedef struct s_light
 {
-    t_vec		pos; 
-    t_vec		color; 
+    t_vec		pos;
+    t_vec		color;
 	double		intens;
 
 }              t_light;
@@ -82,17 +82,17 @@ typedef struct s_cylinder
 }			t_cylinder;
 
 typedef struct s_delta{
-  float a;
-  float b;
-  float c;
-  float delta;
+  double a;
+  double b;
+  double c;
+  double delta;
 } t_delta;
 
 typedef struct s_ray
 {
 	t_vec o;
 	t_vec dir;
-	
+
 }t_ray;
 
 typedef struct s_obj
@@ -110,7 +110,7 @@ typedef struct s_obj
 }			t_obj;
 typedef struct s_hit
 {
-	float t;
+	double t;
 	t_obj *o;
 	t_vec n;
 	t_vec p;
@@ -126,10 +126,10 @@ typedef struct	s_mlx
 	int			*d;
 
 }	t_mlx;
-typedef struct	s_vars	
+typedef struct	s_vars
 {
 	t_vec	n;
-	float	t;
+	double	t;
 
 }				t_vars;
 typedef struct s_data
@@ -146,10 +146,10 @@ typedef struct s_data
 double    intersection_spher(t_ray *r,t_obj *s);
 double   cone_intersection(t_ray *ray, t_obj *cone);
 t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o);
- 	
+
 double	intersect_cone( t_ray *r, t_obj *c);
 double  intersect_plane(t_ray *r, t_obj *plane);
-double		ft_min_ray(float t1, float t2, double *t);
+double		ft_min_ray(double t1, double t2, double *t);
 double intersection_spher(t_ray *r, t_obj *s);
 double      get_norm(t_vec v);
 
@@ -159,9 +159,9 @@ t_vec  vec_add(t_vec v1, t_vec v2);
 t_ray   get_ray(double u, double v, t_camera *camera);
 void    ft_camera(t_camera *cam, t_vec vup , double aspect);
 t_vec get_camera_direction(t_camera cam, t_vec get_ray);
-t_vec ft_rotate_x(t_vec v, float angle);
-t_vec ft_rotate_y(t_vec v, float angle);
-t_vec ft_rotate_z(t_vec v, float angle);
+t_vec ft_rotate_x(t_vec v, double angle);
+t_vec ft_rotate_y(t_vec v, double angle);
+t_vec ft_rotate_z(t_vec v, double angle);
 t_vec ft_rotate(t_vec v, t_vec rot);
 t_vec ft_translate(t_vec v, t_vec trans);
 t_ray   *ft_transform_ray(t_ray *ray, t_obj *o);

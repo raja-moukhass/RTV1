@@ -1,6 +1,6 @@
 #include "rtv1.h"
 
-double ft_min_ray(float t1, float t2, double *t)
+double ft_min_ray(double t1, double t2, double *t)
 {
     if (((t1 < t2 || t2 < 0.001) && t1 > 0.1) && (t1 < *t))
     {
@@ -288,7 +288,7 @@ void init_data(t_data **data, char *av)
     (*data)->camera->look_from = (t_vec){0, 5, 0};
     (*data)->camera->cam_dir = (t_vec){0, 0, 0};
     (*data)->camera->up = (t_vec){0, 1, 0};
-    (*data)->camera->fov = 10;
+    (*data)->camera->fov = 20;
 }
 
 int ft_close(void)
@@ -515,8 +515,8 @@ t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o)
 
     nr = (t_vec){0, 0.0, 0};
 
-    float m;
-    float k = tan((o->an_ra * M_PI / 180.0) / 2);
+    double m;
+    double k = tan((o->an_ra * M_PI / 180.0) / 2);
 
     if (p.y > 0)
         p.y = -sqrt(p.z * p.z + p.x * p.x) * tan(o->an_ra);
@@ -552,7 +552,7 @@ double cone_intersection(t_ray *ray, t_obj *cone)
     }
     if (t2 < 0 && t1 < 0)
         return (-1);
-    else if (t1 > 0 && t2 < 0)
+    else if (t1 >= 0 && t2 < 0)
         t = t1;
     else if (t2 > 0 && t1 < 0)
         t = t2;
@@ -615,7 +615,7 @@ void ray_tracer(t_data *data)
             while (head)
             {
                 t = head->inter(&(data->ray), head);
-                if ((t < t1 && t1 > 0 && t > 0) || (t > t1 && t1 < 0 && t > 0))
+                if ((t <= t1 && t1 > 0 && t > 0) || (t >= t1 && t1 < 0 && t > 0))
                 {
                     t1 = t;
                     save = head;
@@ -642,37 +642,33 @@ void ray_tracer(t_data *data)
                 // color = (t_vec){0,0,0};
                 // else
                 color = light_it_up(data, x, y, save, t1);
-
-                shadow.o = vec_add(data->ray.o, vec_product(data->ray.dir, t1));
-                shadow.dir = normalize(vec_sub(data->light->pos, shadow.o));
+                hit = vec_add(data->ray.o, vec_product(data->ray.dir, t1));
+                shadow.o = data->light->pos;
+                shadow.dir = normalize(vec_sub(hit, data->light->pos));
                 head = data->obj;
                 while (head)
                 {
-                    t = head->inter(&(shadow), head);
+                    // if (save != head)
+                        t = head->inter(&(shadow), head);
                     if (t > 0 && save != head)
                     {
                         t_vec hit2 = vec_add(shadow.o, vec_product(shadow.dir, t));
                         len1 = dot_product(vec_product(shadow.dir, t), vec_product(shadow.dir, t));
 
-                        len2 = dot_product(vec_sub( hit, data->light->pos), vec_sub( hit, data->light->pos));
+                        len2 = dot_product(vec_sub(hit, data->light->pos), vec_sub(hit, data->light->pos));
+
                         if (len1 < len2)
                         {
-                            color.x = color.x * 0;
-                            color.y = color.y * 0;
-                            color.z = color.z * 0;
-                            if (save->axis.z == 1)
-                            {
-                                char *str[] = {"dd", "sphere", "cylinder", "323", "plan", "cone"};
-                                printf("%s shadows %s\n", str[head->id], str[save->id]);
-                            }
+                            color.x = color.x * 0.1;
+                            color.y = color.y * 0.1;
+                            color.z = color.z * 0.1;
                             break;
                         }
                     }
-
                     head = head->next;
                 }
 
-                data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+                data->mlx.d[(y * WIDTH + x)] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
             }
         }
         y++;

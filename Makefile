@@ -6,7 +6,7 @@
 #    By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/12 12:17:42 by ramoukha          #+#    #+#              #
-#    Updated: 2021/02/16 15:31:07 by ramoukha         ###   ########.fr        #
+#    Updated: 2021/02/20 16:02:21 by ramoukha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ INC_DIR = ./includes/
 INC = ./includes/rtv1.h
 OB = $(SRC:.c=.o)
 NAME =  a.out
-LIBFLAGS = -L ./libft -lft -lpthread -L ./miniLibX -lmlx -framework OpenGL -framework AppKit
+LIBFLAGS = -L ./libft -lft -lpthread -lmlx -framework OpenGL -framework AppKit
 
 all : $(NAME)
 
@@ -34,7 +34,7 @@ $(NAME): $(OB)
 
 clean:
 	@make -C libft/ clean
-	@make -C miniLibX clean
+	# @make -C miniLibX clean
 	@rm -f $(OB)
 	@printf "\033[00;32m"
 	@printf "OBJECTS REMOVED\n"

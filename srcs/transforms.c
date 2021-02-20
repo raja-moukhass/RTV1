@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "rtv1.h"
 
-t_vec ft_rotate_x(t_vec v, float angle){
+t_vec ft_rotate_x(t_vec v, double angle){
 	t_vec res;
 
 	res.x = v.x;
@@ -20,7 +20,7 @@ t_vec ft_rotate_x(t_vec v, float angle){
 	return res;
 }
 
-t_vec ft_rotate_y(t_vec v, float angle){
+t_vec ft_rotate_y(t_vec v, double angle){
 	t_vec res;
 	res.y = v.y;
 	res.x = v.x * cos(angle) + v.z * sin(angle);
@@ -42,7 +42,7 @@ t_ray   *ft_transform_ray(t_ray *ray, t_obj *o){
 	return ray;
 }
 
-t_vec ft_rotate_z(t_vec v, float angle){
+t_vec ft_rotate_z(t_vec v, double angle){
 	t_vec res;
 
 

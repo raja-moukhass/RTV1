@@ -6,8 +6,8 @@ double				intersect_cone( t_ray *r, t_obj *c)
     double      t;
 	t_delta		d;
 	t_vec	dist;
-	float		anglesin;
-	float		anglecos;
+	double		anglesin;
+	double		anglecos;
 
 	anglecos = pow(cos(c->an_ra), 2.0);
 	anglesin = pow(sin(c->an_ra), 2.0);
@@ -26,19 +26,19 @@ double				intersect_cone( t_ray *r, t_obj *c)
 				(-d.b - d.delta) / (2.0 * d.a), &t));
 }
 double  intersect_plane(t_ray *r, t_obj *plane)
-{ 
+{
     double  t;
 
-    t_vec p0l0 = vec_sub(r->dir, plane->pos ); 
+    t_vec p0l0 = vec_sub(r->dir, plane->pos );
     double nomin = dot_product(p0l0, plane->axis);
-    float denom = dot_product(plane->axis, r->dir); 
-    if (denom == 0 || (denom > 0 &&  nomin > 0) ||  (denom < 0 &&  nomin < 0) ) 
+    double denom = dot_product(plane->axis, r->dir);
+    if (denom == 0 || (denom > 0 &&  nomin > 0) ||  (denom < 0 &&  nomin < 0) )
         return 0;
 
-    t = -nomin / denom; 
-  
-        return (t); 
-  
+    t = -nomin / denom;
+
+        return (t);
+
 }
 double intersection_cylinder(t_ray *ray, t_obj *cylinder)
 {
@@ -58,18 +58,18 @@ double intersection_cylinder(t_ray *ray, t_obj *cylinder)
     t1 = (-b - sqrt(delta)) / (2 * a);
     t2 = (-b + sqrt(delta)) / (2 * a);
     double t;
-    if (t1 < 0 && t2 < 0)
+    if (t1 <= 0 && t2 <= 0)
         return 0;
-    if (t1 > 0 && t2 > 0)
+    if (t1 >= 0 && t2 >= 0)
     {
         if (t1 > t2)
             t = t2;
         else
             t = t1;
     }
-    else if ((t1 > 0 && t2 < 0) || (t2 < 0 && t2 > 0))
+    else if ((t1 >= 0 && t2 <= 0) || (t2 <= 0 && t2 >= 0))
     {
-        if (t1 > t2)
+        if (t1 >= t2)
             t = t1;
         else
             t = t2;
@@ -79,7 +79,7 @@ double intersection_cylinder(t_ray *ray, t_obj *cylinder)
 
 double intersection_spher(t_ray *r, t_obj *s)
 {
-    
+
     double t1;
     double t2;
     double t;
@@ -89,7 +89,7 @@ double intersection_spher(t_ray *r, t_obj *s)
     double b = 2 * dot_product(r->dir, dist);
     double c = get_norm(dist) - (s->an_ra * s->an_ra);
     double delta = b * b - 4 * a * c;
- 
+
 
     if (delta < 0)
         return (-1);
@@ -97,11 +97,11 @@ double intersection_spher(t_ray *r, t_obj *s)
     t1 = (-1 * b - sqrt(delta)) / (2 * a);
     t2 = (-1 * b + sqrt(delta)) / (2 * a);
 
-    if (t2 < 0 && t1 < 0)
+    if (t2 <= 0 && t1 <= 0)
         return (-1);
-    else if (t1 > 0 && t2 < 0)
+    else if (t1 >= 0 && t2 <= 0)
         t = t1;
-    else if (t2 > 0 && t1 < 0)
+    else if (t2 >= 0 && t1 <= 0)
         t = t2;
     else
         t = fmin(t1, t2);
