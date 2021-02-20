@@ -1,26 +1,20 @@
 #include "rtv1.h"
 
-
-
-
-double		ft_min_ray(float t1, float t2, double *t)
+double ft_min_ray(float t1, float t2, double *t)
 {
-	if (((t1 < t2 || t2 < 0.001) && t1 > 0.1) && (t1 < *t))
-	{
-		*t = t1;
-		return (1);
-	}
-	else if (((t2 < t1 || t1 < 0.001) && t2 > 0.1) && (t2 < *t))
-	{
-		*t = t2;
-		return (1);
-	}
-	else
-		return (0);
+    if (((t1 < t2 || t2 < 0.001) && t1 > 0.1) && (t1 < *t))
+    {
+        *t = t1;
+        return (1);
+    }
+    else if (((t2 < t1 || t1 < 0.001) && t2 > 0.1) && (t2 < *t))
+    {
+        *t = t2;
+        return (1);
+    }
+    else
+        return (0);
 }
-
-
-
 
 double ft_atof(char *str)
 {
@@ -56,7 +50,7 @@ double ft_atof(char *str)
     return (res * signe);
 }
 
-double      get_norm(t_vec v)
+double get_norm(t_vec v)
 {
     double ret;
     ret = (v.x * v.x) + (v.y * v.y) + (v.z * v.z);
@@ -162,8 +156,6 @@ t_vec split_data(t_data *data, char *str)
     return (ret);
 }
 
-
-
 void camera_check(t_data **dat, int i)
 {
     int check;
@@ -217,7 +209,7 @@ void obj_check(t_data **dat, int i, int id)
     temp->rot = split_data(data, data->tab[++i]);
     temp->color = split_data(data, data->tab[++i]);
     if (id != 4)
-    temp->an_ra = ft_atof(ft_strdup(data->tab[++i]));
+        temp->an_ra = ft_atof(ft_strdup(data->tab[++i]));
     if (id != 1)
         temp->axis = split_data(data, data->tab[++i]);
     if (id == 1)
@@ -228,7 +220,6 @@ void obj_check(t_data **dat, int i, int id)
         temp->inter = &intersect_plane;
     else if (id == 5)
         temp->inter = &cone_intersection;
-
 }
 
 int ft_checker(t_data **data)
@@ -244,7 +235,7 @@ int ft_checker(t_data **data)
             obj_check(data, i, 2);
         if (ft_strcmp((*data)->tab[i], "light") == 0)
             light_check(data, i);
-        if(ft_strcmp((*data)->tab[i],"plane") == 0)
+        if (ft_strcmp((*data)->tab[i], "plane") == 0)
             obj_check(data, i, 4);
         if (ft_strcmp((*data)->tab[i], "cone") == 0)
             obj_check(data, i, 5);
@@ -322,8 +313,6 @@ t_vec get_camera_direction(t_camera cam, t_vec get_ray)
     return ray;
 }
 
-
-
 t_ray get_ray(double u, double v, t_camera *camera)
 {
     t_vec horizontal;
@@ -332,8 +321,8 @@ t_ray get_ray(double u, double v, t_camera *camera)
     t_vec cam_v;
     t_vec cam_w;
     t_ray new;
-    
-    u = 2 * (u + 2) / (HEIGHT) - 1;
+
+    u = 2 * (u + 2) / (HEIGHT)-1;
     v = 1 - 2 * (v + 2) / (HEIGHT);
     double half_h;
     double half_w;
@@ -356,7 +345,6 @@ t_ray get_ray(double u, double v, t_camera *camera)
     return new;
 }
 
-
 t_vec normal_sphere(double t, t_ray r, t_sphere s)
 {
     t_vec hit;
@@ -369,7 +357,6 @@ t_vec normal_sphere(double t, t_ray r, t_sphere s)
     return (normalize(n));
 }
 
-
 t_vec normalize(t_vec vec)
 {
     double mod;
@@ -381,10 +368,10 @@ t_vec normalize(t_vec vec)
     return (vec);
 }
 
-t_ray       init_rayy(int i, int j, t_camera *cam)
+t_ray init_rayy(int i, int j, t_camera *cam)
 {
-    t_vec  s;
-    t_ray   r;
+    t_vec s;
+    t_ray r;
     t_vec cam_u;
     t_vec cam_v;
     t_vec cam_w;
@@ -393,182 +380,177 @@ t_ray       init_rayy(int i, int j, t_camera *cam)
     cam_u = normalize(vec_cross(cam->up, cam_w));
     cam_v = vec_cross(cam_w, cam_u);
     s = vec_sub(cam->look_from, vec_product(cam->cam_dir, 2000));
-    s = vec_sub(s, vec_product (cam_u, (i - (HEIGHT / 2))));
+    s = vec_sub(s, vec_product(cam_u, (i - (HEIGHT / 2))));
     s = vec_add(s, vec_product(cam_v, ((HEIGHT / 2) - j)));
     r.dir = vec_sub(s, cam->look_from);
     r.o = cam->look_from;
-    r.dir =  normalize((r.dir));
+    r.dir = normalize((r.dir));
     return (r);
 }
 
-
-
-t_vec   light_it_up(t_data *data, int x, int y,t_obj *obj, double t)
+t_vec light_it_up(t_data *data, int x, int y, t_obj *obj, double t)
 {
     t_vec hit;
-    t_vec   n;
+    t_vec n;
     t_vec color;
-        hit = vec_add(data->ray.o, vec_product(data->ray.dir, t));
+    hit = vec_add(data->ray.o, vec_product(data->ray.dir, t));
     if (obj->id == 2)
     {
-        n = vec_sub(vec_sub(hit ,obj->pos), vec_product(obj->axis, dot_product(obj->axis, vec_sub(hit, obj->pos))));
+        n = vec_sub(vec_sub(hit, obj->pos), vec_product(obj->axis, dot_product(obj->axis, vec_sub(hit, obj->pos))));
         n = normalize(n);
-           double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->light->pos, hit)), n));
-                            t_vec L = normalize(vec_sub(data->light->pos, hit));
-                            t_vec V = normalize(vec_sub(data->ray.o, hit));
-                            t_vec dd = vec_product(n,dot_product(L,n));
-                            t_vec Rm = vec_sub(vec_product(dd, 2),L);
-                            double ka = 0, kd = 0, ks = 1;
-            double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
-            color.x = obj->color.x * 0.3;
-            color.y = obj->color.y * 0.3;
-            color.z = obj->color.x * 0.3;
-                       color.x =  fmin(255, obj->color.x*ang_norm_light + color.x);
-            		    color.y =  fmin(255, obj->color.y*ang_norm_light + color.y);
-            			 color.z =  fmin(255, obj->color.z*ang_norm_light + color.z);
-                        data->mlx.d[(y * WIDTH + x) + 0] =  (int)color.x << 16 | (int)color.y<< 8 | (int)color.z;
-                        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 16)&255) + data->light->color.x * intensite_pixel);
-                        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 8)&255)+data->light->color.y * intensite_pixel);
-                        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] &255) + data->light->color.z * intensite_pixel);
-                        if (color.x > 255)
-                            color.x = 255;
-                             if (color.y > 255)
-                            color.y = 255;
-                             if (color.z > 255)
-                            color.z = 255;
+        double ang_norm_light = fmax(0, dot_product(normalize(vec_sub(data->light->pos, hit)), n));
+        t_vec L = normalize(vec_sub(data->light->pos, hit));
+        t_vec V = normalize(vec_sub(data->ray.o, hit));
+        t_vec dd = vec_product(n, dot_product(L, n));
+        t_vec Rm = vec_sub(vec_product(dd, 2), L);
+        double ka = 0, kd = 0, ks = 1;
+        double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0, dot_product(Rm, V)), 40));
+        color.x = obj->color.x * 0.3;
+        color.y = obj->color.y * 0.3;
+        color.z = obj->color.x * 0.3;
+        color.x = fmin(255, obj->color.x * ang_norm_light + color.x);
+        color.y = fmin(255, obj->color.y * ang_norm_light + color.y);
+        color.z = fmin(255, obj->color.z * ang_norm_light + color.z);
+        data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 16) & 255) + data->light->color.x * intensite_pixel);
+        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 8) & 255) + data->light->color.y * intensite_pixel);
+        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] & 255) + data->light->color.z * intensite_pixel);
+        if (color.x > 255)
+            color.x = 255;
+        if (color.y > 255)
+            color.y = 255;
+        if (color.z > 255)
+            color.z = 255;
     }
-    else if (obj->id == 1 )
+    else if (obj->id == 1)
     {
-        n = normalize(vec_sub( hit, obj->pos));
-          double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->light->pos, hit)), n));
-                            t_vec L = normalize(vec_sub(data->light->pos, hit));
-                            t_vec V = normalize(vec_sub(data->ray.o, hit));
-                            t_vec dd = vec_product(n,dot_product(L,n));
-                            t_vec Rm = vec_sub(vec_product(dd, 2),L);
-                            double ka = 0, kd = 0, ks = 1;
-            double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
-            color.x = obj->color.x * 0.3;
-            color.y = obj->color.y * 0.3;
-            color.z = obj->color.x * 0.3;
-                       color.x =  fmin(255, obj->color.x*ang_norm_light + color.x);
-            		    color.y =  fmin(255, obj->color.y*ang_norm_light + color.y);
-            			 color.z =  fmin(255, obj->color.z*ang_norm_light + color.z);
-                        data->mlx.d[(y * WIDTH + x) + 0] =  (int)color.x << 16 | (int)color.y<< 8 | (int)color.z;
-                        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 16)&255) + data->light->color.x * intensite_pixel);
-                        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 8)&255)+data->light->color.y * intensite_pixel);
-                        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] &255) + data->light->color.z * intensite_pixel);
-                        if (color.x > 255)
-                            color.x = 255;
-                             if (color.y > 255)
-                            color.y = 255;
-                             if (color.z > 255)
-                            color.z = 255;
+        n = normalize(vec_sub(hit, obj->pos));
+        double ang_norm_light = fmax(0, dot_product(normalize(vec_sub(data->light->pos, hit)), n));
+        t_vec L = normalize(vec_sub(data->light->pos, hit));
+        t_vec V = normalize(vec_sub(data->ray.o, hit));
+        t_vec dd = vec_product(n, dot_product(L, n));
+        t_vec Rm = vec_sub(vec_product(dd, 2), L);
+        double ka = 0, kd = 0, ks = 1;
+        double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0, dot_product(Rm, V)), 40));
+        color.x = obj->color.x * 0.3;
+        color.y = obj->color.y * 0.3;
+        color.z = obj->color.x * 0.3;
+        color.x = fmin(255, obj->color.x * ang_norm_light + color.x);
+        color.y = fmin(255, obj->color.y * ang_norm_light + color.y);
+        color.z = fmin(255, obj->color.z * ang_norm_light + color.z);
+        data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 16) & 255) + data->light->color.x * intensite_pixel);
+        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 8) & 255) + data->light->color.y * intensite_pixel);
+        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] & 255) + data->light->color.z * intensite_pixel);
+        if (color.x > 255)
+            color.x = 255;
+        if (color.y > 255)
+            color.y = 255;
+        if (color.z > 255)
+            color.z = 255;
     }
-     else if (obj->id == 4 )
+    else if (obj->id == 4)
     {
         n = normalize(obj->axis);
-          double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->light->pos, hit)), n));
-                            t_vec L = normalize(vec_sub(data->light->pos, hit));
-                            t_vec V = normalize(vec_sub(data->ray.o, hit));
-                            t_vec dd = vec_product(n,dot_product(L,n));
-                            t_vec Rm = vec_sub(vec_product(dd, 2),L);
-                            double ka = 0, kd = 0, ks = 1;
-            double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),40));
-            color.x = obj->color.x * 0.3;
-            color.y = obj->color.y * 0.3;
-            color.z = obj->color.z * 0.3;
-                    //    color.x =  fmin(255, obj->color.x*ang_norm_light + color.x);
-            		//     color.y =  fmin(255, obj->color.y*ang_norm_light + color.y);
-            		// 	 color.z =  fmin(255, obj->color.z*ang_norm_light + color.z);
-                        data->mlx.d[(y * WIDTH + x) + 0] =  (int)color.x << 16 | (int)color.y<< 8 | (int)color.z;
-                        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 16)&255) + data->light->color.x * intensite_pixel);
-                        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 8)&255)+data->light->color.y * intensite_pixel);
-                        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] &255) + data->light->color.z * intensite_pixel);
-                        if (color.x > 255)
-                            color.x = 255;
-                             if (color.y > 255)
-                            color.y = 255;
-                             if (color.z > 255)
-                            color.z = 255;
+        double ang_norm_light = fmax(0, dot_product(normalize(vec_sub(data->light->pos, hit)), n));
+        t_vec L = normalize(vec_sub(data->light->pos, hit));
+        t_vec V = normalize(vec_sub(data->ray.o, hit));
+        t_vec dd = vec_product(n, dot_product(L, n));
+        t_vec Rm = vec_sub(vec_product(dd, 2), L);
+        double ka = 0, kd = 0, ks = 1;
+        double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0, dot_product(Rm, V)), 40));
+        color.x = obj->color.x * 0.3;
+        color.y = obj->color.y * 0.3;
+        color.z = obj->color.z * 0.3;
+        //    color.x =  fmin(255, obj->color.x*ang_norm_light + color.x);
+        //     color.y =  fmin(255, obj->color.y*ang_norm_light + color.y);
+        // 	 color.z =  fmin(255, obj->color.z*ang_norm_light + color.z);
+        data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 16) & 255) + data->light->color.x * intensite_pixel);
+        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 8) & 255) + data->light->color.y * intensite_pixel);
+        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] & 255) + data->light->color.z * intensite_pixel);
+        if (color.x > 255)
+            color.x = 255;
+        if (color.y > 255)
+            color.y = 255;
+        if (color.z > 255)
+            color.z = 255;
     }
     else if (obj->id == 5)
     {
-       double k = tan((obj->an_ra * M_PI / 180) / 2);
-  double  m = dot_product(data->ray.dir, vec_product(obj->axis, t))
-        + dot_product(vec_sub(data->ray.o, obj->pos), obj->axis);    
-    n = normalize(vec_sub(vec_sub(hit, obj->pos), vec_product(obj->axis, (1 + k + k) * m)));
-           double ang_norm_light =  fmax(0,dot_product(normalize(vec_sub(data->light->pos, hit )), n));
-  t_vec L = normalize(vec_sub(data->light->pos, hit));
-                            t_vec V = normalize(vec_sub(data->ray.o, hit));
-                            t_vec dd = vec_product(n,dot_product(L,n));
-                            t_vec Rm = vec_sub(vec_product(dd, 2),L);
-                            double ka = 0, kd = 0, ks = 1;
-            double intensite_pixel = ka + (kd * ang_norm_light) + (ks *pow(fmax(0, dot_product(Rm,V)),70));
-            color.x = obj->color.x * 0.3;
-            color.y = obj->color.y * 0.3;
-            color.z = obj->color.z * 0.3;
-                       color.x =  fmin(255, obj->color.x*ang_norm_light + color.x);
-            		    color.y =  fmin(255, obj->color.y*ang_norm_light + color.y);
-            			 color.z =  fmin(255, obj->color.z*ang_norm_light + color.z);
-                        data->mlx.d[(y * WIDTH + x) + 0] =  (int)color.x << 16 | (int)color.y<< 8 | (int)color.z;
-                        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 16)&255) + data->light->color.x * intensite_pixel);
-                        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0]>> 8)&255)+data->light->color.y * intensite_pixel);
-                        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] &255) + data->light->color.z * intensite_pixel);
-                        if (color.x > 255)
-                            color.x = 255;
-                             if (color.y > 255)
-                            color.y = 255;
-                             if (color.z > 255)
-                            color.z = 255;
+        double k = tan((obj->an_ra * M_PI / 180) / 2);
+        double m = dot_product(data->ray.dir, vec_product(obj->axis, t)) + dot_product(vec_sub(data->ray.o, obj->pos), obj->axis);
+        n = normalize(vec_sub(vec_sub(hit, obj->pos), vec_product(obj->axis, (1 + k + k) * m)));
+        double ang_norm_light = fmax(0, dot_product(normalize(vec_sub(data->light->pos, hit)), n));
+        t_vec L = normalize(vec_sub(data->light->pos, hit));
+        t_vec V = normalize(vec_sub(data->ray.o, hit));
+        t_vec dd = vec_product(n, dot_product(L, n));
+        t_vec Rm = vec_sub(vec_product(dd, 2), L);
+        double ka = 0, kd = 0, ks = 1;
+        double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0, dot_product(Rm, V)), 70));
+        color.x = obj->color.x * 0.3;
+        color.y = obj->color.y * 0.3;
+        color.z = obj->color.z * 0.3;
+        color.x = fmin(255, obj->color.x * ang_norm_light + color.x);
+        color.y = fmin(255, obj->color.y * ang_norm_light + color.y);
+        color.z = fmin(255, obj->color.z * ang_norm_light + color.z);
+        data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+        color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 16) & 255) + data->light->color.x * intensite_pixel);
+        color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 8) & 255) + data->light->color.y * intensite_pixel);
+        color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] & 255) + data->light->color.z * intensite_pixel);
+        if (color.x > 255)
+            color.x = 255;
+        if (color.y > 255)
+            color.y = 255;
+        if (color.z > 255)
+            color.z = 255;
     }
 
     return color;
-
 }
 
 t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o)
 {
-  t_vec nr;
+    t_vec nr;
 
-  nr = (t_vec){0, 0.0, 0};
-  
+    nr = (t_vec){0, 0.0, 0};
+
     float m;
     float k = tan((o->an_ra * M_PI / 180.0) / 2);
-   
-    
-	if (p.y > 0)
-		p.y = -sqrt(p.z * p.z + p.x * p.x) * tan(o->an_ra);
-	else
-		p.y = sqrt(p.z * p.z + p.x * p.x) * tan(o->an_ra);
+
+    if (p.y > 0)
+        p.y = -sqrt(p.z * p.z + p.x * p.x) * tan(o->an_ra);
+    else
+        p.y = sqrt(p.z * p.z + p.x * p.x) * tan(o->an_ra);
 
     nr = (t_vec){p.x, 0.01, p.z};
-   
-  return normalize(nr);
-}
-double   cone_intersection(t_ray *ray, t_obj *cone)
-{
-  double k;
-  double a; 
-  double b;
-  double c;
-  double t1;
-  double t2;
-  double t;
-  k = tan((cone->an_ra * M_PI / 180.0) / 2);
-  t_vec obj_center;
-  obj_center = vec_sub(ray->o, cone->pos);
-  a = dot_product(ray->dir, ray->dir) -(1 + pow(k,2)) *(dot_product(ray->dir, cone->axis) * dot_product(ray->dir, cone->axis));
-  b = 2 * (dot_product(ray->dir,obj_center) - (1 + pow(k,2)) * (dot_product(ray->dir, cone->axis) * dot_product(obj_center, cone->axis)));
-  c = (dot_product(obj_center,obj_center) - (1 + pow(k,2)) * (dot_product(obj_center, cone->axis) * dot_product(obj_center, cone->axis)));
-  double discr = b * b - 4 * a * c;
-  if(discr < 0)
-  return -1;
-  else {
-    t1 = (-b - sqrtf(discr)) / 2 * a;
-    t2 = (-b + sqrtf(discr)) / 2 * a;
 
-  }
-   if (t2 < 0 && t1 < 0)
+    return normalize(nr);
+}
+double cone_intersection(t_ray *ray, t_obj *cone)
+{
+    double k;
+    double a;
+    double b;
+    double c;
+    double t1;
+    double t2;
+    double t;
+    k = tan((cone->an_ra * M_PI / 180.0) / 2);
+    t_vec obj_center;
+    obj_center = vec_sub(ray->o, cone->pos);
+    a = dot_product(ray->dir, ray->dir) - (1 + pow(k, 2)) * (dot_product(ray->dir, cone->axis) * dot_product(ray->dir, cone->axis));
+    b = 2 * (dot_product(ray->dir, obj_center) - (1 + pow(k, 2)) * (dot_product(ray->dir, cone->axis) * dot_product(obj_center, cone->axis)));
+    c = (dot_product(obj_center, obj_center) - (1 + pow(k, 2)) * (dot_product(obj_center, cone->axis) * dot_product(obj_center, cone->axis)));
+    double discr = b * b - 4 * a * c;
+    if (discr < 0)
+        return -1;
+    else
+    {
+        t1 = (-b - sqrtf(discr)) / 2 * a;
+        t2 = (-b + sqrtf(discr)) / 2 * a;
+    }
+    if (t2 < 0 && t1 < 0)
         return (-1);
     else if (t1 > 0 && t2 < 0)
         t = t1;
@@ -576,7 +558,7 @@ double   cone_intersection(t_ray *ray, t_obj *cone)
         t = t2;
     else
         t = fmin(t1, t2);
-  return t;
+    return t;
 }
 
 void ray_tracer(t_data *data)
@@ -600,11 +582,13 @@ void ray_tracer(t_data *data)
     double yes;
     int check = 1;
     double t1 = -1;
-	// t_camera shadow;
-	t_ray shadow;
-	t_vec hit;
+    // t_camera shadow;
+    t_ray shadow;
+    t_vec hit;
+    double len1;
+    double len2;
 
-	/*
+    /*
 	while (y < HEIGHT)
     {
         x = -1;
@@ -628,61 +612,67 @@ void ray_tracer(t_data *data)
             // printf("x = %f y = %f z %f",data->ray.dir.x, data->ray.dir.y, data->ray.dir.z);
             t1 = -1;
             head = data->obj;
-            while(head)
+            while (head)
             {
                 t = head->inter(&(data->ray), head);
-            	    if ((t < t1 && t1 > 0 && t > 0) || (t > t1 && t1 < 0 && t > 0))
-            		{
-            			t1 = t;
-            			save=head;
-            		}
-            	head = head->next;
-             }
-             if (t1 != -1)
-            {
-			// shadow.o = 	vec_add(data->ray.o, vec_product(data->ray.dir, t1));
-			// shadow.dir = vec_sub(data->light->pos, shadow.o );
-			// 	 t1 = -1;
-            // head = data->obj;
-            // while(head)
-            // {
-            //     t = head->inter(&(shadow), head);
-            // 	    if (t != -1 && save->id != head->id)
-            // 		{
-            // 			t1 = t;
-			// 			break;
-            // 		}
-            // 	head = head->next;
-            // }
-			// if (t1 != -1)
-			// color = (t_vec){0,0,0};
-			// else
-                color = light_it_up(data, x, y, save, t1);
-                
-
-
-			shadow.o = 	vec_add(data->ray.o, vec_product(data->ray.dir, t1));
-			shadow.dir = vec_sub(data->light->pos, shadow.o );
-			t1 = -1;
-            head = data->obj;
-            while(head)
-            {
-                t = head->inter(&(shadow), head);
-            	    if (t != 0 && save->id != head->id)
-            		{
-            			t1 = t;
-						break;
-            		}
-					
-            	head = head->next;
+                if ((t < t1 && t1 > 0 && t > 0) || (t > t1 && t1 < 0 && t > 0))
+                {
+                    t1 = t;
+                    save = head;
+                }
+                head = head->next;
             }
-			if (t1 != -1)
-			{
-				color.x = color.x * 0.6;
-				color.y = color.y * 0.6;
-				color.z = color.z * 0.6;
-			}
-			data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+            if (t1 != -1)
+            {
+                // shadow.o = 	vec_add(data->ray.o, vec_product(data->ray.dir, t1));
+                // shadow.dir = vec_sub(data->light->pos, shadow.o );
+                // 	 t1 = -1;
+                // head = data->obj;
+                // while(head)
+                // {
+                //     t = head->inter(&(shadow), head);
+                // 	    if (t != -1 && save->id != head->id)
+                // 		{
+                // 			t1 = t;
+                // 			break;
+                // 		}
+                // 	head = head->next;
+                // }
+                // if (t1 != -1)
+                // color = (t_vec){0,0,0};
+                // else
+                color = light_it_up(data, x, y, save, t1);
+
+                shadow.o = vec_add(data->ray.o, vec_product(data->ray.dir, t1));
+                shadow.dir = normalize(vec_sub(data->light->pos, shadow.o));
+                head = data->obj;
+                while (head)
+                {
+                    t = head->inter(&(shadow), head);
+                    if (t > 0 && save != head)
+                    {
+                        t_vec hit2 = vec_add(shadow.o, vec_product(shadow.dir, t));
+                        len1 = dot_product(vec_product(shadow.dir, t), vec_product(shadow.dir, t));
+
+                        len2 = dot_product(vec_sub( hit, data->light->pos), vec_sub( hit, data->light->pos));
+                        if (len1 < len2)
+                        {
+                            color.x = color.x * 0;
+                            color.y = color.y * 0;
+                            color.z = color.z * 0;
+                            if (save->axis.z == 1)
+                            {
+                                char *str[] = {"dd", "sphere", "cylinder", "323", "plan", "cone"};
+                                printf("%s shadows %s\n", str[head->id], str[save->id]);
+                            }
+                            break;
+                        }
+                    }
+
+                    head = head->next;
+                }
+
+                data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
             }
         }
         y++;
@@ -697,7 +687,6 @@ int mouse_move(int x, int y, t_data *data)
     data->light->pos.x = x - (HEIGHT / 2);
     data->light->pos.y = y - (HEIGHT / 2);
 
-
     image_clear(data->mlx.d);
     ray_tracer(data);
     mlx_put_image_to_window(data->mlx.ptr, data->mlx.win, data->mlx.img, 0, 0);
@@ -705,26 +694,26 @@ int mouse_move(int x, int y, t_data *data)
     return 1;
 }
 
-int		key_press(int key, t_data *data)
+int key_press(int key, t_data *data)
 {
-	double	p;
+    double p;
 
-	// if (key == 35)
-	// 	mlx->up = 1;
-	// if (key == 31)
-	// 	mlx->up = 0;
-	// if (key == 34)
-	// 	init_mlx(mlx, mlx->key);
-	if (key == 124 || key == 123)
-	{
-		// p = (mlx->max_r - mlx->min_r) / 10;
-		 data->light->pos.x += key == 123 ?  data->light->pos.x++ :  data->light->pos.x;
-		 data->light->pos.x += key == 123 ?  data->light->pos.x-- :  data->light->pos.x;
-	}
-	image_clear(data->mlx.d);
+    // if (key == 35)
+    // 	mlx->up = 1;
+    // if (key == 31)
+    // 	mlx->up = 0;
+    // if (key == 34)
+    // 	init_mlx(mlx, mlx->key);
+    if (key == 124 || key == 123)
+    {
+        // p = (mlx->max_r - mlx->min_r) / 10;
+        data->light->pos.x += key == 123 ? data->light->pos.x++ : data->light->pos.x;
+        data->light->pos.x += key == 123 ? data->light->pos.x-- : data->light->pos.x;
+    }
+    image_clear(data->mlx.d);
     ray_tracer(data);
     mlx_put_image_to_window(data->mlx.ptr, data->mlx.win, data->mlx.img, 0, 0);
-	return (0);
+    return (0);
 }
 
 int main(int ac, char **av)
@@ -747,18 +736,18 @@ int main(int ac, char **av)
     int bpp;
     t_mlx f;
 
-      f.ptr = mlx_init();
-      f.win = mlx_new_window(f.ptr, WIDTH, HEIGHT, "RTV1");
-      mlx_hook(f.win,17,0,ft_close,&data);
-      mlx_hook(f.win, 2,0,keyhook,data);
-      f.img = mlx_new_image(f.ptr,WIDTH,HEIGHT);
-      f.d   = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
-      data->mlx = f;
-    debugstr("CHECK",1);
+    f.ptr = mlx_init();
+    f.win = mlx_new_window(f.ptr, WIDTH, HEIGHT, "RTV1");
+    mlx_hook(f.win, 17, 0, ft_close, &data);
+    mlx_hook(f.win, 2, 0, keyhook, data);
+    f.img = mlx_new_image(f.ptr, WIDTH, HEIGHT);
+    f.d = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
+    data->mlx = f;
+    debugstr("CHECK", 1);
     ray_tracer(data);
     // mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
-    mlx_hook(data->mlx.win, 2, 0, key_press, data);
-    mlx_put_image_to_window(f.ptr, f.win, f.img,0 ,0);
-     mlx_loop(f.ptr);
+    // mlx_hook(data->mlx.win, 2, 0, key_press, data);
+    mlx_put_image_to_window(f.ptr, f.win, f.img, 0, 0);
+    mlx_loop(f.ptr);
     return (0);
 }
