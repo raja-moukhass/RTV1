@@ -1,29 +1,37 @@
 
 #include "rtv1.h"
-
-double				intersect_cone( t_ray *r, t_obj *c)
+double cone_intersection(t_ray *ray, t_obj *cone)
 {
-    double      t;
-	t_delta		d;
-	t_vec	dist;
-	double		anglesin;
-	double		anglecos;
-
-	anglecos = pow(cos(c->an_ra), 2.0);
-	anglesin = pow(sin(c->an_ra), 2.0);
-	dist = vec_sub(r->o, c->axis);
-	d.a = anglecos * (r->dir.z * r->dir.z + r->dir.x * r->dir.x)
-		- anglesin * (r->dir.y * r->dir.y);
-	d.b = 2.0 * (anglecos * (dist.z * r->dir.z + dist.x * r->dir.x)
-			- anglesin * (dist.y * r->dir.y));
-	d.c = anglecos * (dist.z * dist.z + dist.x * dist.x)
-		- anglesin * (dist.y * dist.y);
-	d.delta = d.b * d.b - 4.0 * d.a * d.c;
-	if (d.delta < 0.00000001)
-		return (0);
-	d.delta = sqrt(d.delta);
-	return (ft_min_ray((-d.b + d.delta) / (2.0 * d.a),
-				(-d.b - d.delta) / (2.0 * d.a), &t));
+    double k;
+    double a;
+    double b;
+    double c;
+    double t1;
+    double t2;
+    double t;
+    k = tan((cone->an_ra * M_PI / 180.0) / 2);
+    t_vec obj_center;
+    obj_center = vec_sub(ray->o, cone->pos);
+    a = dot_product(ray->dir, ray->dir) - (1 + pow(k, 2)) * (dot_product(ray->dir, cone->axis) * dot_product(ray->dir, cone->axis));
+    b = 2 * (dot_product(ray->dir, obj_center) - (1 + pow(k, 2)) * (dot_product(ray->dir, cone->axis) * dot_product(obj_center, cone->axis)));
+    c = (dot_product(obj_center, obj_center) - (1 + pow(k, 2)) * (dot_product(obj_center, cone->axis) * dot_product(obj_center, cone->axis)));
+    double discr = b * b - 4 * a * c;
+    if (discr < 0)
+        return -1;
+    else
+    {
+        t1 = (-b - sqrtf(discr)) / 2 * a;
+        t2 = (-b + sqrtf(discr)) / 2 * a;
+    }
+    if (t2 < 0 && t1 < 0)
+        return (-1);
+    else if (t1 >= 0 && t2 < 0)
+        t = t1;
+    else if (t2 > 0 && t1 < 0)
+        t = t2;
+    else
+        t = fmin(t1, t2);
+    return t;
 }
 
 // double		solve_plane(t_plane *pl, t_ray ray)

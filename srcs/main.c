@@ -57,52 +57,8 @@ double get_norm(t_vec v)
     return (ret);
 }
 
-t_obj *add_node(t_data **dat)
-{
-    int i = 1;
-    t_data *data = *dat;
 
-    t_obj *temp;
-    t_obj *p;
-    temp = ft_memalloc(sizeof(t_obj));
-    if (data->obj == NULL)
-        data->obj = temp;
-    else
-    {
-        p = data->obj;
-        while (p->next != NULL)
-        {
-            p = p->next;
-            i++;
-        }
-        p->next = temp;
-    }
-    temp->id = i;
-    return (temp);
-}
-void debugstr(char *str, int nl)
-{
-    ft_putstr_fd("|", 2);
-    ft_putstr_fd(str, 2);
-    ft_putstr_fd("|", 2);
-    if (nl)
-        ft_putendl_fd("", 2);
-}
 
-void debugnbr(int nbr, int nl, int fd)
-{
-    ft_putstr_fd("|", fd);
-    ft_putnbr_fd(nbr, fd);
-    ft_putstr_fd("|", fd);
-    if (nl)
-        ft_putendl_fd("", fd);
-}
-
-void call_error(t_data *data)
-{
-    ft_putstr("parsing error");
-    exit(1);
-}
 
 int ft_lines(int fd)
 {
@@ -156,108 +112,9 @@ t_vec split_data(t_data *data, char *str)
     return (ret);
 }
 
-void camera_check(t_data **dat, int i)
-{
-    int check;
-    t_data *data;
 
-    data = *dat;
-    check = 1;
-    while (data->tab[i + check] && check < 3)
-        check++;
-    if (check != 3)
-        call_error(data);
 
-    data->camera->look_from = split_data(data, data->tab[i + 1]);
 
-    data->camera->cam_dir = split_data(data, data->tab[i + 2]);
-}
-void light_check(t_data **dat, int i)
-{
-    int check;
-    t_data *data;
-
-    data = *dat;
-    check = 1;
-    while (data->tab[i + check] && check < 3)
-        check++;
-    if (check != 3)
-        call_error(data);
-
-    data->light->pos = split_data(data, data->tab[i + 1]);
-
-    data->light->color = split_data(data, data->tab[i + 2]);
-    data->light->intens = ft_atof(ft_strdup(data->tab[i + 3]));
-}
-void obj_check(t_data **dat, int i, int id)
-{
-    int check;
-    t_obj *temp;
-    t_data *data;
-
-    data = *dat;
-    check = 1;
-    while (data->tab[i + check] && check < 4)
-        check++;
-
-    if (check != 4)
-        call_error(data);
-    temp = add_node(dat);
-    temp->id = id;
-    temp->pos = split_data(data, data->tab[++i]);
-    temp->trans = split_data(data, data->tab[++i]);
-    temp->rot = split_data(data, data->tab[++i]);
-    temp->color = split_data(data, data->tab[++i]);
-    if (id != 4)
-        temp->an_ra = ft_atof(ft_strdup(data->tab[++i]));
-    if (id != 1)
-        temp->axis = split_data(data, data->tab[++i]);
-    if (id == 1)
-        temp->inter = &intersection_spher;
-    else if (id == 2)
-        temp->inter = &intersection_cylinder;
-    else if (id == 4)
-        temp->inter = &intersect_plane;
-    else if (id == 5)
-        temp->inter = &cone_intersection;
-}
-
-int ft_checker(t_data **data)
-{
-    int i = 0;
-    while ((*data)->tab[i])
-    {
-        if (ft_strcmp((*data)->tab[i], "camera") == 0)
-            camera_check(data, i);
-        if (ft_strcmp((*data)->tab[i], "sphere") == 0)
-            obj_check(data, i, 1);
-        if (ft_strcmp((*data)->tab[i], "cylinder") == 0)
-            obj_check(data, i, 2);
-        if (ft_strcmp((*data)->tab[i], "light") == 0)
-            light_check(data, i);
-        if (ft_strcmp((*data)->tab[i], "plane") == 0)
-            obj_check(data, i, 4);
-        if (ft_strcmp((*data)->tab[i], "cone") == 0)
-            obj_check(data, i, 5);
-        i++;
-    }
-    return (0);
-}
-
-void image_clear(int *d)
-{
-    int y;
-    int x;
-
-    y = 0;
-    while (y < HEIGHT)
-    {
-        x = -1;
-        while (x++ < WIDTH)
-            d[y * WIDTH + x] = 0x000000;
-        y++;
-    }
-}
 void init_data(t_data **data, char *av)
 {
     int i;
@@ -291,19 +148,8 @@ void init_data(t_data **data, char *av)
     (*data)->camera->fov = 20;
 }
 
-int ft_close(void)
-{
-    exit(1);
-    return (0);
-}
 
-int keyhook(int key, void *p)
-{
-    (void)p;
-    if (key == 53)
-        ft_close();
-    return (0);
-}
+
 
 t_vec get_camera_direction(t_camera cam, t_vec get_ray)
 {
@@ -509,57 +355,7 @@ t_vec light_it_up(t_data *data, int x, int y, t_obj *obj, double t)
     return color;
 }
 
-t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o)
-{
-    t_vec nr;
 
-    nr = (t_vec){0, 0.0, 0};
-
-    double m;
-    double k = tan((o->an_ra * M_PI / 180.0) / 2);
-
-    if (p.y > 0)
-        p.y = -sqrt(p.z * p.z + p.x * p.x) * tan(o->an_ra);
-    else
-        p.y = sqrt(p.z * p.z + p.x * p.x) * tan(o->an_ra);
-
-    nr = (t_vec){p.x, 0.01, p.z};
-
-    return normalize(nr);
-}
-double cone_intersection(t_ray *ray, t_obj *cone)
-{
-    double k;
-    double a;
-    double b;
-    double c;
-    double t1;
-    double t2;
-    double t;
-    k = tan((cone->an_ra * M_PI / 180.0) / 2);
-    t_vec obj_center;
-    obj_center = vec_sub(ray->o, cone->pos);
-    a = dot_product(ray->dir, ray->dir) - (1 + pow(k, 2)) * (dot_product(ray->dir, cone->axis) * dot_product(ray->dir, cone->axis));
-    b = 2 * (dot_product(ray->dir, obj_center) - (1 + pow(k, 2)) * (dot_product(ray->dir, cone->axis) * dot_product(obj_center, cone->axis)));
-    c = (dot_product(obj_center, obj_center) - (1 + pow(k, 2)) * (dot_product(obj_center, cone->axis) * dot_product(obj_center, cone->axis)));
-    double discr = b * b - 4 * a * c;
-    if (discr < 0)
-        return -1;
-    else
-    {
-        t1 = (-b - sqrtf(discr)) / 2 * a;
-        t2 = (-b + sqrtf(discr)) / 2 * a;
-    }
-    if (t2 < 0 && t1 < 0)
-        return (-1);
-    else if (t1 >= 0 && t2 < 0)
-        t = t1;
-    else if (t2 > 0 && t1 < 0)
-        t = t2;
-    else
-        t = fmin(t1, t2);
-    return t;
-}
 
 void ray_tracer(t_data *data)
 {
@@ -743,7 +539,7 @@ int main(int ac, char **av)
     f.img = mlx_new_image(f.ptr, WIDTH, HEIGHT);
     f.d = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
     data->mlx = f;
-    debugstr("CHECK", 1);
+   
     ray_tracer(data);
     mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
     // mlx_hook(data->mlx.win, 2, 0, key_press, data);

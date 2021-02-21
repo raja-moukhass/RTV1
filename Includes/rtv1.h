@@ -144,7 +144,7 @@ typedef struct s_data
 	t_ray		ray;
 }              t_data;
 double    intersection_spher(t_ray *r,t_obj *s);
-double   cone_intersection(t_ray *ray, t_obj *cone);
+double cone_intersection(t_ray *ray, t_obj *cone);
 t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o);
 
 double	intersect_cone( t_ray *r, t_obj *c);
@@ -152,6 +152,16 @@ double  intersect_plane(t_ray *r, t_obj *plane);
 double		ft_min_ray(double t1, double t2, double *t);
 double intersection_spher(t_ray *r, t_obj *s);
 double      get_norm(t_vec v);
+int keyhook(int key, void *p);
+void image_clear(int *d);
+void call_error(t_data *data);
+int ft_checker(t_data **data);
+void camera_check(t_data **dat, int i);
+void light_check(t_data **dat, int i);
+void obj_check(t_data **dat, int i, int id);
+double ft_atof(char *str);
+t_obj *add_node(t_data **dat);
+
 
 double		 intersection_cylinder(t_ray *ray, t_obj *cylinder);
 t_vec  vec_cross(t_vec v1, t_vec v2);
@@ -165,11 +175,12 @@ t_vec ft_rotate_z(t_vec v, double angle);
 t_vec ft_rotate(t_vec v, t_vec rot);
 t_vec ft_translate(t_vec v, t_vec trans);
 t_ray   *ft_transform_ray(t_ray *ray, t_obj *o);
-
-
+int ft_close(void);
 t_vec  vec_sub(t_vec v1, t_vec v2);
 double	  dot_product(t_vec v1, t_vec v2);
 t_vec normal_sphere(double t, t_ray r, t_sphere s);
 t_vec  normalize(t_vec vec);
 t_vec  vec_product(t_vec v, double i);
+t_vec split_data(t_data *data, char *str);
+
 #endif

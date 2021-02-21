@@ -11,8 +11,8 @@
 # **************************************************************************** #
 
 COMP = gcc -g
-SRC = srcs/main.c srcs/vec_calc.c  srcs/transforms.c srcs/ft_intersection.c
-OB =  srcs/main.o srcs/vec_calc.o srcs/transforms.o  srcs/ft_intersection.o
+SRC = srcs/main.c srcs/vec_calc.c  srcs/transforms.c srcs/ft_intersection.c srcs/tools.c srcs/checker.c
+OB =  srcs/main.o srcs/vec_calc.o srcs/transforms.o  srcs/ft_intersection.o srcs/tools.o srcs/checker.o
 INC_DIR = ./includes/
 INC = ./includes/rtv1.h
 OB = $(SRC:.c=.o)
