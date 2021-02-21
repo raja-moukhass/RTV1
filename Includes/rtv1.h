@@ -146,6 +146,18 @@ typedef struct s_data
 double    intersection_spher(t_ray *r,t_obj *s);
 double cone_intersection(t_ray *ray, t_obj *cone);
 t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o);
+int ft_lines(int fd);
+double get_norm(t_vec v);
+t_vec normal_sphere(double t, t_ray r, t_sphere s);
+t_vec normalize(t_vec vec);
+double ft_min_ray(double t1, double t2, double *t);
+double ft_atof(char *str);
+
+t_vec light_it_up(t_data *data, int x, int y, t_obj *obj, double t);
+void init_data(t_data **data, char *av);
+
+
+
 
 double	intersect_cone( t_ray *r, t_obj *c);
 double  intersect_plane(t_ray *r, t_obj *plane);
@@ -161,6 +173,11 @@ void light_check(t_data **dat, int i);
 void obj_check(t_data **dat, int i, int id);
 double ft_atof(char *str);
 t_obj *add_node(t_data **dat);
+
+void init_data(t_data **data, char *av);
+t_ray get_ray(double u, double v, t_camera *camera);
+t_vec get_camera_direction(t_camera cam, t_vec get_ray);
+t_ray init_rayy(int i, int j, t_camera *cam);
 
 
 double		 intersection_cylinder(t_ray *ray, t_obj *cylinder);

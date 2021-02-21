@@ -15,6 +15,7 @@ int ft_close(void)
 }
 
 
+
 void call_error(t_data *data)
 {
     ft_putstr("parsing error");
@@ -58,4 +59,19 @@ t_obj *add_node(t_data **dat)
     }
     temp->id = i;
     return (temp);
+}
+
+
+int ft_lines(int fd)
+{
+    char *line = NULL;
+    int count = 0;
+
+    while (get_next_line(fd, &line))
+    {
+        count++;
+        free(line);
+    }
+    close(fd);
+    return (count);
 }
