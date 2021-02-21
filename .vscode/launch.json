@@ -8,10 +8,10 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/Users/ramoukha/Desktop/rtv1/RTV1",
-            "args": ["files/0_0_sphere"],
+            "program": "/Users/amya/Desktop/ramoukha/a.out",
+            "args": ["/Users/amya/Desktop/rrt/mytest 2"],
             "stopAtEntry": true,
-            "cwd": "/Users/ramoukha/Desktop/rtv1",
+            "cwd": "/Users/amya/Desktop/ramoukha",
             "environment": [],
             "externalConsole": false,
             "MIMode": "lldb"

@@ -25,21 +25,39 @@ double				intersect_cone( t_ray *r, t_obj *c)
 	return (ft_min_ray((-d.b + d.delta) / (2.0 * d.a),
 				(-d.b - d.delta) / (2.0 * d.a), &t));
 }
+
+// double		solve_plane(t_plane *pl, t_ray ray)
+// {
+// 	t_equation	e;
+// 	t_vect		x;
+
+// 	e.a = vector_scalar(ray.dir, pl->norm);
+// 	if (e.a == 0)
+// 		return (0);
+// 	x = vector_sub(ray.origin, pl->origin);
+// 	e.b = vector_scalar(x, pl->norm);
+// 	e.s1 = -e.b / e.a;
+// 	if (e.s1 < 0)
+// 		return (0);
+// 	return (e.s1);
+// }
+
+
 double  intersect_plane(t_ray *r, t_obj *plane)
 {
     double  t;
 
-    t_vec p0l0 = vec_sub(r->dir, plane->pos );
-    double nomin = dot_product(p0l0, plane->axis);
-    double denom = dot_product(plane->axis, r->dir);
-    if (denom == 0 || (denom > 0 &&  nomin > 0) ||  (denom < 0 &&  nomin < 0) )
+    double res = dot_product(r->dir, plane->axis);
+	if (res == 0)
+		return (0);
+    t_vec nomin = vec_sub(r->o, plane->pos);
+    double denom = dot_product(nomin,plane->axis);
+    double s1 = -(denom)/(res);
+    if(s1 <0)
         return 0;
-
-    t = -nomin / denom;
-
-        return (t);
-
+        return(s1);
 }
+
 double intersection_cylinder(t_ray *ray, t_obj *cylinder)
 {
 	ray = ft_transform_ray(ray, cylinder);

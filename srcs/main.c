@@ -650,11 +650,12 @@ void ray_tracer(t_data *data)
                 {
                     // if (save != head)
                         t = head->inter(&(shadow), head);
+                    if (x == 107 && y == 736)
+                        ft_putendl("");
                     if (t > 0 && save != head)
                     {
                         t_vec hit2 = vec_add(shadow.o, vec_product(shadow.dir, t));
                         len1 = dot_product(vec_product(shadow.dir, t), vec_product(shadow.dir, t));
-
                         len2 = dot_product(vec_sub(hit, data->light->pos), vec_sub(hit, data->light->pos));
 
                         if (len1 < len2)
@@ -680,9 +681,12 @@ int mouse_move(int x, int y, t_data *data)
     double PI = 22 / 7;
     double alpha = 60 * PI / 180;
     // data->camera->look_from.x = x - (HEIGHT / 2);
-    data->light->pos.x = x - (HEIGHT / 2);
-    data->light->pos.y = y - (HEIGHT / 2);
-
+   
+    ft_putendl("");
+    
+    ft_putnbr(x);
+    ft_putendl("");
+    ft_putnbr(y);
     image_clear(data->mlx.d);
     ray_tracer(data);
     mlx_put_image_to_window(data->mlx.ptr, data->mlx.win, data->mlx.img, 0, 0);
@@ -741,7 +745,7 @@ int main(int ac, char **av)
     data->mlx = f;
     debugstr("CHECK", 1);
     ray_tracer(data);
-    // mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
+    mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
     // mlx_hook(data->mlx.win, 2, 0, key_press, data);
     mlx_put_image_to_window(f.ptr, f.win, f.img, 0, 0);
     mlx_loop(f.ptr);
