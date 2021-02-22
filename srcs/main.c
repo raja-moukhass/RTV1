@@ -39,20 +39,6 @@ t_vec split_data(t_data *data, char *str)
     return (ret);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void ray_tracer(t_data *data)
 {
     t_vec color;
@@ -142,8 +128,6 @@ void ray_tracer(t_data *data)
                 {
                     // if (save != head)
                         t = head->inter(&(shadow), head);
-                    if (x == 107 && y == 736)
-                        ft_putendl("");
                     if (t > 0 && save != head)
                     {
                         t_vec hit2 = vec_add(shadow.o, vec_product(shadow.dir, t));
@@ -152,9 +136,11 @@ void ray_tracer(t_data *data)
 
                         if (len1 < len2)
                         {
-                            color.x = color.x * 0.1;
-                            color.y = color.y * 0.1;
-                            color.z = color.z * 0.1;
+                    if (x == 248 && y == 727)
+                        ft_putendl("");
+                            color.x =  color.x * 0.6 ;
+                            color.y = color.y * 0.6 ;
+                            color.z = color.z * 0.6 ;
                             break;
                         }
                     }
@@ -198,9 +184,11 @@ int key_press(int key, t_data *data)
     // 	init_mlx(mlx, mlx->key);
     if (key == 124 || key == 123)
     {
+            ft_putendl("hey");
+
         // p = (mlx->max_r - mlx->min_r) / 10;
-        data->light->pos.x += key == 123 ? data->light->pos.x++ : data->light->pos.x;
-        data->light->pos.x += key == 123 ? data->light->pos.x-- : data->light->pos.x;
+        data->camera->cam_dir.x -= key == 123 ? 40 : 0;
+        data->camera->cam_dir.x += key == 124 ? 40 : 0;
     }
     image_clear(data->mlx.d);
     ray_tracer(data);

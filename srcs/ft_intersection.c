@@ -20,8 +20,8 @@ double cone_intersection(t_ray *ray, t_obj *cone)
         return -1;
     else
     {
-        t1 = (-b - sqrtf(discr)) / 2 * a;
-        t2 = (-b + sqrtf(discr)) / 2 * a;
+        t1 = (-b - sqrt(discr)) / 2 * a;
+        t2 = (-b + sqrt(discr)) / 2 * a;
     }
     if (t2 < 0 && t1 < 0)
         return (-1);
@@ -61,7 +61,7 @@ double  intersect_plane(t_ray *r, t_obj *plane)
     t_vec nomin = vec_sub(r->o, plane->pos);
     double denom = dot_product(nomin,plane->axis);
     double s1 = -(denom)/(res);
-    if(s1 <0)
+    if(s1 <= 0)
         return 0;
         return(s1);
 }
