@@ -1,5 +1,8 @@
 
 #include "rtv1.h"
+
+
+
 double cone_intersection(t_ray *ray, t_obj *cone)
 {
     double k;
@@ -9,7 +12,7 @@ double cone_intersection(t_ray *ray, t_obj *cone)
     double t1;
     double t2;
     double t;
-    k = tan((cone->an_ra * M_PI / 180.0) / 2);
+    k = tan((cone->an_ra * M_PI / 180.0));
     t_vec obj_center;
     obj_center = vec_sub(ray->o, cone->pos);
     a = dot_product(ray->dir, ray->dir) - (1 + pow(k, 2)) * (dot_product(ray->dir, cone->axis) * dot_product(ray->dir, cone->axis));
@@ -20,8 +23,8 @@ double cone_intersection(t_ray *ray, t_obj *cone)
         return -1;
     else
     {
-        t1 = (-b - sqrt(discr)) / 2 * a;
-        t2 = (-b + sqrt(discr)) / 2 * a;
+        t1 = (-b - sqrt(discr)) / (2 * a);
+        t2 = (-b + sqrt(discr)) / (2 * a);
     }
     if (t2 < 0 && t1 < 0)
         return (-1);
