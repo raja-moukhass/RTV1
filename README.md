@@ -21,3 +21,4 @@ sources
 (cone intersection)
 - https://github.com/raja-moukhass/RTV1.git (good resources)
 - https://github.com/VBrazhnik/FdF/wiki/How-to-rotate-figure-in-3D%3F (rotation)
+- https://www.youtube.com/watch?v=yF8cKSIw6l4 (rotation video)
