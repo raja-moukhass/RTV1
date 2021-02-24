@@ -90,6 +90,7 @@ void ray_tracer(t_data *data)
             // printf("x = %f y = %f z %f",data->ray.dir.x, data->ray.dir.y, data->ray.dir.z);
             t1 = -1;
             head = data->obj;
+
             while (head)
             {
                 t = head->inter(&(data->ray), head);
@@ -159,9 +160,9 @@ int mouse_move(int x, int y, t_data *data)
     double PI = 22 / 7;
     double alpha = 60 * PI / 180;
     // data->camera->look_from.x = x - (HEIGHT / 2);
-   
+
     ft_putendl("");
-    
+
     ft_putnbr(x);
     ft_putendl("");
     ft_putnbr(y);
@@ -223,10 +224,10 @@ int main(int ac, char **av)
     f.img = mlx_new_image(f.ptr, WIDTH, HEIGHT);
     f.d = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
     data->mlx = f;
-   
+
     ray_tracer(data);
-    mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
-    // mlx_hook(data->mlx.win, 2, 0, key_press, data);
+    // mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
+    mlx_hook(data->mlx.win, 2, 0, key_press, data);
     mlx_put_image_to_window(f.ptr, f.win, f.img, 0, 0);
     mlx_loop(f.ptr);
     return (0);

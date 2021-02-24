@@ -191,7 +191,7 @@ t_vec ft_rotate_y(t_vec v, double angle);
 t_vec ft_rotate_z(t_vec v, double angle);
 t_vec ft_rotate(t_vec v, t_vec rot);
 t_vec ft_translate(t_vec v, t_vec trans);
-t_ray   *ft_transform_ray(t_ray *ray, t_obj *o);
+t_vec   ft_transform_ray(t_obj *o);
 int ft_close(void);
 t_vec  vec_sub(t_vec v1, t_vec v2);
 double	  dot_product(t_vec v1, t_vec v2);

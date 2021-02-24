@@ -29,7 +29,7 @@ void init_data(t_data **data, char *av)
     (*data)->light = malloc(sizeof(t_light));
     (*data)->camera->look_from = (t_vec){0, 5, 0};
     (*data)->camera->cam_dir = (t_vec){0, 0, 0};
-    (*data)->camera->up = (t_vec){0, 1, 0};
+    (*data)->camera->up = (t_vec){0, 1, 0.1};
     (*data)->camera->fov = 20;
 }
 

@@ -71,7 +71,7 @@ double  intersect_plane(t_ray *r, t_obj *plane)
 
 double intersection_cylinder(t_ray *ray, t_obj *cylinder)
 {
-	ray = ft_transform_ray(ray, cylinder);
+	// cylinder->axis = ft_transform_ray( cylinder);
     t_vec delta_p = vec_sub(ray->o, cylinder->pos);
     double tmp = dot_product(ray->dir, cylinder->axis);
     double a = dot_product(ray->dir, ray->dir) - pow(tmp, 2);

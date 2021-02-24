@@ -29,17 +29,17 @@ t_vec ft_rotate_y(t_vec v, double angle){
 
 }
 
-t_ray   *ft_transform_ray(t_ray *ray, t_obj *o){
-	t_vec rot;
-	t_vec trans;
+   t_vec ft_transform_ray( t_obj *o){
+	// t_vec rot;
+	// t_vec trans;
 
-	rot = (t_vec){-o->rot.x, -o->rot.y, -o->rot.z};
-	trans = (t_vec){-o->trans.x, -o->trans.y, -o->trans.z};
+	// rot = (t_vec){-o->rot.x, -o->rot.y, -o->rot.z};
+	// trans = (t_vec){-o->trans.x, -o->trans.y, -o->trans.z};
 
-	ray->o = ft_rotate(ray->o, rot);
-	ray->o = ft_translate(ray->o, trans);
-	ray->dir = ft_rotate(ray->dir, rot);
-	return ray;
+	o->axis = ft_rotate(o->axis, o->rot);
+	// ray->o = ft_translate(ray->o, trans);
+	// ray->dir = ft_rotate(ray->dir, rot);
+	return o->axis;
 }
 
 t_vec ft_rotate_z(t_vec v, double angle){
@@ -55,9 +55,9 @@ t_vec ft_rotate_z(t_vec v, double angle){
 t_vec ft_rotate(t_vec v, t_vec rot){
 	t_vec res;
 
-	res = ft_rotate_x(v, rot.x);
-	res = ft_rotate_y(res, rot.y);
-	res = ft_rotate_z(res, rot.z);
+	res = ft_rotate_x(v, rot.x * M_PI / 180.0);
+	res = ft_rotate_y(res, rot.y * M_PI / 180.0);
+	res = ft_rotate_z(res, rot.z * M_PI / 180.0);
 	return res;
 }
 

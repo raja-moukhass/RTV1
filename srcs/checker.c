@@ -44,7 +44,15 @@ void obj_check(t_data **dat, int i, int id)
     if (id != 4)
         temp->an_ra = ft_atof(ft_strdup(data->tab[++i]));
     if (id != 1)
-        temp->axis = split_data(data, data->tab[++i]);
+        {
+
+            temp->axis = split_data(data, data->tab[++i]);
+           // if (id == 2)
+           printf("\nbefore id = %d x = %f y = %f z = %f",temp->id, temp->axis.x, temp->axis.y, temp->axis.z );
+            temp->axis = ft_transform_ray(temp);
+            printf("\nafter id = %d x = %f y = %f z = %f",temp->id, temp->axis.x, temp->axis.y, temp->axis.z );
+
+        }
     if (id == 1)
         temp->inter = &intersection_spher;
     else if (id == 2)
@@ -53,6 +61,7 @@ void obj_check(t_data **dat, int i, int id)
         temp->inter = &intersect_plane;
     else if (id == 5)
         temp->inter = &cone_intersection;
+
 }
 
 
@@ -69,7 +78,6 @@ void camera_check(t_data **dat, int i)
         call_error(data);
 
     data->camera->look_from = split_data(data, data->tab[i + 1]);
-
     data->camera->cam_dir = split_data(data, data->tab[i + 2]);
 }
 
