@@ -1,0 +1,38 @@
+camera
+	look_from
+	look_at
+
+sphere
+	position
+	translation
+	rotation
+	color
+	radius
+	
+plane
+	position
+	translation
+	rotation
+	color
+	axis
+
+cone
+	position
+	translation
+	axis
+	rotation
+	color
+	angle
+
+cylinder
+	position
+	axis
+	translation
+	rotation
+	color
+	radius
+	
+light
+	position
+	intensity
+	color
