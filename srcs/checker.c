@@ -22,6 +22,23 @@ int	ft_checker(t_data **data)
 	return (0);
 }
 
+int init_obj(t_obj *temp, int i, t_data *data, int id)
+{
+	temp->id = id;
+	temp->pos = split_data(data, data->tab[++i]);
+	temp->trans = split_data(data, data->tab[++i]);
+	temp->rot = split_data(data, data->tab[++i]);
+	temp->color = split_data(data, data->tab[++i]);
+	if (id != 4)
+		temp->an_ra = ft_atof(ft_strdup(data->tab[++i]));
+	if (id != 1)
+	{
+		temp->axis = split_data(data, data->tab[++i]);
+		temp->axis = ft_transform_ray(temp);
+	}
+	return(i);
+}
+
 void	obj_check(t_data **dat, int i, int id)
 {
 	int check;
@@ -35,18 +52,9 @@ void	obj_check(t_data **dat, int i, int id)
 	if (check != 4)
 		call_error(data);
 	temp = add_node(dat);
-	temp->id = id;
-	temp->pos = split_data(data, data->tab[++i]);
-	temp->trans = split_data(data, data->tab[++i]);
-	temp->rot = split_data(data, data->tab[++i]);
-	temp->color = split_data(data, data->tab[++i]);
-	if (id != 4)
-		temp->an_ra = ft_atof(ft_strdup(data->tab[++i]));
-	if (id != 1)
-	{
-		temp->axis = split_data(data, data->tab[++i]);
-		temp->axis = ft_transform_ray(temp);
-	}
+ i = init_obj(temp,  i, data, id);
+
+	
 	if (id == 1)
 		temp->inter = &intersection_spher;
 	else if (id == 2)

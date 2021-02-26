@@ -7,6 +7,8 @@
 # define WIDTH  1000
 # define HEIGHT 1000
 # define BPP 3
+# define PI 22 /7
+# define ALPHA 60 * PI / 180
 // # define PSIZE (4 - (600 * 3) % 4) % 4
 # define FILE_HEADER_SIZE 14
 # define INFO_HEADER_SIZE 40
@@ -25,6 +27,25 @@
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
+
+
+
+typedef struct s_sol
+{
+	double k;
+    double a;
+    double b;
+    double c;
+    double t1;
+    double t2;
+    double t;
+	double tmp;
+	double tmp_2;
+	double tmp1;
+	double delta;
+
+}t_sol;
+
 typedef struct	s_vec
 {
 	double	x;
@@ -159,6 +180,19 @@ typedef struct s_data
 	t_light		*light;
 	t_ray		ray;
 }              t_data;
+
+typedef struct s_raytracer
+{
+	t_vec color;
+    t_obj *head;
+    t_obj *save;
+    t_ray shadow;
+    int y;
+    int x;
+	double t;
+	double t1; 
+
+}t_raytracer;
 double    intersection_spher(t_ray *r,t_obj *s);
 double cone_intersection(t_ray *ray, t_obj *cone);
 t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o);
@@ -166,7 +200,7 @@ int ft_lines(int fd);
 double get_norm(t_vec v);
 t_vec normal_sphere(double t, t_ray r, t_sphere s);
 t_vec normalize(t_vec vec);
-double ft_min_ray(double t1, double t2, double *t);
+double ft_min_ray(double t1, double t2, double t);
 double ft_atof(char *str);
 
 t_vec light_it_up(t_data *data, int x, int y, t_obj *obj, double t);
@@ -271,7 +305,7 @@ t_var_light          *ft_var_light(t_data *data, t_obj *obj, t_var_light *light)
 
 double	intersect_cone( t_ray *r, t_obj *c);
 double  intersect_plane(t_ray *r, t_obj *plane);
-double		ft_min_ray(double t1, double t2, double *t);
+double ft_min_ray(double t1, double t2, double t);
 double intersection_spher(t_ray *r, t_obj *s);
 double      get_norm(t_vec v);
 int keyhook(int key, void *p);

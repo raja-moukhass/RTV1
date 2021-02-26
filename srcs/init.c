@@ -6,7 +6,6 @@ void init_data(t_data **data, char *av)
     char **tab;
     int count;
     int fd;
-
     t_camera cam;
 
     i = 0;
@@ -17,14 +16,12 @@ void init_data(t_data **data, char *av)
     while (get_next_line(fd, &tab[i]))
         i++;
     close(fd);
-
     tab[i] = NULL;
     (*data) = (t_data *)malloc(sizeof(t_data));
     (*data)->tab = tab;
     (*data)->camera = (t_camera *)malloc(sizeof(t_camera));
     (*data)->obj = malloc(sizeof(t_obj));
     (*data)->obj = NULL;
-
     (*data)->light = malloc(sizeof(t_light));
     (*data)->camera->look_from = (t_vec){0, 5, 0};
     (*data)->camera->cam_dir = (t_vec){0, 0, 0};
@@ -40,20 +37,18 @@ t_vec get_camera_direction(t_camera cam, t_vec get_ray)
     return ray;
 }
 
-double ft_min_ray(double t1, double t2, double *t)
+double ft_min_ray(double t1, double t2, double t)
 {
-    if (((t1 < t2 || t2 < 0.001) && t1 > 0.1) && (t1 < *t))
-    {
-        *t = t1;
-        return (1);
-    }
-    else if (((t2 < t1 || t1 < 0.001) && t2 > 0.1) && (t2 < *t))
-    {
-        *t = t2;
-        return (1);
-    }
+    t_sol n;
+  if (t2 <= 0 && t1 <= 0)
+        return (-1);
+    else if (t1 >= 0 && t2 <= 0)
+        t = t1;
+    else if (t2 >= 0 && t1 <= 0)
+        t = t2;
     else
-        return (0);
+        t = fmin(t1, t2);
+    return (t);;
 }
 
 t_ray get_ray(double u, double v, t_camera *camera)
@@ -84,6 +79,5 @@ t_ray get_ray(double u, double v, t_camera *camera)
     new.dir = vec_sub(new.dir, vec_product(horizontal, u));
     new.dir = vec_add(new.dir, vec_product(vertical, v));
     new.dir = normalize(new.dir);
-
     return new;
 }

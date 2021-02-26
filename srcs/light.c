@@ -2,7 +2,6 @@
 
 t_vec	light_it_up(t_data *data, int x, int y, t_obj *obj, double t)
 {
-
 	t_vec color;
 
 	obj->hit = vec_add(data->ray.o, vec_product(data->ray.dir, t));
@@ -37,12 +36,13 @@ t_vec	get_color(t_data *data, t_obj *obj, int x, int y)
 {
 	t_var_light *light;
 	t_vec color;
+	
 	light = malloc(sizeof(t_var_light));
 	light = ft_var_light(data, obj, light);
 	color.x = obj->color.x * 0.3;
 		color.y = obj->color.y * 0.3;
 		color.z = obj->color.x * 0.3;
-		color.x = fmin(255, obj->color.x * light->ang_norm_light + color.x);
+	color.x = fmin(255, obj->color.x * light->ang_norm_light + color.x);
 		color.y = fmin(255, obj->color.y * light->ang_norm_light + color.y);
 		color.z = fmin(255, obj->color.z * light->ang_norm_light + color.z);
 		data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16

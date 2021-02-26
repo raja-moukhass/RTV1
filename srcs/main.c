@@ -35,130 +35,90 @@ t_vec split_data(t_data *data, char *str)
     ret.x = ft_atof(ar[0]);
     ret.y = ft_atof(ar[1]);
     ret.z = ft_atof(ar[2]);
-
     return (ret);
+}
+
+int		get_closest(t_data *data, int x, int y, t_obj **save)
+{
+	int		t1;
+	int		t;
+	t_obj	*head;
+
+	data->ray = get_ray(x, y, data->camera);
+	t1 = -1;
+	head = data->obj;
+	while (head)
+	{
+		t = head->inter(&(data->ray), head);
+		if ((t <= t1 && t1 > 0 && t > 0) || (t >= t1 && t1 < 0 && t > 0))
+		{
+			t1 = t;
+			*save = head;
+		}
+		head = head->next;
+	}
+	return (t1);
+}
+
+void		get_shadow(t_obj *head, t_ray shadow, t_obj *save, t_data *data, t_vec *color)
+{
+	double	t;
+	double	len1;
+	double	len2;
+	;
+
+	while (head)
+	{
+		t = head->inter(&(shadow), head);
+			if (t > 0 && save != head)
+			{
+				t_vec hit2 = vec_add(shadow.o, vec_product(shadow.dir, t));
+				len1 = dot_product(vec_product(shadow.dir, t), vec_product(shadow.dir, t));
+				len2 = dot_product(vec_sub(data->hit, data->light->pos), vec_sub(data->hit, data->light->pos));
+				if (len1 < len2)
+				{
+					
+					color->x =  color->x * 0.6;
+					color->y = color->y * 0.6;
+					color->z = color->z * 0.6;
+					break;
+				}
+			}
+			head = head->next;
+	}
 }
 
 void ray_tracer(t_data *data)
 {
-    t_vec color;
-    t_vec dif;
-    t_obj *head;
-    t_obj *save;
-    int y;
-    int x;
-    double PI = 22 / 7;
-    double alpha = 60 * PI / 180;
-    t_vec L;
-    t_vec V;
-    double intensite_pixel;
-    y = 0;
-    t_vec n;
-    t_vec p;
-    double t;
-    int i = 0;
-    double yes;
-    int check = 1;
-    double t1 = -1;
-    // t_camera shadow;
-    t_ray shadow;
-    t_vec hit;
-    double len1;
-    double len2;
-
-    /*
-	while (y < HEIGHT)
+    t_raytracer v;
+	
+    v.y = -1;
+    while (++v.y < HEIGHT)
     {
-        x = -1;
-        while (x++ < WIDTH)
+        v.x = -1;
+        while (v.x++ < WIDTH)
         {
-			save = get_col(data, ray);
-			save(color ,hit, t);
-			if(save.t != -1)
-			{
-
-			}
-		}
-	}
-	*/
-    while (y < HEIGHT)
-    {
-        x = -1;
-        while (x++ < WIDTH)
-        {
-            data->ray = get_ray(x, y, data->camera);
-            // printf("x = %f y = %f z %f",data->ray.dir.x, data->ray.dir.y, data->ray.dir.z);
-            t1 = -1;
-            head = data->obj;
-            while (head)
+           v.t1 = get_closest(data, v.x, v.y, &(v.save));
+            if (v.t1 != -1)
             {
-                t = head->inter(&(data->ray), head);
-                if ((t <= t1 && t1 > 0 && t > 0) || (t >= t1 && t1 < 0 && t > 0))
-                {
-                    t1 = t;
-                    save = head;
-                }
-                head = head->next;
-            }
-            if (t1 != -1)
-            {
-                // shadow.o = 	vec_add(data->ray.o, vec_product(data->ray.dir, t1));
-                // shadow.dir = vec_sub(data->light->pos, shadow.o );
-                // 	 t1 = -1;
-                // head = data->obj;
-                // while(head)
-                // {
-                //     t = head->inter(&(shadow), head);
-                // 	    if (t != -1 && save->id != head->id)
-                // 		{
-                // 			t1 = t;
-                // 			break;
-                // 		}
-                // 	head = head->next;
-                // }
-                // if (t1 != -1)
-                // color = (t_vec){0,0,0};
-                // else
-                color = light_it_up(data, x, y, save, t1);
-                hit = vec_add(data->ray.o, vec_product(data->ray.dir, t1));
-                shadow.o = data->light->pos;
-                shadow.dir = normalize(vec_sub(hit, data->light->pos));
-                head = data->obj;
-                while (head)
-                {
-                t = head->inter(&(shadow), head);
-                    if (t > 0 && save != head)
-                    {
-                        t_vec hit2 = vec_add(shadow.o, vec_product(shadow.dir, t));
-                        len1 = dot_product(vec_product(shadow.dir, t), vec_product(shadow.dir, t));
-                        len2 = dot_product(vec_sub(hit, data->light->pos), vec_sub(hit, data->light->pos));
-                        if (len1 < len2)
-                        {
-                          
-                            color.x =  color.x * 0.6;
-                            color.y = color.y * 0.6;
-                            color.z = color.z * 0.6;
-                            break;
-                        }
-                    }
-                    head = head->next;
-                }
-
-                data->mlx.d[(y * WIDTH + x)] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
+				v.color = light_it_up(data, v.x, v.y, v.save, v.t1);
+                data->hit = vec_add(data->ray.o, vec_product(data->ray.dir, v.t1));
+                v.shadow.o = data->light->pos;
+                v.shadow.dir = normalize(vec_sub(data->hit, data->light->pos));
+                v.head = data->obj;
+                get_shadow(v.head,v.shadow, v.save, data, &(v.color));
+                data->mlx.d[(v.y * WIDTH + v.x)] = (int)v.color.x << 16 
+				| (int)v.color.y << 8 | (int)v.color.z;
             }
         }
-        y++;
     }
 }
 
 int mouse_move(int x, int y, t_data *data)
 {
-    double PI = 22 / 7;
-    double alpha = 60 * PI / 180;
-    // data->camera->look_from.x = x - (HEIGHT / 2);
-   
-    ft_putendl("");
     
+    // data->camera->look_from.x = x - (HEIGHT / 2);
+    ft_putendl("");
     ft_putnbr(x);
     ft_putendl("");
     ft_putnbr(y);
