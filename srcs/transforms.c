@@ -20,7 +20,8 @@ t_vec ft_rotate_x(t_vec v, double angle){
 	return res;
 }
 
-t_vec ft_rotate_y(t_vec v, double angle){
+t_vec ft_rotate_y(t_vec v, double angle)
+{
 	t_vec res;
 	res.y = v.y;
 	res.x = v.x * cos(angle) + v.z * sin(angle);
@@ -29,20 +30,20 @@ t_vec ft_rotate_y(t_vec v, double angle){
 
 }
 
-t_vec   ft_transform_ray(t_obj *o){
+t_vec   ft_transform_ray(t_obj *o)
+{
 	t_vec rot;
 	t_vec trans;
 
-	
 	o->axis = ft_rotate(o->axis, o->rot);
 	// o->axis.y = ft_translate(o->axis.y, trans);
 	// o->axis.z = ft_rotate(o->axis.z, rot);
 	return (o->axis);
 }
 
-t_vec ft_rotate_z(t_vec v, double angle){
+t_vec ft_rotate_z(t_vec v, double angle)
+{
 	t_vec res;
-
 
 	res.z = v.z;
 	res.x = v.x * cos(angle) - v.y * sin(angle);
@@ -50,9 +51,10 @@ t_vec ft_rotate_z(t_vec v, double angle){
 	return res;
 }
 
-t_vec ft_rotate(t_vec v, t_vec rot){
+t_vec ft_rotate(t_vec v, t_vec rot)
+{
 	t_vec res;
-	
+
 	res = ft_rotate_x(v, rot.x * M_PI / 180);
 	res = ft_rotate_y(res, rot.y * M_PI / 180);
 	res = ft_rotate_z(res, rot.z * M_PI / 180);
