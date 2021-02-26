@@ -65,7 +65,6 @@ void		get_shadow(t_obj *head, t_ray shadow, t_obj *save, t_data *data, t_vec *co
 	double	t;
 	double	len1;
 	double	len2;
-	;
 
 	while (head)
 	{
@@ -155,15 +154,10 @@ int key_press(int key, t_data *data)
 int main(int ac, char **av)
 {
     t_data *data;
+
     if (ac != 2)
         exit(0);
-
     init_data(&data, av[1]);
-    ac = 0;
-
-    char **tab;
-    int i = 0;
-
     if (ft_checker(&data) < 0)
     {
         ft_putendl("error");
@@ -171,7 +165,6 @@ int main(int ac, char **av)
     }
     int bpp;
     t_mlx f;
-
     f.ptr = mlx_init();
     f.win = mlx_new_window(f.ptr, WIDTH, HEIGHT, "RTV1");
     mlx_hook(f.win, 17, 0, ft_close, &data);
@@ -179,10 +172,8 @@ int main(int ac, char **av)
     f.img = mlx_new_image(f.ptr, WIDTH, HEIGHT);
     f.d = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
     data->mlx = f;
-   
     ray_tracer(data);
     mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
-    // mlx_hook(data->mlx.win, 2, 0, key_press, data);
     mlx_put_image_to_window(f.ptr, f.win, f.img, 0, 0);
     mlx_loop(f.ptr);
     return (0);
