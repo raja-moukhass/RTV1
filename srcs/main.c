@@ -6,7 +6,7 @@
 /*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:40:26 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 16:51:03 by amya             ###   ########.fr       */
+/*   Updated: 2021/02/27 17:41:09 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ double		get_closest(t_data *data, int x, int y, t_obj **save)
 	return (t1);
 }
 
-void	get_shadow(t_obj *head, t_ray shad, t_obj *s, t_data *data, t_vec *col)
+void	get_shadow(t_obj *head, t_obj *s, t_data *data, t_vec *col)
 {
 	double	t;
 	double	len1;
@@ -89,12 +89,12 @@ void	get_shadow(t_obj *head, t_ray shad, t_obj *s, t_data *data, t_vec *col)
 
 	while (head)
 	{
-		t = head->inter(&(shad), head);
+		t = head->inter(&(data->shad), head);
 		if (t > 0 && s != head)
 		{
-			hit2 = vec_add(shad.o, vec_product(shad.dir, t));
-			len1 = dot_product(vec_product(shad.dir, t),
-			vec_product(shad.dir, t));
+			hit2 = vec_add(data->shad.o, vec_product(data->shad.dir, t));
+			len1 = dot_product(vec_product(data->shad.dir, t),
+			vec_product(data->shad.dir, t));
 			len2 = dot_product(vec_sub(data->hit, data->light->pos),
 			vec_sub(data->hit, data->light->pos));
 			if (len1 < len2)
@@ -119,16 +119,17 @@ void	ray_tracer(t_data *data)
 		v.x = -1;
 		while (v.x++ < WIDTH)
 		{
-			v.t1 = get_closest(data, v.x, v.y, &(v.save));
-			if (v.t1 != -1)
+			data->t = get_closest(data, v.x, v.y, &(v.save));
+			if (data->t != -1)
 			{
-				v.color = light_it_up(data, v.x, v.y, v.save, v.t1);
+				v.color = light_it_up(data, v.x, v.y, v.save);
 				data->hit = vec_add(data->ray.o,
-				vec_product(data->ray.dir, v.t1));
+				vec_product(data->ray.dir, data->t));
 				v.shadow.o = data->light->pos;
 				v.shadow.dir = normalize(vec_sub(data->hit, data->light->pos));
 				v.head = data->obj;
-				get_shadow(v.head, v.shadow, v.save, data, &(v.color));
+				data->shad = v.shadow;
+				get_shadow(v.head, v.save, data, &(v.color));
 				data->mlx.d[(v.y * WIDTH + v.x)] = (int)v.color.x << 16
 				| (int)v.color.y << 8 | (int)v.color.z;
 			}

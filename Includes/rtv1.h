@@ -15,14 +15,12 @@
  #include <fcntl.h>
 #include <stdlib.h>
 # include "../libft/libft.h"
-
 # include <stdio.h>
 # include <stdlib.h>
 # include "../libft/libft.h"
 # include "math.h"
 # include "pthread.h"
 #include "../miniLibX/mlx.h"
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
@@ -82,7 +80,7 @@ typedef struct s_light
 	double		intens;
 
 }              t_light;
-typedef struct s_sphere
+typedef struct	s_sphere
 {
     t_vec			pos;
 	t_vec			trans;
@@ -90,7 +88,7 @@ typedef struct s_sphere
 	t_vec			color;
 	double			radius;
 	struct s_sphere  *next;
-}			t_sphere;
+}				t_sphere;
 
 typedef struct s_cone
 {
@@ -169,9 +167,10 @@ typedef struct	s_vars
 typedef struct s_data
 {
     char **tab;
+	double t;
 	t_vec hit;
 	t_vec  n;
-
+	t_ray	shad;
 	t_vars			var;
 	int			fd;
 	t_mlx		mlx;
@@ -230,7 +229,7 @@ int mouse_move(int x, int y, t_data *data);
 double ft_min_ray(double t1, double t2, double t);
 double ft_atof(char *str);
 void    free_2d(char **tab);
-t_vec light_it_up(t_data *data, int x, int y, t_obj *obj, double t);
+t_vec light_it_up(t_data *data, int x, int y, t_obj *obj);
 void init_data(t_data **data, char *av);
 t_var_light          *ft_var_light(t_data *data, t_obj *obj, t_var_light *light);
 double	intersect_cone( t_ray *r, t_obj *c);

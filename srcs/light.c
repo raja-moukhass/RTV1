@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:58:13 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 14:58:28 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/27 17:35:54 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-t_vec		light_it_up(t_data *data, int x, int y, t_obj *obj, double t)
+t_vec		light_it_up(t_data *data, int x, int y, t_obj *obj)
 {
 	t_vec	color;
 	double	k;
 	double	m;
 
-	obj->hit = vec_add(data->ray.o, vec_product(data->ray.dir, t));
+	obj->hit = vec_add(data->ray.o, vec_product(data->ray.dir, data->t));
 	if (obj->id == 2)
 		obj->n = normalize(vec_sub(vec_sub(obj->hit, obj->pos),
 	vec_product(obj->axis, dot_product(obj->axis,
@@ -31,7 +31,7 @@ t_vec		light_it_up(t_data *data, int x, int y, t_obj *obj, double t)
 	{
 		k = tan((obj->an_ra * M_PI / 180) / 2);
 		m = dot_product(data->ray.dir,
-		vec_product(obj->axis, t)) +
+		vec_product(obj->axis, data->t)) +
 		dot_product(vec_sub(data->ray.o, obj->pos), obj->axis);
 		obj->n = normalize(vec_sub(vec_sub(obj->hit,
 		obj->pos), vec_product(obj->axis, (1 + k + k) * m)));
