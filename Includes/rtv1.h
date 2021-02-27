@@ -181,6 +181,19 @@ typedef struct s_data
 	t_ray		ray;
 }              t_data;
 
+
+typedef	struct	s_get_ray
+{
+	t_vec	horizontal;
+	t_vec	vertical;
+	t_vec	cam_u;
+	t_vec	cam_v;
+	t_vec	cam_w;
+	t_ray	new;
+	double	half_h;
+	double	half_w;
+}				t_get_ray;
+
 typedef struct s_raytracer
 {
 	t_vec color;
@@ -193,6 +206,7 @@ typedef struct s_raytracer
 	double t1;
 
 }t_raytracer;
+void	color_limit(t_vec *color);
 double    intersection_spher(t_ray *r,t_obj *s);
 void ray_tracer(t_data *data);
 double cone_intersection(t_ray *ray, t_obj *cone);

@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:11:25 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 09:16:43 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/27 14:32:39 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 double	get_norm(t_vec v)
 {
-	double ret;
+	double	ret;
+
 	ret = (v.x * v.x) + (v.y * v.y) + (v.z * v.z);
 	return (ret);
 }

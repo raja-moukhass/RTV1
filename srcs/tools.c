@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <moukhassraja@gmail.com>          +#+  +:+       +#+        */
+/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:43:51 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 09:56:16 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/27 14:35:02 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		keyhook(int key, void *p)
 {
 	(void)p;
 	if (key == 53)
-	ft_close();
+		ft_close();
 	return (0);
 }
 
@@ -42,7 +42,7 @@ void	image_clear(int *d)
 	{
 		x = -1;
 		while (x++ < WIDTH)
-		d[y * WIDTH + x] = 0x000000;
+			d[y * WIDTH + x] = 0x000000;
 		y++;
 	}
 }
@@ -52,10 +52,10 @@ t_obj	*add_node(t_data **dat)
 	int		i;
 	t_obj	*temp;
 	t_obj	*p;
+	t_data	*data;
 
+	data = *dat;
 	i = 1;
-	t_data *data = *dat;
-
 	temp = ft_memalloc(sizeof(t_obj));
 	if (data->obj == NULL)
 		data->obj = temp;
@@ -71,19 +71,4 @@ t_obj	*add_node(t_data **dat)
 	}
 	temp->id = i;
 	return (temp);
-}
-
-int		ft_lines(int fd)
-{
-	char	*line = NULL;
-	int		count;
-	
-	count = 0;
-	while (get_next_line(fd, &line))
-	{
-		count++;
-		free(line);
-	}
-	close(fd);
-	return (count);
 }

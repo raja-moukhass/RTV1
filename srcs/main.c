@@ -1,13 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/27 14:40:26 by ramoukha          #+#    #+#             */
+/*   Updated: 2021/02/27 15:28:29 by ramoukha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rtv1.h"
 
-
-t_vec split_data(t_data *data, char *str)
+t_vec	split_data(t_data *data, char *str)
 {
-	int i;
-	char **ar;
-	int j;
-	int dot;
-	t_vec ret;
+	int		i;
+	char	**ar;
+	int		j;
+	int		dot;
+	t_vec	ret;
 
 	i = 0;
 	ar = ft_strsplit(str, ' ');
@@ -19,7 +30,8 @@ t_vec split_data(t_data *data, char *str)
 		{
 			if (!ft_isdigit(ar[i][j]))
 			{
-				if ((ar[i][j] == '-' && j == 0) || (ar[i][j] == '.' && dot && j != 0 && ft_isdigit(ar[i][j + 1])))
+				if ((ar[i][j] == '-' && j == 0) ||
+				(ar[i][j] == '.' && dot && j != 0 && ft_isdigit(ar[i][j + 1])))
 					;
 				else
 					call_error(data);
@@ -60,36 +72,38 @@ int		get_closest(t_data *data, int x, int y, t_obj **save)
 	return (t1);
 }
 
-void		get_shadow(t_obj *head, t_ray shadow, t_obj *save, t_data *data, t_vec *color)
+void	get_shadow(t_obj *head, t_ray shad, t_obj *s, t_data *data, t_vec *col)
 {
 	double	t;
 	double	len1;
 	double	len2;
+	t_vec	hit2;
 
 	while (head)
 	{
-		t = head->inter(&(shadow), head);
-			if (t > 0 && save != head)
+		t = head->inter(&(shad), head);
+		if (t > 0 && s != head)
+		{
+			hit2 = vec_add(shad.o, vec_product(shad.dir, t));
+			len1 = dot_product(vec_product(shad.dir, t),
+			vec_product(shad.dir, t));
+			len2 = dot_product(vec_sub(data->hit, data->light->pos),
+			vec_sub(data->hit, data->light->pos));
+			if (len1 < len2)
 			{
-				t_vec hit2 = vec_add(shadow.o, vec_product(shadow.dir, t));
-				len1 = dot_product(vec_product(shadow.dir, t), vec_product(shadow.dir, t));
-				len2 = dot_product(vec_sub(data->hit, data->light->pos), vec_sub(data->hit, data->light->pos));
-				if (len1 < len2)
-				{
-
-					color->x =  color->x * 0.6;
-					color->y = color->y * 0.6;
-					color->z = color->z * 0.6;
-					break;
-				}
+				col->x = col->x * 0.6;
+				col->y = col->y * 0.6;
+				col->z = col->z * 0.6;
+				break ;
 			}
-			head = head->next;
+		}
+		head = head->next;
 	}
 }
 
-void ray_tracer(t_data *data)
+void	ray_tracer(t_data *data)
 {
-	t_raytracer v;
+	t_raytracer	v;
 
 	v.y = -1;
 	while (++v.y < HEIGHT)
@@ -97,15 +111,16 @@ void ray_tracer(t_data *data)
 		v.x = -1;
 		while (v.x++ < WIDTH)
 		{
-		   v.t1 = get_closest(data, v.x, v.y, &(v.save));
+			v.t1 = get_closest(data, v.x, v.y, &(v.save));
 			if (v.t1 != -1)
 			{
 				v.color = light_it_up(data, v.x, v.y, v.save, v.t1);
-				data->hit = vec_add(data->ray.o, vec_product(data->ray.dir, v.t1));
+				data->hit = vec_add(data->ray.o,
+				vec_product(data->ray.dir, v.t1));
 				v.shadow.o = data->light->pos;
 				v.shadow.dir = normalize(vec_sub(data->hit, data->light->pos));
 				v.head = data->obj;
-				get_shadow(v.head,v.shadow, v.save, data, &(v.color));
+				get_shadow(v.head, v.shadow, v.save, data, &(v.color));
 				data->mlx.d[(v.y * WIDTH + v.x)] = (int)v.color.x << 16
 				| (int)v.color.y << 8 | (int)v.color.z;
 			}
@@ -113,11 +128,9 @@ void ray_tracer(t_data *data)
 	}
 }
 
-
-
-int main(int ac, char **av)
+int		main(int ac, char **av)
 {
-	t_data *data;
+	t_data	*data;
 
 	if (ac != 2)
 		exit(0);
@@ -137,7 +150,6 @@ int main(int ac, char **av)
 	f.d = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
 	data->mlx = f;
 	ray_tracer(data);
-	mlx_hook(data->mlx.win, 6, 0, mouse_move, data);
 	mlx_put_image_to_window(f.ptr, f.win, f.img, 0, 0);
 	mlx_loop(f.ptr);
 	return (0);
