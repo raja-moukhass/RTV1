@@ -131,7 +131,7 @@ typedef struct s_obj
 {
 	int 			id;
 	double			t;
-	t_vec			hit;																
+	t_vec			hit;
     t_vec			pos;
 	t_vec			trans;
 	t_vec			axis;
@@ -190,16 +190,18 @@ typedef struct s_raytracer
     int y;
     int x;
 	double t;
-	double t1; 
+	double t1;
 
 }t_raytracer;
 double    intersection_spher(t_ray *r,t_obj *s);
+void ray_tracer(t_data *data);
 double cone_intersection(t_ray *ray, t_obj *cone);
 t_vec ft_object_normal(double hit, t_ray *ray, t_vec p, t_obj *o);
 int ft_lines(int fd);
 double get_norm(t_vec v);
 t_vec normal_sphere(double t, t_ray r, t_sphere s);
 t_vec normalize(t_vec vec);
+int mouse_move(int x, int y, t_data *data);
 double ft_min_ray(double t1, double t2, double t);
 double ft_atof(char *str);
 
@@ -293,7 +295,7 @@ t_var_light          *ft_var_light(t_data *data, t_obj *obj, t_var_light *light)
 // 	return color;
 
 // }
-   
+
 
 
 
