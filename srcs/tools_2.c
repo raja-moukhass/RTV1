@@ -51,3 +51,35 @@ int			ft_lines(int fd)
 	close(fd);
 	return (count);
 }
+
+
+void    free_2d(char **tab)
+{
+    int i;
+
+    i = 0;
+    if (tab)
+    {
+        while(tab[i])
+        {
+            ft_strdel(&tab[i]);
+            i++;
+        }
+        free(tab);
+        tab = NULL;
+    }
+}
+
+void	free_list(t_obj *obj)
+{
+	t_obj	*save;
+	t_obj	*head;
+
+	head = obj;
+	while(head)
+	{
+		save = head;
+		head = head->next;
+		free(save);
+	}
+}

@@ -12,16 +12,17 @@
 
 #include "rtv1.h"
 
-int		keyhook(int key, void *p)
+int		keyhook(int key, void *p, t_data *data)
 {
 	(void)p;
 	if (key == 53)
-		ft_close();
+		ft_close(data);
 	return (0);
 }
 
-int		ft_close(void)
+int		ft_close(t_data *data)
 {
+	free_list(data->obj);
 	exit(1);
 	return (0);
 }

@@ -206,6 +206,17 @@ typedef struct s_raytracer
 	double t1;
 
 }t_raytracer;
+
+typedef		struct	s_split_data
+{
+	int i;
+    char **ar;
+    int j;
+    int dot;
+    t_vec ret;
+}					t_split_data;
+double		get_closest(t_data *data, int x, int y, t_obj **save);
+t_vec split_data(t_data *data, char *str);
 void	color_limit(t_vec *color);
 double    intersection_spher(t_ray *r,t_obj *s);
 void ray_tracer(t_data *data);
@@ -218,113 +229,16 @@ t_vec normalize(t_vec vec);
 int mouse_move(int x, int y, t_data *data);
 double ft_min_ray(double t1, double t2, double t);
 double ft_atof(char *str);
-
+void    free_2d(char **tab);
 t_vec light_it_up(t_data *data, int x, int y, t_obj *obj, double t);
 void init_data(t_data **data, char *av);
 t_var_light          *ft_var_light(t_data *data, t_obj *obj, t_var_light *light);
-
-//  n = normalize(vec_sub(hit, obj->pos));
-//         double ang_norm_light = fmax(0, dot_product(normalize(vec_sub(data->light->pos, hit)), n));
-//         t_vec L = normalize(vec_sub(data->light->pos, hit));
-//         t_vec V = normalize(vec_sub(data->ray.o, hit));
-//         t_vec dd = vec_product(n, dot_product(L, n));
-//         t_vec Rm = vec_sub(vec_product(dd, 2), L);
-//         double ka = 0, kd = 0, ks = 1;
-//         double intensite_pixel = ka + (kd * ang_norm_light) + (ks * pow(fmax(0, dot_product(Rm, V)), 40));
-//         color.x = obj->color.x * 0.3;
-//         color.y = obj->color.y * 0.3;
-//         color.z = obj->color.x * 0.3;
-//         color.x = fmin(255, obj->color.x * ang_norm_light + color.x);
-//         color.y = fmin(255, obj->color.y * ang_norm_light + color.y);
-//         color.z = fmin(255, obj->color.z * ang_norm_light + color.z);
-//         data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
-//         color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 16) & 255) + data->light->color.x * intensite_pixel);
-//         color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 8) & 255) + data->light->color.y * intensite_pixel);
-//         color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] & 255) + data->light->color.z * intensite_pixel);
-//         if (color.x > 255)
-//             color.x = 255;
-//         if (color.y > 255)
-//             color.y = 255;
-//         if (color.z > 255)
-//             color.z = 255;
-
-
-
-// t_vec light_it_up(t_data *data, int x, int y, t_obj *obj, double t)
-// {
-// 	t_vec hit;
-// 	t_vec n;
-// 	t_vec color;
-
-// 	obj->hit = vec_add(data->ray.o, vec_product(data->ray.dir, t));
-// 	if (obj->id == 2)
-// 	obj->n = normalize (vec_sub(vec_sub(hit, obj->pos), vec_product(obj->axis, dot_product(obj->axis, vec_sub(hit, obj->pos)))));
-// 	else if (obj->id == 1)
-// 		obj->n = normalize(vec_sub(hit, obj->pos));
-// 	else if (obj->id == 4)
-// 		obj->n = normalize(obj->axis);
-// 	else if (obj->id == 5)
-// 	{
-// 		double k = tan((obj->an_ra * M_PI / 180) / 2);
-// 		double m = dot_product(data->ray.dir, vec_product(obj->axis, t)) + dot_product(vec_sub(data->ray.o, obj->pos), obj->axis);
-// 		obj->n = normalize(vec_sub(vec_sub(hit, obj->pos), vec_product(obj->axis, (1 + k + k) * m)));
-//     }
-// 	color = get_color(data,obj, x, y);
-// 	return (color);
-
-// }
-// t_var_light          *ft_var_light(t_data *data, t_obj *obj, t_var_light *light)
-// {
-// 	light->ang_norm_light = fmax(0, dot_product(normalize(vec_sub(data->light->pos, obj->hit)), obj->n));
-// 	light->intensite_pixel =  (light->ang_norm_light) + (pow(fmax(0, dot_product(light->Rm, light->V)), 40));
-// 	light->L = normalize(vec_sub(data->light->pos, obj->hit));
-// 	light->V = normalize(vec_sub(data->ray.o, obj->hit));
-// 	light->dd = vec_product(obj->n, dot_product(light->L, obj->n));
-// 	light->Rm = vec_sub(vec_product(light->dd, 2), light->L);
-// 	return(light);
-// }
-
-// t_vec       get_color(t_data *data, t_obj *obj, int x, int y)
-// {
-// 	t_var_light *light;
-// 	t_vec color;
-// 	light = malloc(sizeof(t_var_light));
-// 	light = ft_var_light(data, obj, light);
-// 	color.x = obj->color.x * 0.3;
-// 		color.y = obj->color.y * 0.3;
-// 		color.z = obj->color.x * 0.3;
-// 		color.x = fmin(255, obj->color.x * light->ang_norm_light + color.x);
-// 		color.y = fmin(255, obj->color.y * light->ang_norm_light + color.y);
-// 		color.z = fmin(255, obj->color.z * light->ang_norm_light + color.z);
-// 		data->mlx.d[(y * WIDTH + x) + 0] = (int)color.x << 16 | (int)color.y << 8 | (int)color.z;
-// 		color.x = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 16) & 255) + data->light->color.x * light->intensite_pixel);
-// 		color.y = (int)(((data->mlx.d[(y * WIDTH + x) + 0] >> 8) & 255) + data->light->color.y * light->intensite_pixel);
-// 		color.z = (int)((data->mlx.d[(y * WIDTH + x) + 0] & 255) + data->light->color.z * light->intensite_pixel);
-// 		if (color.x > 255)
-// 			color.x = 255;
-// 		if (color.y > 255)
-// 			color.y = 255;
-// 		if (color.z > 255)
-// 			color.z = 255;
-// 	return color;
-
-// }
-
-
-
-
-
-
-
-
-
-
 double	intersect_cone( t_ray *r, t_obj *c);
 double  intersect_plane(t_ray *r, t_obj *plane);
 double ft_min_ray(double t1, double t2, double t);
 double intersection_spher(t_ray *r, t_obj *s);
 double      get_norm(t_vec v);
-int keyhook(int key, void *p);
+int keyhook(int key, void *p, t_data *data);
 void image_clear(int *d);
 void call_error(t_data *data);
 int ft_checker(t_data **data);
@@ -354,12 +268,13 @@ t_vec ft_rotate_z(t_vec v, double angle);
 t_vec ft_rotate(t_vec v, t_vec rot);
 t_vec ft_translate(t_vec v, t_vec trans);
 t_vec   ft_transform_ray(t_obj *o);
-int ft_close(void);
+int ft_close(t_data *data);
 t_vec  vec_sub(t_vec v1, t_vec v2);
 double	  dot_product(t_vec v1, t_vec v2);
 t_vec normal_sphere(double t, t_ray r, t_sphere s);
 t_vec  normalize(t_vec vec);
 t_vec  vec_product(t_vec v, double i);
 t_vec split_data(t_data *data, char *str);
-
+int		error_check(char **ar, t_data *data);
+void	free_list(t_obj *obj);
 #endif

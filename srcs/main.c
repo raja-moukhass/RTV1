@@ -3,57 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:40:26 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 15:28:29 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:51:03 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-t_vec	split_data(t_data *data, char *str)
+int		error_check(char **ar, t_data *data)
 {
-	int		i;
-	char	**ar;
-	int		j;
-	int		dot;
-	t_vec	ret;
+	int j;
+    int dot;
+	int i;
 
 	i = 0;
-	ar = ft_strsplit(str, ' ');
 	while (ar[i])
-	{
-		dot = 1;
-		j = 0;
-		while (ar[i][j])
-		{
-			if (!ft_isdigit(ar[i][j]))
-			{
-				if ((ar[i][j] == '-' && j == 0) ||
-				(ar[i][j] == '.' && dot && j != 0 && ft_isdigit(ar[i][j + 1])))
-					;
-				else
-					call_error(data);
-				if (ar[i][j] == '.')
-					dot--;
-			}
-			j++;
-		}
-		i++;
-	}
-	if (i != 3)
-		call_error(data);
-	ret.x = ft_atof(ar[0]);
-	ret.y = ft_atof(ar[1]);
-	ret.z = ft_atof(ar[2]);
-	return (ret);
+    {
+        dot = 1;
+        j = 0;
+        while (ar[i][j])
+        {
+            if (!ft_isdigit(ar[i][j]))
+            {
+                if ((ar[i][j] == '-' && j == 0) || (ar[i][j] == '.' && dot && j != 0 && ft_isdigit(ar[i][j + 1])))
+                    ;
+                else
+                    call_error(data);
+                if (ar[i][j] == '.')
+                    dot--;
+            }
+            j++;
+        }
+        i++;
+    }
+	return (i);
 }
 
-int		get_closest(t_data *data, int x, int y, t_obj **save)
+t_vec split_data(t_data *data, char *str)
 {
-	int		t1;
-	int		t;
+    int i;
+    char **ar;
+    t_vec ret;
+
+    ar = ft_strsplit(str, ' ');
+	i = error_check(ar, data);
+    if (i != 3)
+        call_error(data);
+    ret.x = ft_atof(ar[0]);
+    ret.y = ft_atof(ar[1]);
+    ret.z = ft_atof(ar[2]);
+	free_2d(ar);
+    return (ret);
+}
+
+double		get_closest(t_data *data, int x, int y, t_obj **save)
+{
+	double	t1;
+	double	t;
 	t_obj	*head;
 
 	data->ray = get_ray(x, y, data->camera);
@@ -128,6 +136,7 @@ void	ray_tracer(t_data *data)
 	}
 }
 
+
 int		main(int ac, char **av)
 {
 	t_data	*data;
@@ -140,6 +149,7 @@ int		main(int ac, char **av)
 		ft_putendl("error");
 		exit(0);
 	}
+	free_2d(data->tab);
 	int bpp;
 	t_mlx f;
 	f.ptr = mlx_init();
