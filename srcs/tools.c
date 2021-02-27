@@ -6,7 +6,7 @@
 /*   By: ramoukha <moukhassraja@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:43:51 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 09:52:19 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/27 09:56:16 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,9 @@ t_obj	*add_node(t_data **dat)
 
 int		ft_lines(int fd)
 {
-	char	*line;
+	char	*line = NULL;
 	int		count;
-
-	*line = NULL;
+	
 	count = 0;
 	while (get_next_line(fd, &line))
 	{
