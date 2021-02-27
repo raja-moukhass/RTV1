@@ -6,9 +6,11 @@
 /*   By: ramoukha <moukhassraja@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 12:54:06 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 09:38:06 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/27 09:40:29 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "rtv1.h"
 
 t_vec	ft_rotate_x(t_vec v, double angle)
 {
