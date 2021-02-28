@@ -8,10 +8,10 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/Users/amya/Desktop/ramoukha/a.out",
-            "args": ["/Users/amya/Desktop/rrt/mytest 2"],
+            "program": "/Users/amya/Desktop/leakproblem/a.out",
+            "args": ["mytest"],
             "stopAtEntry": true,
-            "cwd": "/Users/amya/Desktop/ramoukha",
+            "cwd": "/Users/amya/Desktop/leakproblem",
             "environment": [],
             "externalConsole": false,
             "MIMode": "lldb"

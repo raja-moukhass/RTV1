@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rtv1.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 09:58:34 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 10:06:09 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/28 15:14:02 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ double		intersect_plane(t_ray *r, t_obj *plane);
 double		ft_min_ray(double t1, double t2, double t);
 double		intersection_spher(t_ray *r, t_obj *s);
 double		get_norm(t_vec v);
-int			keyhook(int key, void *p, t_data *data);
+int			keyhook(int key, void *p, t_data **data);
 void		image_clear(int *d);
 void		call_error(t_data *data);
 int			ft_checker(t_data **data);
@@ -254,7 +254,7 @@ t_vec		ft_rotate_z(t_vec v, double angle);
 t_vec		ft_rotate(t_vec v, t_vec rot);
 t_vec		ft_translate(t_vec v, t_vec trans);
 t_vec		ft_transform_ray(t_obj *o);
-int			ft_close(t_data *data);
+int			ft_close(t_data **data);
 t_vec		vec_sub(t_vec v1, t_vec v2);
 double		dot_product(t_vec v1, t_vec v2);
 t_vec		normal_sphere(double t, t_ray r, t_sphere s);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   transforms.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 12:54:06 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 15:29:50 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/28 15:53:16 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ t_vec	ft_rotate_y(t_vec v, double angle)
 t_vec	ft_transform_ray(t_obj *o)
 {
 	t_vec	rot;
-	t_vec	trans;
 
 	o->axis = ft_rotate(o->axis, o->rot);
-	// o->axis.y = ft_translate(o->axis.y, trans);
+	o->pos = ft_translate(o->axis, o->trans);
+	ft_putnbr(o->trans.x);
 	// o->axis.z = ft_rotate(o->axis.z, rot);
 	return (o->axis);
 }
@@ -66,7 +66,7 @@ t_vec	ft_rotate(t_vec v, t_vec rot)
 t_vec	ft_translate(t_vec v, t_vec trans)
 {
 	t_vec	res;
-
+	
 	res.x = v.x + trans.x;
 	res.y = v.y + trans.y;
 	res.z = v.z + trans.z;

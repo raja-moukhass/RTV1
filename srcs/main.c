@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:40:26 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 09:15:57 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/28 15:12:56 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,12 +125,12 @@ int		main(int ac, char **av)
 	free_2d(data->tab);
 	f.ptr = mlx_init();
 	f.win = mlx_new_window(f.ptr, WIDTH, HEIGHT, "RTV1");
-	mlx_hook(f.win, 17, 0, ft_close, &data);
-	mlx_hook(f.win, 2, 0, keyhook, data);
+	// mlx_hook(f.win, 17, 0, ft_close, data);
 	f.img = mlx_new_image(f.ptr, WIDTH, HEIGHT);
 	f.d = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
 	data->mlx = f;
 	ray_tracer(data);
+	// mlx_hook(data->mlx.win, 2, 0, keyhook, &data);
 	mlx_put_image_to_window(f.ptr, f.win, f.img, 0, 0);
 	mlx_loop(f.ptr);
 	return (0);

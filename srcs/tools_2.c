@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:57:34 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 12:20:33 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/28 15:08:52 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void		free_list(t_obj *obj)
 	t_obj	*head;
 
 	head = obj;
-	while (obj != NULL)
+	while (head != NULL)
 	{
 		save = head;
 		head = head->next;

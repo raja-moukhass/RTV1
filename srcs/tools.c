@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:43:51 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 12:09:23 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/28 15:14:34 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-int		keyhook(int key, void *p, t_data *data)
+int		keyhook(int key, void *p, t_data **data)
 {
 	(void)p;
 	if (key == 53)
@@ -20,9 +20,9 @@ int		keyhook(int key, void *p, t_data *data)
 	return (0);
 }
 
-int		ft_close(t_data *data)
+int		ft_close(t_data **data)
 {
-	free_list(data->obj);
+	free_list((*data)->obj);
 	exit(1);
 	return (0);
 }
