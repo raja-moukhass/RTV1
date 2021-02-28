@@ -6,7 +6,7 @@
 /*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:40:26 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 15:12:56 by amya             ###   ########.fr       */
+/*   Updated: 2021/02/28 17:07:40 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int		main(int ac, char **av)
 	f.d = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
 	data->mlx = f;
 	ray_tracer(data);
-	// mlx_hook(data->mlx.win, 2, 0, keyhook, &data);
+	mlx_hook(data->mlx.win, 2, 0, keyhook, data);
 	mlx_put_image_to_window(f.ptr, f.win, f.img, 0, 0);
 	mlx_loop(f.ptr);
 	return (0);

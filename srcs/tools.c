@@ -6,23 +6,22 @@
 /*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:43:51 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 15:14:34 by amya             ###   ########.fr       */
+/*   Updated: 2021/02/28 17:10:01 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-int		keyhook(int key, void *p, t_data **data)
+int		keyhook(int key, t_data *data)
 {
-	(void)p;
 	if (key == 53)
 		ft_close(data);
 	return (0);
 }
 
-int		ft_close(t_data **data)
+int		ft_close(t_data *data)
 {
-	free_list((*data)->obj);
+	free_list(data->obj);
 	exit(1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 12:54:06 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 15:53:16 by amya             ###   ########.fr       */
+/*   Updated: 2021/02/28 16:15:19 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,8 @@ t_vec	ft_transform_ray(t_obj *o)
 	t_vec	rot;
 
 	o->axis = ft_rotate(o->axis, o->rot);
-	o->pos = ft_translate(o->axis, o->trans);
-	ft_putnbr(o->trans.x);
-	// o->axis.z = ft_rotate(o->axis.z, rot);
+	o->pos = ft_translate(o->pos, o->trans);
+	ft_putnbr(o->pos.x);
 	return (o->axis);
 }
 
@@ -66,7 +65,7 @@ t_vec	ft_rotate(t_vec v, t_vec rot)
 t_vec	ft_translate(t_vec v, t_vec trans)
 {
 	t_vec	res;
-	
+
 	res.x = v.x + trans.x;
 	res.y = v.y + trans.y;
 	res.z = v.z + trans.z;

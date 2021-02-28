@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:17:33 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 14:20:32 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/28 16:18:22 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@ int		init_obj(t_obj *temp, int i, t_data *data, int id)
 	{
 		temp->axis = split_data(data, data->tab[++i]);
 		temp->axis = ft_transform_ray(temp);
+	}
+	if (id == 1)
+	{
+		temp->pos = ft_translate(temp->pos, temp->trans);
 	}
 	return (i);
 }
