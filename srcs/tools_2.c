@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:57:34 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 14:38:35 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/02/28 12:20:33 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,31 +52,30 @@ int			ft_lines(int fd)
 	return (count);
 }
 
-
-void    free_2d(char **tab)
+void		free_2d(char **tab)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if (tab)
-    {
-        while(tab[i])
-        {
-            ft_strdel(&tab[i]);
-            i++;
-        }
-        free(tab);
-        tab = NULL;
-    }
+	i = 0;
+	if (tab)
+	{
+		while (tab[i])
+		{
+			ft_strdel(&tab[i]);
+			i++;
+		}
+		free(tab);
+		tab = NULL;
+	}
 }
 
-void	free_list(t_obj *obj)
+void		free_list(t_obj *obj)
 {
 	t_obj	*save;
 	t_obj	*head;
 
 	head = obj;
-	while(head)
+	while (obj != NULL)
 	{
 		save = head;
 		head = head->next;

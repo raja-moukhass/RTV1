@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:40:26 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 17:41:09 by amya             ###   ########.fr       */
+/*   Updated: 2021/02/28 09:15:57 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,51 +14,51 @@
 
 int		error_check(char **ar, t_data *data)
 {
-	int j;
-    int dot;
-	int i;
+	int		j;
+	int		dot;
+	int		i;
 
-	i = 0;
-	while (ar[i])
-    {
-        dot = 1;
-        j = 0;
-        while (ar[i][j])
-        {
-            if (!ft_isdigit(ar[i][j]))
-            {
-                if ((ar[i][j] == '-' && j == 0) || (ar[i][j] == '.' && dot && j != 0 && ft_isdigit(ar[i][j + 1])))
-                    ;
-                else
-                    call_error(data);
-                if (ar[i][j] == '.')
-                    dot--;
-            }
-            j++;
-        }
-        i++;
-    }
+	i = -1;
+	while (ar[++i])
+	{
+		dot = 1;
+		j = 0;
+		while (ar[i][j])
+		{
+			if (!ft_isdigit(ar[i][j]))
+			{
+				if ((ar[i][j] == '-' && j == 0) || (ar[i][j] == '.'
+				&& dot && j != 0 && ft_isdigit(ar[i][j + 1])))
+					;
+				else
+					call_error(data);
+				if (ar[i][j] == '.')
+					dot--;
+			}
+			j++;
+		}
+	}
 	return (i);
 }
 
-t_vec split_data(t_data *data, char *str)
+t_vec	split_data(t_data *data, char *str)
 {
-    int i;
-    char **ar;
-    t_vec ret;
+	int		i;
+	char	**ar;
+	t_vec	ret;
 
-    ar = ft_strsplit(str, ' ');
+	ar = ft_strsplit(str, ' ');
 	i = error_check(ar, data);
-    if (i != 3)
-        call_error(data);
-    ret.x = ft_atof(ar[0]);
-    ret.y = ft_atof(ar[1]);
-    ret.z = ft_atof(ar[2]);
+	if (i != 3)
+		call_error(data);
+	ret.x = ft_atof(ar[0]);
+	ret.y = ft_atof(ar[1]);
+	ret.z = ft_atof(ar[2]);
 	free_2d(ar);
-    return (ret);
+	return (ret);
 }
 
-double		get_closest(t_data *data, int x, int y, t_obj **save)
+double	get_closest(t_data *data, int x, int y, t_obj **save)
 {
 	double	t1;
 	double	t;
@@ -78,35 +78,6 @@ double		get_closest(t_data *data, int x, int y, t_obj **save)
 		head = head->next;
 	}
 	return (t1);
-}
-
-void	get_shadow(t_obj *head, t_obj *s, t_data *data, t_vec *col)
-{
-	double	t;
-	double	len1;
-	double	len2;
-	t_vec	hit2;
-
-	while (head)
-	{
-		t = head->inter(&(data->shad), head);
-		if (t > 0 && s != head)
-		{
-			hit2 = vec_add(data->shad.o, vec_product(data->shad.dir, t));
-			len1 = dot_product(vec_product(data->shad.dir, t),
-			vec_product(data->shad.dir, t));
-			len2 = dot_product(vec_sub(data->hit, data->light->pos),
-			vec_sub(data->hit, data->light->pos));
-			if (len1 < len2)
-			{
-				col->x = col->x * 0.6;
-				col->y = col->y * 0.6;
-				col->z = col->z * 0.6;
-				break ;
-			}
-		}
-		head = head->next;
-	}
 }
 
 void	ray_tracer(t_data *data)
@@ -137,10 +108,11 @@ void	ray_tracer(t_data *data)
 	}
 }
 
-
 int		main(int ac, char **av)
 {
 	t_data	*data;
+	int		bpp;
+	t_mlx	f;
 
 	if (ac != 2)
 		exit(0);
@@ -151,8 +123,6 @@ int		main(int ac, char **av)
 		exit(0);
 	}
 	free_2d(data->tab);
-	int bpp;
-	t_mlx f;
 	f.ptr = mlx_init();
 	f.win = mlx_new_window(f.ptr, WIDTH, HEIGHT, "RTV1");
 	mlx_hook(f.win, 17, 0, ft_close, &data);

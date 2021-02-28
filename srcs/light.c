@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:58:13 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 17:35:54 by amya             ###   ########.fr       */
+/*   Updated: 2021/02/28 12:37:24 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_vec		get_color(t_data *data, t_obj *obj, int x, int y)
 	return (color);
 }
 
-void	color_limit(t_vec *color)
+void		color_limit(t_vec *color)
 {
 	if (color->x > 255)
 		color->x = 255;
@@ -86,4 +86,33 @@ void	color_limit(t_vec *color)
 		color->y = 255;
 	if (color->z > 255)
 		color->z = 255;
+}
+
+void		get_shadow(t_obj *head, t_obj *s, t_data *data, t_vec *col)
+{
+	double	t;
+	double	len1;
+	double	len2;
+	t_vec	hit2;
+
+	while (head)
+	{
+		t = head->inter(&(data->shad), head);
+		if (t > 0 && s != head)
+		{
+			hit2 = vec_add(data->shad.o, vec_product(data->shad.dir, t));
+			len1 = dot_product(vec_product(data->shad.dir, t),
+			vec_product(data->shad.dir, t));
+			len2 = dot_product(vec_sub(data->hit, data->light->pos),
+			vec_sub(data->hit, data->light->pos));
+			if (len1 < len2)
+			{
+				col->x = col->x * 0.6;
+				col->y = col->y * 0.6;
+				col->z = col->z * 0.6;
+				break ;
+			}
+		}
+		head = head->next;
+	}
 }
