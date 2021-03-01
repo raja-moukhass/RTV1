@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 15:13:37 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 15:14:46 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/01 18:46:25 by amya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	init_data(t_data **data, char *av)
 	(*data)->light = malloc(sizeof(t_light));
 	(*data)->camera->look_from = (t_vec){0, 5, 0};
 	(*data)->camera->cam_dir = (t_vec){0, 0, 0};
-	(*data)->camera->up = (t_vec){0, 1, 0};
+	(*data)->camera->up = (t_vec){0, 1, 0.1};
 	(*data)->camera->fov = 20;
 }
 
