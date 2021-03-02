@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 15:13:37 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/01 18:46:25 by amya             ###   ########.fr       */
+/*   Updated: 2021/03/02 17:29:18 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	init_data(t_data **data, char *av)
 	(*data)->light = malloc(sizeof(t_light));
 	(*data)->camera->look_from = (t_vec){0, 5, 0};
 	(*data)->camera->cam_dir = (t_vec){0, 0, 0};
-	(*data)->camera->up = (t_vec){0, 1, 0.1};
+	(*data)->camera->up = (t_vec){0, 1, 1e-6};
 	(*data)->camera->fov = 20;
 }
 
@@ -89,4 +89,31 @@ t_ray	get_ray(double u, double v, t_camera *camera)
 	r.new.dir = vec_add(r.new.dir, vec_product(r.vertical, v));
 	r.new.dir = normalize(r.new.dir);
 	return (r.new);
+}
+
+int		init_obj(t_obj *temp, int i, t_data *data, int id)
+{
+	temp->id = id;
+	temp->pos = split_data(data, data->tab[++i]);
+	temp->trans = split_data(data, data->tab[++i]);
+	temp->rot = split_data(data, data->tab[++i]);
+	temp->color = split_data(data, data->tab[++i]);
+	if (id != 4)
+	{
+		i++;
+		if (str_isnum(data->tab[i]))
+			temp->an_ra = ft_atof(ft_strdup(data->tab[i]));
+		else
+			call_error(data);
+	}
+	if (id != 1)
+	{
+		temp->axis = split_data(data, data->tab[++i]);
+		temp->axis = ft_transform_ray(temp);
+	}
+	if (id == 1)
+	{
+		temp->pos = ft_translate(temp->pos, temp->trans);
+	}
+	return (i);
 }

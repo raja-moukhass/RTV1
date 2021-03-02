@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:17:33 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 16:18:22 by amya             ###   ########.fr       */
+/*   Updated: 2021/03/02 17:29:13 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,17 @@ int		ft_checker(t_data **data)
 	return (0);
 }
 
-int		init_obj(t_obj *temp, int i, t_data *data, int id)
+int		str_isnum(char *tab)
 {
-	temp->id = id;
-	temp->pos = split_data(data, data->tab[++i]);
-	temp->trans = split_data(data, data->tab[++i]);
-	temp->rot = split_data(data, data->tab[++i]);
-	temp->color = split_data(data, data->tab[++i]);
-	if (id != 4)
-		temp->an_ra = ft_atof(ft_strdup(data->tab[++i]));
-	if (id != 1)
+	int i;
+
+	i = 0;
+	while (tab[i])
 	{
-		temp->axis = split_data(data, data->tab[++i]);
-		temp->axis = ft_transform_ray(temp);
-	}
-	if (id == 1)
-	{
-		temp->pos = ft_translate(temp->pos, temp->trans);
+		if (ft_isdigit(tab[i]))
+			i++;
+		else
+			return (0);
 	}
 	return (i);
 }
@@ -103,11 +97,10 @@ void	light_check(t_data **dat, int i)
 
 	data = *dat;
 	check = 1;
-	while (data->tab[i + check] && check < 3)
+	while (data->tab[i + check] && check < 2)
 		check++;
-	if (check != 3)
+	if (check != 2)
 		call_error(data);
 	data->light->pos = split_data(data, data->tab[i + 1]);
 	data->light->color = split_data(data, data->tab[i + 2]);
-	data->light->intens = ft_atof(ft_strdup(data->tab[i + 3]));
 }

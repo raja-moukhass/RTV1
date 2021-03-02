@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:58:13 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 12:37:24 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/02 17:36:12 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,16 @@ t_vec		light_it_up(t_data *data, int x, int y, t_obj *obj)
 	return (color);
 }
 
-t_var_light		*ft_var_light(t_data *data, t_obj *obj, t_var_light *light)
+t_var_light	*ft_var_light(t_data *data, t_obj *obj, t_var_light *light)
 {
 	light->ang_norm_light = fmax(0,
 	dot_product(normalize(vec_sub(data->light->pos, obj->hit)), obj->n));
-	light->L = normalize(vec_sub(data->light->pos, obj->hit));
-	light->V = normalize(vec_sub(data->ray.o, obj->hit));
-	light->dd = vec_product(obj->n, dot_product(light->L, obj->n));
-	light->Rm = vec_sub(vec_product(light->dd, 2), light->L);
+	light->l = normalize(vec_sub(data->light->pos, obj->hit));
+	light->v = normalize(vec_sub(data->ray.o, obj->hit));
+	light->dd = vec_product(obj->n, dot_product(light->l, obj->n));
+	light->rm = vec_sub(vec_product(light->dd, 2), light->l);
 	light->intensite_pixel = (pow(fmax(0,
-	dot_product(light->Rm, light->V)), 40));
+	dot_product(light->rm, light->v)), 40));
 	return (light);
 }
 
@@ -62,7 +62,7 @@ t_vec		get_color(t_data *data, t_obj *obj, int x, int y)
 	light = ft_var_light(data, obj, light);
 	color.x = obj->color.x * 0.3;
 	color.y = obj->color.y * 0.3;
-	color.z = obj->color.x * 0.3;
+	color.z = obj->color.z * 0.3;
 	color.x = fmin(255, obj->color.x * light->ang_norm_light + color.x);
 	color.y = fmin(255, obj->color.y * light->ang_norm_light + color.y);
 	color.z = fmin(255, obj->color.z * light->ang_norm_light + color.z);

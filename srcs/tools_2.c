@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:57:34 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/28 17:11:11 by amya             ###   ########.fr       */
+/*   Updated: 2021/03/02 17:27:58 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,14 @@ void		free_list(t_obj *obj)
 		head = head->next;
 		free(save);
 	}
+}
+
+t_vec		ft_translate(t_vec v, t_vec trans)
+{
+	t_vec	res;
+
+	res.x = v.x + trans.x;
+	res.y = v.y + trans.y;
+	res.z = v.z + trans.z;
+	return (res);
 }

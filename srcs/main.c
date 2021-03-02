@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amya <amya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:40:26 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/01 19:53:20 by amya             ###   ########.fr       */
+/*   Updated: 2021/03/02 17:21:19 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	ray_tracer(t_data *data)
 	while (++v.y < HEIGHT)
 	{
 		v.x = -1;
-		while (v.x++ < WIDTH)
+		while (++v.x < WIDTH)
 		{
 			data->t = get_closest(data, v.x, v.y, &(v.save));
 			if (data->t != -1)
@@ -125,7 +125,7 @@ int		main(int ac, char **av)
 	free_2d(data->tab);
 	f.ptr = mlx_init();
 	f.win = mlx_new_window(f.ptr, WIDTH, HEIGHT, "RTV1");
-	// mlx_hook(f.win, 17, 0, ft_close, data);
+	mlx_hook(f.win, 17, 0, ft_close, data);
 	f.img = mlx_new_image(f.ptr, WIDTH, HEIGHT);
 	f.d = (int *)mlx_get_data_addr(f.img, &bpp, &bpp, &bpp);
 	data->mlx = f;
