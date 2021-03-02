@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 15:13:37 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/02 17:29:18 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/02 17:57:48 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	init_data(t_data **data, char *av)
 	char		**tab;
 	int			count;
 	int			fd;
-	t_camera	cam;
 
 	i = 0;
 	fd = open(av, O_RDONLY);
@@ -52,8 +51,6 @@ t_vec	get_camera_direction(t_camera cam, t_vec get_ray)
 
 double	ft_min_ray(double t1, double t2, double t)
 {
-	t_sol n;
-
 	if (t2 <= 0 && t1 <= 0)
 		return (-1);
 	else if (t1 >= 0 && t2 <= 0)

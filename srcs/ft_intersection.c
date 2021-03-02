@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 15:25:01 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/02/27 15:25:08 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/02 17:54:27 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ double	cone_intersection(t_ray *ray, t_obj *cone)
 
 double	intersect_plane(t_ray *r, t_obj *plane)
 {
-	double	t;
 	double	res;
 	double	s1;
 	double	denom;

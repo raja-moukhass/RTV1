@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 09:58:34 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/02 17:45:59 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/02 17:49:59 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <stdbool.h>
 # include <fcntl.h>
 # include <stdlib.h>
-# include "../miniLibX/mlx.h"
 # include "../libft/libft.h"
 # include "pthread.h"
 # define WIDTH  1000
