@@ -70,35 +70,35 @@ Under the construction
 **Camere**
 
 ```sh
-camera <position> <look at> <field of view> 
+camera <look from> <look at>  
 ```
 
 **light**
 
 ```sh
-light <position> <intensity> <color> 
+light <position> <color> 
 ```
 **Sphere**
 
 ```sh
-sphere <origin> <raduis> <color> <translation> <rotation>
+sphere <position> <translation> <rotation> <color> <raduis>
 ```
 
 **Plane**
 
 ```sh 
-plane <origin> <color> <norme> <translation> <rotation> 
+plane <position> <translation> <rotation> <color> <norme>
 ```
 **Cylindre**
 
 ```sh
-cylindre <origin> <raduis> <height> <axis> <color> <translation> <rotation>
+cylindre <position>  <translation> <rotation> <color> <raduis> <axis>
 ```
 
 **Cone**
 
 ```sh
-cone <origin> <raduis> <height> <color> <axis vector> <translation> <rotation>
+cone <position>  <translation> <rotation> <color> <raduis> <axis>
 ```
 <img src="https://i.imgur.com/4of1CJQ.png" width="1000" />
 
