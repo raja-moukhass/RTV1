@@ -100,7 +100,7 @@ cylindre <origin> <raduis> <height> <axis> <color> <translation> <rotation>
 ```sh
 cone <origin> <raduis> <height> <color> <axis vector> <translation> <rotation>
 ```
-
+<img src="https://i.imgur.com/4of1CJQ.png" width="1000" />
 
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-ray-tracing
 - https://www.purplealienplanet.com/node/20
