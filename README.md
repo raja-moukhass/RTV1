@@ -100,7 +100,17 @@ cylindre <position>  <translation> <rotation> <color> <raduis> <axis>
 ```sh
 cone <position>  <translation> <rotation> <color> <raduis> <axis>
 ```
-<img src="https://i.imgur.com/4of1CJQ.png" width="1000" />
+
+- screen1
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/back_bone.png" width="1000" />
+
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/sphere.png" width="1000" />
+
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/shadow.png" width="1000" />
+
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/scene_.png" width="1000" />
+
+
 
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-ray-tracing
 - https://www.purplealienplanet.com/node/20
