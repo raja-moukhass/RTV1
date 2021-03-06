@@ -110,6 +110,8 @@ cone <position>  <translation> <rotation> <color> <raduis> <axis>
 
 <img src="https://github.com/raja-moukhass/RTV1/blob/main/images/scene_.png" width="1000" />
 
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/blue_sphere.rgb.png" width="1000" />
+
 
 
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-ray-tracing
