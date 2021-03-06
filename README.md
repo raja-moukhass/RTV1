@@ -40,7 +40,25 @@ Run the following commands:
 * To re-compile:
 	- `make re`
 
-sources
+
+# Challenges
+this program was created without much help from standard libraries, these are all the standard function used:
+
+- open
+- read
+- write
+- malloc
+- free
+- math:
+	- sin()
+	- cos()
+	- pow()
+- mlx graphic library:
+- to create a window
+- use keyboard input
+- ![lines of code](imgs/lines.png)
+
+
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-ray-tracing
 - https://www.purplealienplanet.com/node/20
 - https://www.scratchapixel.com/index.php?redirect
