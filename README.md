@@ -12,6 +12,17 @@
 # RTV1
 - This mini-project is the first step to create a Raytracing program, for you to
 finally be able to render computer-generated images.
+# Functionalities:
+- The program traces rays from one camera to n objects, the objects have shading and cast shadows on each other based the position of a single source of light.
+- it takes keyboard input for moving the camera (W,A,S,D,Q,E), rotate the camera (arrows) moving the light(J,K), changing resolution (\[,\]) and fov angle (+,-) in the scene in real time.
+- RTv1 takes as input a custom file format based on comma separated values (examples found in the scenes folder), from the file it can get these informations:
+	- camera (location and direction);
+	- light (location);
+	- objects:
+		- sphere (color, location and radius);
+		- cylinder (color, location, axis and radius);
+		- cone (color, location, axis and angle);
+		- plane (color, normal and distance from 0,0,0);
 
 # Installation
 To generate an executable for this project run make in the root of the project directory after you've downloaded or cloned it.
