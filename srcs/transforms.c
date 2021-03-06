@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 12:54:06 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/02 17:54:03 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/03 14:45:15 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ t_vec	ft_transform_ray(t_obj *o)
 {
 	o->axis = ft_rotate(o->axis, o->rot);
 	o->pos = ft_translate(o->pos, o->trans);
-	ft_putnbr(o->pos.x);
 	return (o->axis);
 }
 

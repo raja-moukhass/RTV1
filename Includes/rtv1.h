@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 09:58:34 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/02 17:49:59 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/03 14:42:31 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ void			image_clear(int *d);
 void			call_error(t_data *data);
 int				ft_checker(t_data **data);
 void			camera_check(t_data **dat, int i);
-void			light_check(t_data **dat, int i);
+void			light_check(t_data **dat, int i, int light);
 void			obj_check(t_data **dat, int i, int id);
 double			ft_atof(char *str);
 t_obj			*add_node(t_data **dat);

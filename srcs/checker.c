@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:17:33 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/02 17:52:38 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/03 15:37:13 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 int		ft_checker(t_data **data)
 {
 	int	i;
+	int	light;
 
-	i = 0;
-	while ((*data)->tab[i])
+	light = 0;
+	i = -1;
+	while ((*data)->tab[++i])
 	{
 		if (ft_strcmp((*data)->tab[i], "camera") == 0)
 			camera_check(data, i);
@@ -26,13 +28,14 @@ int		ft_checker(t_data **data)
 		if (ft_strcmp((*data)->tab[i], "cylinder") == 0)
 			obj_check(data, i, 2);
 		if (ft_strcmp((*data)->tab[i], "light") == 0)
-			light_check(data, i);
+			light_check(data, i, light++);
 		if (ft_strcmp((*data)->tab[i], "plane") == 0)
 			obj_check(data, i, 4);
 		if (ft_strcmp((*data)->tab[i], "cone") == 0)
 			obj_check(data, i, 5);
-		i++;
 	}
+	if (!light)
+		call_error(*data);
 	return (0);
 }
 
@@ -90,11 +93,12 @@ void	camera_check(t_data **dat, int i)
 	data->camera->cam_dir = split_data(data, data->tab[i + 2]);
 }
 
-void	light_check(t_data **dat, int i)
+void	light_check(t_data **dat, int i, int light)
 {
 	int		check;
 	t_data	*data;
 
+	(void)light;
 	data = *dat;
 	check = 1;
 	while (data->tab[i + check] && check < 2)

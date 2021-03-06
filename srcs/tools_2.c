@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:57:34 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/02 17:27:58 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/03 15:29:37 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ int			ft_lines(int fd)
 	char	*line;
 	int		count;
 
+	if (fd < 0)
+	{
+		perror("error");
+		exit(1);
+	}
 	line = NULL;
 	count = 0;
 	while (get_next_line(fd, &line))

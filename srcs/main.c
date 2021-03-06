@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 14:40:26 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/02 17:21:19 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/03 14:48:00 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,11 +117,7 @@ int		main(int ac, char **av)
 	if (ac != 2)
 		exit(0);
 	init_data(&data, av[1]);
-	if (ft_checker(&data) < 0)
-	{
-		ft_putendl("error");
-		exit(0);
-	}
+	ft_checker(&data);
 	free_2d(data->tab);
 	f.ptr = mlx_init();
 	f.win = mlx_new_window(f.ptr, WIDTH, HEIGHT, "RTV1");

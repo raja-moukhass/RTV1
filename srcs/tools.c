@@ -6,7 +6,7 @@
 /*   By: ramoukha <ramoukha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 09:43:51 by ramoukha          #+#    #+#             */
-/*   Updated: 2021/03/02 17:55:54 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/03 14:47:26 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		ft_close(t_data *data)
 void	call_error(t_data *data)
 {
 	free_2d(data->tab);
-	ft_putstr("parsing error");
+	ft_putstr("parsing error\n");
 	exit(1);
 }
 
