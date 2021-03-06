@@ -58,6 +58,49 @@ this program was created without much help from standard libraries, these are al
 	- use keyboard input
 - ![lines of code](imgs/lines.png)
 
+## Parsing file format
+
+```sh
+
+Under the construction
+
+```
+
+
+**Camere**
+
+```sh
+camera <position> <look at> <field of view> 
+```
+
+**light**
+
+```sh
+light <position> <intensity> <color> 
+```
+**Sphere**
+
+```sh
+sphere <origin> <raduis> <color> <translation> <rotation>
+```
+
+**Plane**
+
+```sh 
+plane <origin> <color> <norme> <translation> <rotation> 
+```
+**Cylindre**
+
+```sh
+cylindre <origin> <raduis> <height> <axis> <color> <translation> <rotation>
+```
+
+**Cone**
+
+```sh
+cone <origin> <raduis> <height> <color> <axis vector> <translation> <rotation>
+```
+
 
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-ray-tracing
 - https://www.purplealienplanet.com/node/20
