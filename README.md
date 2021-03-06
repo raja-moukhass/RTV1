@@ -12,6 +12,16 @@
 # RTV1
 - This mini-project is the first step to create a Raytracing program, for you to
 finally be able to render computer-generated images.
+# Functionalities:
+- The program traces rays from one camera to n objects, the objects have shading and cast shadows on each other based the position of a single source of light.
+- RTv1 takes as input a custom file format based on comma separated values (examples found in the scenes folder), from the file it can get these informations:
+	- camera (location and direction);
+	- light (location);
+	- objects:
+		- sphere (color, location and radius);
+		- cylinder (color, location, axis and radius);
+		- cone (color, location, axis and angle);
+		- plane (color, normal and distance from 0,0,0);
 
 # Installation
 To generate an executable for this project run make in the root of the project directory after you've downloaded or cloned it.
@@ -30,7 +40,78 @@ Run the following commands:
 * To re-compile:
 	- `make re`
 
-sources
+
+# Challenges
+this program was created without much help from standard libraries, these are all the standard function used:
+
+- open
+- read
+- write
+- malloc
+- free
+- math:
+	- sin()
+	- cos()
+	- pow()
+- mlx graphic library:
+	- to create a window
+	- use keyboard input
+- ![lines of code](imgs/lines.png)
+
+## Parsing file format
+
+```sh
+
+Under the construction
+
+```
+
+
+**Camere**
+
+```sh
+camera <look from> <look at>  
+```
+
+**light**
+
+```sh
+light <position> <color> 
+```
+**Sphere**
+
+```sh
+sphere <position> <translation> <rotation> <color> <raduis>
+```
+
+**Plane**
+
+```sh 
+plane <position> <translation> <rotation> <color> <norme>
+```
+**Cylindre**
+
+```sh
+cylindre <position>  <translation> <rotation> <color> <raduis> <axis>
+```
+
+**Cone**
+
+```sh
+cone <position>  <translation> <rotation> <color> <raduis> <axis>
+```
+
+- screen1
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/back_bone.png" width="1000" />
+
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/sphere.png" width="1000" />
+
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/shadow.png" width="1000" />
+
+<img src="https://github.com/raja-moukhass/RTV1/blob/main/images/scene_.png" width="1000" />
+
+
+
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-ray-tracing
 - https://www.purplealienplanet.com/node/20
 - https://www.scratchapixel.com/index.php?redirect
