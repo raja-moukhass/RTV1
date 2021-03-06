@@ -54,8 +54,8 @@ this program was created without much help from standard libraries, these are al
 	- cos()
 	- pow()
 - mlx graphic library:
-- to create a window
-- use keyboard input
+	- to create a window
+	- use keyboard input
 - ![lines of code](imgs/lines.png)
 
 
