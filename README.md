@@ -1,6 +1,3 @@
-# RTV1
-<p align="center"><img width=60% src="https://github.com/raja-moukhass/RTV1/blob/main/images/ray_tracing.png"></p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 [![Build Status](https://travis-ci.org/anfederico/Clairvoyant.svg?branch=master)](https://travis-ci.org/anfederico/Clairvoyant)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
@@ -9,9 +6,29 @@
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+<p align="center"><img width=60% src="https://github.com/raja-moukhass/RTV1/blob/main/images/ray_tracing.png"></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
- This mini-project is the first step to create a Raytracing program, for you to
+# RTV1
+- This mini-project is the first step to create a Raytracing program, for you to
 finally be able to render computer-generated images.
+
+# Installation
+To generate an executable for this project run make in the root of the project directory after you've downloaded or cloned it.
+
+This project will only work on MacOS El Capitan/Sierra/HighSierra and even then, no promises!
+
+### how to run the project 
+Run the following commands:
+
+* To compile
+	- `make`
+* To remove objects:
+	- `make clean`
+* To remove objects and binary file (program):
+	- `make fclean`
+* To re-compile:
+	- `make re`
 
 sources
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-ray-tracing
