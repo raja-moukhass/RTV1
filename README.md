@@ -118,10 +118,11 @@ cone <position>  <translation> <rotation> <color> <raduis> <axis>
 - screen5
 <img src="https://github.com/raja-moukhass/RTV1/blob/main/images/blue_sphere.rgb.png" width="1000" />
 
+# Resources :
+
 - <a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-ray-tracing">Introduction to Ray Tracing: a Simple Method for Creating 3D Images</a>
 - <a href="https://www.purplealienplanet.com/node/20">Introduction to Ray Tracing and a simple raytracer with C</a>
 - <a href="http://www.realtimerendering.com/raytracing/Ray%20Tracing%20in%20a%20Weekend.pdf">Raytracing with one week</a>
-- <a href=" http://www.hugi.scene.org/online/coding/hugi%2023%20-%20d9ray.htm">Raytracing with one week</a>
 - <a href="http://www.hugi.scene.org/online/coding/hugi%2023%20-%20d9ray.htm">Introduction to raytracing, it should give you the idea how things work.</a>
 - <a href="https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces">How to deal with vectors</a>
 - <a href="https://medium.com/swlh/ray-tracing-from-scratch-in-python-41670e6a96f9">Ray Tracing From Scratch in Python</a>
