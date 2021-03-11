@@ -6,7 +6,7 @@
 /*   By: ramoukha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 19:20:03 by ramoukha          #+#    #+#             */
-/*   Updated: 2019/07/24 12:11:35 by ramoukha         ###   ########.fr       */
+/*   Updated: 2021/03/11 09:19:43 by ramoukha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ int		ft_atoi(const char *str)
 	}
 	if (sign == 1)
 		return (-res);
-	else
+else
 		return (res);
 }
